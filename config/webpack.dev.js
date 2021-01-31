@@ -1,11 +1,11 @@
-const { common, distPath, srcPath } = require('./common')
+const { common, srcPath } = require('./common')
 const HTMLPlugin = require('html-webpack-plugin')
 
 
 module.exports = common({
     devServer: {
         historyApiFallback: true,
-        contentBase: distPath,
+        contentBase: srcPath,
         compress: true,
         hot: true,
         port: 1234,

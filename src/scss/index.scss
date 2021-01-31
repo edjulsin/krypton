@@ -1,9 +1,3 @@
-body {
-    user-select: none;
-}
-
-h1 {
-    font-size: 5rem;
-    color: pink;
-    font-weight: bold
-}
+@import './font';
+@import './color';
+@import './base';

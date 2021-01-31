@@ -1,0 +1,207 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    overflow-x: hidden;
+    overflow-y: scroll;
+    font-size: 62.5%;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+
+
+    @media only screen and (max-width: 35em) {
+        & {
+            font-size: 60%;
+        }   
+    }
+
+    @media only screen and (max-width: 28em) {
+        & {
+            font-size: 57.5%;
+        }   
+    }
+
+    @media only screen and (max-width: 25.6em) {
+        & {
+            font-size: 56%;
+        }   
+    }
+
+    @media only screen and (max-width: 25em) {
+        & {
+            font-size: 54%;
+        }   
+    }
+}
+
+
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    font-size: 1.6rem;
+    line-height: 1.6em;
+    font-weight: 300;
+    font-style: normal;
+    font-family: $font-sans-serif;
+    color: $grey;
+    text-rendering: optimizeLegibility;
+    background: $dark;
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+p,
+ul,
+ol,
+li,
+dl,
+dd,
+hr,
+pre,
+form,
+table,
+video,
+figure,
+figcaption,
+blockquote {
+    margin: 0;
+    padding: 0;
+}
+
+ul[class],
+ol[class] {
+    padding: 0;
+    list-style: none;
+}
+
+img {
+    display: block;
+    max-width: 100%;
+}
+
+svg {
+    vertical-align: middle;
+}
+
+input,
+button,
+select,
+textarea {
+    font: inherit;
+}
+
+code, kbd, pre, samp {
+    font-weight: normal;
+    color: rgba(black, .7);
+}
+
+fieldset {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+label {
+    display: block;
+    font-size: 0.9em;
+    font-weight: 700;
+}
+
+hr {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid currentcolor;
+    opacity: 0.2;
+}
+
+::selection {
+    text-shadow: none;
+    background: #cbeafb;
+}
+
+mark {
+    background-color: #fdffb6;
+}
+
+small {
+    font-size: 80%;
+}
+
+sub,
+sup {
+    position: relative;
+    font-size: 75%;
+    line-height: 0;
+    vertical-align: baseline;
+}
+sup {
+    top: -0.5em;
+}
+sub {
+    bottom: -0.25em;
+}
+
+li:not([class]) + li:not([class]) {
+    margin-top: 1em;
+}
+
+a:not([class]) {
+    color: inherit;
+    text-decoration-skip-ink: auto;
+}
+
+a[class] {
+    color: inherit;
+    text-decoration: none;
+    transition: 0.4s ease;
+}
+
+a[class]:hover {
+    transition: 0.2s ease;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin: 0;
+    line-height: 1.15em;
+    font-weight: 600;
+}
+
+h1 {
+    font-size: 4.4rem;
+    letter-spacing: -.5px;
+}
+
+h2 {
+    font-size: 3.4rem;
+}
+
+h3 {
+    font-size: 3rem;
+}
+
+h4 {
+    font-size: 2.4rem;
+}
+
+h5 {
+    font-size: 2.2rem;
+}
+
+h6 {
+    font-size: 2rem;
+}
+
+
