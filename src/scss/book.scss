@@ -1,0 +1,18 @@
+.book {
+    margin-top: 10rem;
+    position: relative;
+
+    &__chart {
+        width: 100%;
+        background-color: rgba(33, 32, 41, 0.507);
+    }
+
+    &__table {
+        width: 100%;
+        border: 1px solid rgba(33, 32, 41, 0.507);
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 10rem;
+    }
+}

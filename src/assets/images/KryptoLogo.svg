@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192.525 56">
+  <defs>
+    <style>
+      .cls-1, .cls-2 {
+        fill: #f3e8ee;
+        font-family: TiemposHeadline-Medium, Tiempos Headline;
+        font-weight: 500;
+      }
+
+      .cls-1 {
+        font-size: 38px;
+      }
+
+      .cls-2 {
+        font-size: 39px;
+      }
+
+      .cls-3 {
+        fill: #0ff4c6;
+      }
+
+      .cls-4 {
+        fill: none;
+        stroke: #0ff4c6;
+      }
+    </style>
+  </defs>
+  <g id="Group_10" data-name="Group 10" transform="translate(-43 -20.467)">
+    <g id="Group_2" data-name="Group 2" transform="translate(31 15)">
+      <text id="Krpyt" class="cls-1" transform="translate(12 45.417)"><tspan x="0" y="0">Krpyt</tspan></text>
+      <text id="nite" class="cls-2" transform="translate(134.525 45.238)"><tspan x="0" y="0">nite</tspan></text>
+      <circle id="Ellipse_1" data-name="Ellipse 1" class="cls-3" cx="11.281" cy="11.281" r="11.281" transform="translate(111.962 22.454)"/>
+      <line id="Line_1" data-name="Line 1" class="cls-4" y2="56" transform="translate(123.287 5.467)"/>
+    </g>
+  </g>
+</svg>

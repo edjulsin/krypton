@@ -1,0 +1,14 @@
+.trending {
+    display: flex;
+    flex-direction: column;
+
+    & > *:not(:first-child) {
+        margin-top: 4rem;
+    }
+
+    &__canvas {
+        background-color: rgba(33, 32, 41, 0.507);
+        border-radius: 3px;
+
+    }
+}

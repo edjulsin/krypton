@@ -1,5 +1,12 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import App from './ui'
 
 
-ReactDOM.render(<h1>My Dashboard</h1>, document.querySelector('.root'))
+const Render = state =>
+    ReactDOM.render(
+        <App state={state} dispatch={(action, payload) => render(state)} />, 
+        document.querySelector('.root')
+    )
+
+Render({})

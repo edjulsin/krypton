@@ -1,0 +1,11 @@
+.main {
+    max-width: 80rem;
+    width: 100%;
+    margin: 5rem auto;
+    position: relative;
+
+    & > *:not(:first-child) {
+        margin-left: 15rem;
+  
+    }
+}

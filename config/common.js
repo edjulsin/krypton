@@ -34,10 +34,7 @@ module.exports = {
                 },
                 {
                     test: /\.(woff(2)?|eot|ttf|otf|svg)$/,
-                    type: 'asset/resource',
-                    generator: {
-                        filename: 'assets/fonts/[name]-[hash][ext]'
-                    }
+                    type: 'asset/inline'
                 }
             ].concat(rules)
         }

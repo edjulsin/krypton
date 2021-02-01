@@ -1,0 +1,12 @@
+.header {
+
+    &__logo {
+        max-width: 20rem;
+        width: 100%;
+        border: 1px solid $darkgrey;
+        border-top: none;
+        border-left: none;
+        padding: 1rem;
+        margin: auto;
+    }
+}
