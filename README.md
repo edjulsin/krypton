@@ -1,5 +1,7 @@
 <div align='center'>
-    <img alt='Krypton' width='200' height='62' src='/src/assets/images/logo/krypton.png' />
+    <a href='https://krypton-navy.vercel.app/' target='_blank'>
+        <img alt='Krypton' width='200' height='62' src='/src/assets/images/logo/krypton.png' />
+    </a>
 </div>
 <br>
 <div align="center">
@@ -7,7 +9,9 @@
 </div>
 <br>
 <div align='center'>
-    <img alt='Krypton Dashboard' src='/src/assets/images/screenshot/Krypton.png' />
+    <a href='https://krypton-navy.vercel.app/' target='_blank'>
+        <img alt='Krypton Dashboard' src='/src/assets/images/screenshot/Krypton.png' />
+    </a>
 </div>
 
-<br>Realtime data used in this application came from [Bitfinex](https://trading.bitfinex.com/t?type=exchange).
+<br>See Krypton live <a href='https://krypton-navy.vercel.app/' target='_blank'>here</a>.
