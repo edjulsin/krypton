@@ -1,5 +1,5 @@
 <div align='center'>
-    <a href='https://krypton-navy.vercel.app/' target='_blank'>
+    <a href='https://krypton-navy.vercel.app/'>
         <img alt='Krypton' width='200' height='62' src='/src/assets/images/logo/krypton.png' />
     </a>
 </div>
@@ -9,9 +9,9 @@
 </div>
 <br>
 <div align='center'>
-    <a href='https://krypton-navy.vercel.app/' target='_blank'>
+    <a href='https://krypton-navy.vercel.app/'>
         <img alt='Krypton Dashboard' src='/src/assets/images/screenshot/Krypton.png' />
     </a>
 </div>
 
-<br>See Krypton live <a href='https://krypton-navy.vercel.app/' target='_blank'>here</a>.
+<br>See Krypton live <a href='https://krypton-navy.vercel.app/'>here</a>.
