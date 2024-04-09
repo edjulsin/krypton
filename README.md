@@ -10,4 +10,4 @@
     <img alt='Krypton Dashboard' src='/src/assets/images/screenshot/Krypton.png' />
 </div>
 
-<br>Realtime data used in this application came from [Bitfinex](https://trading.bitfinex.com/t?type=exchange).<br>If you cloned this project to your machine, use `npm run build` first, followed by `npm run preview`. The app will available at `http://localhost:1234`.
+<br>Realtime data used in this application came from [Bitfinex](https://trading.bitfinex.com/t?type=exchange).
