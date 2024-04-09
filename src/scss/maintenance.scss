@@ -1,0 +1,16 @@
+.maintenance {
+    @include flexCenter;
+    flex-direction: column;
+    height: 100vh;
+    padding: 1rem;
+    row-gap: 1.5rem;
+
+    &-logo {
+        height: 7rem;
+    }
+
+    &-message {
+        font-size: 1.7rem;
+        font-weight: 400;
+    }
+}

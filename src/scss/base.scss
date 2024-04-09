@@ -7,9 +7,9 @@
 html {
     overflow-x: hidden;
     overflow-y: scroll;
+    @include thinScrollBar;
     font-size: 62.5%;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-
 
     @media only screen and (max-width: 35em) {
         & {
@@ -19,11 +19,11 @@ html {
 
     @media only screen and (max-width: 28em) {
         & {
-            font-size: 57.5%;
+            font-size: 58%;
         }   
     }
 
-    @media only screen and (max-width: 25.6em) {
+    @media only screen and (max-width: 26em) {
         & {
             font-size: 56%;
         }   
@@ -41,20 +41,18 @@ html {
 body {
     margin: 0;
     padding: 0;
-    font-size: 1.6rem;
+    font-size: 1.3rem;
     line-height: 1.6em;
-    font-weight: 300;
+    font-weight: 400;
     font-style: normal;
     font-family: $font-sans-serif;
     color: $grey;
     text-rendering: optimizeLegibility;
-    background: $dark;
-    scroll-behavior: smooth;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    background: $black;
 }
 
 p,
+menu,
 ul,
 ol,
 li,
@@ -70,6 +68,10 @@ figcaption,
 blockquote {
     margin: 0;
     padding: 0;
+}
+
+menu[class] {
+    list-style: none;
 }
 
 ul[class],

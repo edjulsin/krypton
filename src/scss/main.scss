@@ -1,11 +1,22 @@
 .main {
-    max-width: 80rem;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: 2fr 1fr;
+    padding: 1rem;
+    gap: 1rem;
     width: 100%;
-    margin: 5rem auto;
-    position: relative;
+    height: 100vh;
+    min-width: 35rem;
+    min-height: 80rem;
+    overflow: hidden;
 
-    & > *:not(:first-child) {
-        margin-left: 15rem;
-  
+    @media only screen and (max-width: 900px) {
+        grid-template-columns: 1fr;
+    }
+
+    & > * {
+        background-color: $dark;
+        padding: 1rem;
+        border-radius: 5px;
     }
 }

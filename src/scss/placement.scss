@@ -1,0 +1,105 @@
+.placement {
+    &-inline {
+        @include flexCenter;
+    }
+
+    &-block {
+        @include flexCenter;
+        @include fullSize;
+    }
+
+    &-target {
+        @include fullSize;
+    }
+
+    &-tooltip {
+        @include flexCenter;
+        white-space: nowrap;
+        min-width: max-content;
+        color: $white;
+        padding: .3rem .8rem;
+        font-size: 1.3rem;
+        font-weight: 300;
+    }
+
+    &-lazy {
+        &-left {
+            & > *:first-child {
+                visibility: hidden;
+            }
+            &:hover {
+                & > *:first-child {
+                    visibility: visible;
+                }
+            }
+        }
+        &-right {
+            & > *:last-child {
+                visibility: hidden;
+            }
+            &:hover {
+                & > *:last-child {
+                    visibility: visible;
+                }
+            }
+        }
+    }
+
+    &-list {
+        &-grid {
+            width: 100%;
+            column-gap: .2rem;
+            align-items: center;
+        }
+
+        &-left {
+            text-align: center;
+        }
+
+        &-center {
+            text-align: left;
+        }
+
+        &-right {
+            text-align: center;
+        }
+
+        &-separator {
+            display: block;
+            height: 1px;
+            background-color: $border;
+        }
+    }
+
+    &-lists {
+        overflow-x: hidden;
+        overflow-y: auto;
+        @include thinScrollBar;
+        font-weight: 300;
+
+        &-scrollenabled {
+            scrollbar-gutter: stable;
+        }
+
+        &-scrolldisabled {
+            scrollbar-gutter: auto;
+        }
+
+        &-expanded {
+            display: block;
+        }
+
+        &-collapsed {
+            display: none;
+        }
+    }
+
+    &-data {
+        top: 0;
+        left: 0;
+        position: absolute;
+        @include outline;
+        @include background;
+        border-radius: 5px;
+    }
+}

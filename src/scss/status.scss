@@ -1,0 +1,24 @@
+.status {
+    @include flexCenter;
+    border-radius: 5px;
+    padding: .3rem .6rem;
+    cursor: pointer;
+
+    & > * {
+        @include flexCenter;
+    }
+
+    &-icon {
+        &-success {
+            color: $up;
+        }
+    
+        &-failed {
+            color: $down;
+        }
+    
+        &-network {
+            color: $eq;
+        }
+    }
+}

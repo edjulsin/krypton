@@ -2,8 +2,28 @@
     color: $darkgrey;
     font-weight: 400;
     font-size: 1.6rem;
+    margin-top: auto;
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-top: auto;
+    display: none;
+
+    &-author {
+        display: flex;
+        align-items: center;
+        
+        &::after {
+            content: '';
+            height: 1px;
+            width: 10rem;
+            margin-left: 1rem;
+            background: linear-gradient(to right, rgba($darkgrey, .3), rgba($darkgrey, .1));
+
+            @media only screen and (max-width: 37.5em) {
+                & {
+                    display: none;
+                }
+            }
+
+        }
+    }
 }

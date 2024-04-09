@@ -1,0 +1,43 @@
+.number {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    height: 100%;
+    border-radius: 5px;
+
+    @include formEffect;
+   
+    &-input {
+        @include fullSize;
+        background-color: transparent;
+        outline: none;
+        border: none;
+        color: currentColor;
+        margin: 0;
+        padding: 0px 5px;
+        pointer-events: auto;
+        appearance: none;
+    }
+
+    &-menu {
+        @include flexCenter;
+        flex-direction: column;
+        width: 1.8rem;
+        height: 3.2rem;
+
+        &-list {
+            @include flexCenter;
+            height: 100%;
+            width: 100%;
+        }
+
+        &-increase {
+            background-image: url('../assets/images/misc/angleup.svg');   
+            background-position: center;
+        }
+
+        &-decrease {
+            background-image: url('../assets/images/misc/angledown.svg');   
+            background-position: center;
+        }
+    }
+}

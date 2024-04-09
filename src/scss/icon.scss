@@ -1,0 +1,31 @@
+.icon {
+    image-rendering: pixelated;
+
+    &-supersmall {
+        @include size(10px, 10px);
+    }
+
+    &-small {
+        @include size(15px, 15px);
+    }
+
+    &-smallmedium {
+        @include size(20px, 20px);
+    }
+
+    &-medium {
+        @include size(25px, 25px);
+    }
+
+    &-mediumlarge {
+        @include size(30px, 30px);
+    }
+
+    &-large {
+        @include size(35px, 35px);
+    }
+
+    &-superlarge {
+        @include size(40px, 40px);
+    }
+}

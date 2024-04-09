@@ -1,18 +1,41 @@
 .book {
-    margin-top: 10rem;
-    position: relative;
+    @include fullSize;
+    display: flex;
+    flex-direction: column;
+    min-width: 33rem;
+    min-height: 23rem;
 
-    &__chart {
-        width: 100%;
-        background-color: rgba(33, 32, 41, 0.507);
+    &-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
 
-    &__table {
+    &-title {
+        font-size: 1.5rem;
+        color: $darkwhite;
+    }
+
+    &-control {
+        @include flexCenter;
+        column-gap: 10px;
+    }
+
+    &-loader {
+        @include flexCenter;
         width: 100%;
-        border: 1px solid rgba(33, 32, 41, 0.507);
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 10rem;
+        height: 100%;
+    }
+
+    &-slider {
+        background-color: $black;
+        border-radius: 10px;
+        width: 8rem;
+        height: 1.5rem;
+        
+        & > * {
+            width: 1.5rem;
+            height: 1.5rem;
+        }
     }
 }

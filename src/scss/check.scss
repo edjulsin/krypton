@@ -1,0 +1,28 @@
+.check {
+    @include size(2.1rem, 2.1rem);
+    margin: 0px;
+    padding: 0px;
+    outline: none;
+    appearance: none;
+    cursor: pointer;
+    border-width: 1px;
+    border-style: solid;
+    transition: background-color 150ms ease-in-out, border-color 150ms ease-in-out;
+    border-radius: 5px;
+
+    &-enabled {
+        background-image: url('../assets/images/misc/check.svg');   
+        background-position: center;
+        background-color: $blue;
+        border-color: $blue;
+    }
+
+    &-disabled {
+        background-color: transparent;
+        border-color: $darkwhite; 
+
+        &:hover {
+            border-color: $mediumwhite;
+        }
+    }
+}

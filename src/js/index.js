@@ -1,12 +1,8 @@
+
+import { querySelector } from './utils'
 import React from 'react'
-import ReactDOM from 'react-dom'
-import App from './ui'
+import UI from './ui'
 
+import { createRoot } from 'react-dom/client'
 
-const Render = state =>
-    ReactDOM.render(
-        <App state={state} dispatch={(action, payload) => render(state)} />, 
-        document.querySelector('.root')
-    )
-
-Render({})
+createRoot(querySelector('.root')).render(<UI />)

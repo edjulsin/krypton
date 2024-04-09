@@ -1,0 +1,72 @@
+@mixin roundCorner {
+    border-radius: 5px;
+}
+
+@mixin size($width: auto, $height: auto) {
+    width: $width;
+    height: $height;
+}
+
+@mixin fullSize {
+    @include size(100%, 100%);
+}
+
+@mixin maxSize($maxWidth: none, $maxHeight: none) {
+    max-width: $maxWidth;
+    max-height: $maxHeight;
+}
+
+@mixin minSize($minWidth: auto, $minHeight: auto) {
+    min-width: $minWidth;
+    min-height: $minHeight;
+}
+
+@mixin outline {
+    border: 1px solid $border;
+}
+
+@mixin flexCenter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@mixin inlineFlexCenter {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@mixin highlighted {
+    background-color: $highlight;
+    color: $white;
+    text-decoration-color: $white;
+}
+
+@mixin background {
+    background-color: $black;
+}
+
+@mixin thinScrollBar {
+    scrollbar-width: thin;
+    scrollbar-color: $blackwhite $black;
+    scroll-behavior: smooth;
+}
+
+@mixin formEffect($border-color: $border) {
+    color: $darkwhite;
+    border-style: solid;
+    border-width: 1px;
+    border-color: $border-color;
+    transition: border 150ms ease-in-out, color 150ms ease-in-out;
+
+    &:hover {
+        color: $darkwhite;
+        border-color: $darkwhite;
+    }
+
+    &:focus-within {
+        color: $mediumwhite;
+        border-color: $mediumwhite;
+    }
+}

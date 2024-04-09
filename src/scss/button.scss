@@ -1,0 +1,89 @@
+.button {
+    background-color: transparent;
+    text-align: center;
+    margin: 0px;
+    outline: none;
+    white-space: nowrap;
+    cursor: pointer;
+    border: none;
+    transition: background-color 150ms ease-in-out, color 150ms ease-in-out;
+    overflow: hidden;
+    min-width: max-content;
+    min-height: max-content;
+
+    &-outlined {
+        @include outline;
+    }
+
+    &-inline {
+        @include flexCenter;
+    }
+
+    &-block {
+        @include flexCenter;
+        @include fullSize;
+    }
+
+    &-slim {
+        padding: 0rem;
+    }
+
+    &-wide {
+        padding: 0rem .5rem;
+    }
+
+    &-tall {
+        padding: .3rem 0rem;
+    }
+
+    &-big {
+        padding: .3rem .5rem;
+    }
+
+    &-round {
+        border-radius: 5px;
+    }
+
+    &-dark {
+        color: $darkwhite;
+
+        &:hover {
+            @include highlighted;
+        }
+    }
+
+    &-medium {
+        color: $mediumwhite;
+
+        &:hover {
+            @include highlighted;
+        }
+    }
+
+    &-white {
+        color: $white;
+
+        &:hover {
+            @include highlighted;
+        }
+    }
+
+    &-highlighted {
+        @include highlighted;
+    }
+
+    &-underlined {
+        text-decoration-line: underline;
+    }
+
+    &-disabled {
+        color: rgba(255, 255, 255, .2);
+        cursor: not-allowed;
+
+        &:hover {
+            color: rgba(255, 255, 255, .2);
+            background-color: transparent;
+        }
+    }
+
+}

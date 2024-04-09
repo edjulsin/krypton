@@ -1,0 +1,10 @@
+.canvas {
+    @include fullSize;
+    position: relative;
+    user-select: none;
+
+    & > * {
+        position: absolute;
+        background-color: transparent;
+    }
+}
