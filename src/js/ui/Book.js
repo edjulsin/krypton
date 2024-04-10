@@ -1036,11 +1036,12 @@ const BookChart = ({
                     volumeDomain(sBids, sAsks)
                 )
 
-                const diff = width - paddingX - paddingX
-                const t0 = x / diff
+                const t0 = x / width
                 const t1 = 1 - t0
+                const a = t0 * width
+                const b = t1 * width
 
-                const xBid = Math.min(t0, t1) * diff
+                const xBid = Math.min(a, b)
                 const pBid = bXScale.invert(xBid)
                 const iBid = binarySearch(head, pBid, sBids)
                 const oBid = head(sBids[ iBid ]) > pBid ? -1 : 0
@@ -1048,7 +1049,7 @@ const BookChart = ({
                     last(sBids[ Math.max(0, iBid + oBid) ])
                 )
 
-                const xAsk = Math.max(t0, t1) * diff
+                const xAsk = Math.max(a, b)
                 const pAsk = aXScale.invert(xAsk)
                 const iAsk = binarySearch(head, pAsk, sAsks)
                 const oAsk = head(sAsks[ iAsk ]) > pAsk ? - 1 : 0
