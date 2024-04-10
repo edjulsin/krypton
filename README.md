@@ -5,7 +5,7 @@
 </div>
 <br>
 <div align="center">
-    <strong>Krypton</strong> is live cryptocurrency dashboard application build with Javascript using React.js.
+    <strong>Krypton</strong> is real-time cryptocurrency dashboard build with Javascript using React.js.
 </div>
 <br>
 <div align='center'>
