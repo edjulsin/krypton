@@ -916,6 +916,8 @@ const BookChart = ({
                         : ([ ...priceLabels, ...changeLabels ])
                 })
             }
+        } else {
+            front.clearRect(0, 0, width, height)
         }
     }
 
