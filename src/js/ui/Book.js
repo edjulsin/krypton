@@ -415,7 +415,7 @@ const volumeTransform = zoomIdentity.translate(0, 50 - 50 * .98).scale(.98)
 const drawPoints = ({ context, points }) => {
     const path = new Path2D()
     points.forEach(([ x, y ]) => {
-        path.arc(floor(x) + .5, floor(y) + .5, 2, 0, 2 * Math.PI)
+        path.arc(round(x), round(y), 2, 0, 2 * Math.PI)
         path.closePath()
     })
 
@@ -429,8 +429,8 @@ const drawOverlays = ({ context, overlays }) => {
     context.fillStyle = overlay
     overlays.forEach(([ start, end ]) =>
         context.fillRect(
-            ...start,
-            ...zipWithSubtract(end, start)
+            ...start.map(round),
+            ...zipWithSubtract(end, start).map(round)
         )
     )
 }
@@ -1036,22 +1036,22 @@ const BookChart = ({
                     volumeDomain(sBids, sAsks)
                 )
 
-                const interpolateBid = scaleLinear().domain([ paddingX, center ])
-                const interpolateAsk = scaleLinear().domain([ center, width - paddingX ])
+                const diff = width - paddingX - paddingX
+                const t0 = x / diff
+                const t1 = 1 - t0
 
-                const withinBidBound = clamp(paddingX, center, x) === x
-                const withinAskBound = clamp(center, width - paddingX, x) === x
-
-                const xBid = withinBidBound ? x : interpolateBid.invert(1 - interpolateAsk(x))
-                const iBid = binarySearch(head, bXScale.invert(xBid), sBids)
-                const oBid = head(sBids[ iBid ]) > bXScale.invert(xBid) ? -1 : 0
+                const xBid = Math.min(t0, t1) * diff
+                const pBid = bXScale.invert(xBid)
+                const iBid = binarySearch(head, pBid, sBids)
+                const oBid = head(sBids[ iBid ]) > pBid ? -1 : 0
                 const yBid = bYScale(
                     last(sBids[ Math.max(0, iBid + oBid) ])
                 )
 
-                const xAsk = withinAskBound ? x : interpolateAsk.invert(1 - interpolateBid(x))
-                const iAsk = binarySearch(head, aXScale.invert(xAsk), sAsks)
-                const oAsk = head(sAsks[ iAsk ]) > aXScale.invert(xAsk) ? - 1 : 0
+                const xAsk = Math.max(t0, t1) * diff
+                const pAsk = aXScale.invert(xAsk)
+                const iAsk = binarySearch(head, pAsk, sAsks)
+                const oAsk = head(sAsks[ iAsk ]) > pAsk ? - 1 : 0
                 const yAsk = aYScale(
                     last(sAsks[ Math.max(0, iAsk + oAsk) ])
                 )
