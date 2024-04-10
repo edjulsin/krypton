@@ -641,289 +641,19 @@ const BookChart = ({
     const [ [ bid ], setBid ] = useState([ [], [] ])
     const [ [ ask ], setAsk ] = useState([ [], [] ])
 
+    const [ cursor, setCursor ] = useState([])
+
     const onZoom = useCallback(({ scaled, dk }) => setZoom(zoom =>
         scaled ? clampZoom(dk * zoom) : zoom
     ), [])
 
-    const onPointerMove = e => {
-        const [ x, y ] = pointer(e, e.target)
-        const [ width, height ] = size
-        const transform = scaleZoomTo([ width / 2, 0 ], zoom, zoomIdentity)
-        const textHeight = defaultFontSize * 1.5
-
-        const measureX = xMeasure(front)
-
-        const paddingX = add(
-            measureX(
-                formatVolume(
-                    maxVolume(bid, ask)
-                )
-            ),
-            tickLength
-        )
-        const paddingY = textHeight + tickLength
-
-        const withinXBound = clamp(paddingX, width - paddingX, x) === x
-        const withinYBound = clamp(paddingY, height - paddingY, y) === y
-
-        if(withinXBound && withinYBound) {
-            const [ eqPrice, eqChange ] = calculateEq(bid, ask)
-
-            const center = round(width / 2)
-
-            const [ bXScale, aXScale ] = zipWith(
-                compose(rescaleX(transform), scale),
-                [ [ paddingX, center ], [ center, width - paddingX ] ],
-                priceDomain(bid, ask)
-            )
-
-            const sBids = sliceBid(bXScale, bid)
-            const sAsks = sliceAsk(aXScale, ask)
-
-            const sufficient = [ sBids, sAsks ].every(data => data.length > 1)
-
-            if(sufficient) {
-                const [ bYScale, aYScale ] = zipWith(
-                    compose(rescaleY(volumeTransform), scale),
-                    [ [ height - paddingY, paddingY ], [ height - paddingY, paddingY ] ],
-                    volumeDomain(sBids, sAsks)
-                )
-
-                const interpolateBid = scaleLinear().domain([ paddingX, center ])
-                const interpolateAsk = scaleLinear().domain([ center, width - paddingX ])
-
-                const withinBidBound = clamp(paddingX, center, x) === x
-                const withinAskBound = clamp(center, width - paddingX, x) === x
-
-                const xBid = withinBidBound ? x : interpolateBid.invert(1 - interpolateAsk(x))
-                const iBid = binarySearch(head, bXScale.invert(xBid), sBids)
-                const oBid = head(sBids[ iBid ]) > bXScale.invert(xBid) ? -1 : 0
-                const yBid = bYScale(
-                    last(sBids[ Math.max(0, iBid + oBid) ])
-                )
-
-                const xAsk = withinAskBound ? x : interpolateAsk.invert(1 - interpolateBid(x))
-                const iAsk = binarySearch(head, aXScale.invert(xAsk), sAsks)
-                const oAsk = head(sAsks[ iAsk ]) > aXScale.invert(xAsk) ? - 1 : 0
-                const yAsk = aYScale(
-                    last(sAsks[ Math.max(0, iAsk + oAsk) ])
-                )
-
-                const formatPrice = priceFormatter(
-                    precisionFixed(
-                        absDiff(
-                            ...take(2, bid).map(head)
-                        )
-                    )
-                )
-
-                const bidPrice = formatPrice(
-                    bXScale.invert(xBid)
-                )
-
-                const askPrice = formatPrice(
-                    aXScale.invert(xAsk)
-                )
-
-                const bidVolume = formatVolume(
-                    bYScale.invert(yBid)
-                )
-
-                const askVolume = formatVolume(
-                    aYScale.invert(yAsk)
-                )
-
-                const bidPriceWidth = measureX(bidPrice)
-                const askPriceWidth = measureX(askPrice)
-                const bidVolumeWidth = measureX(bidVolume)
-                const askVolumeWidth = measureX(askVolume)
-
-                const change = formatCursorChange(absDiff(bXScale.invert(xBid), eqPrice) / eqPrice)
-
-                const changeWidth = measureX(change)
-                const changeHeight = textHeight
-
-                const priceLabels = [
-                    {
-                        message: bidPrice,
-                        x: clamp(0, center - bidPriceWidth / 2, xBid),
-                        y: height - paddingY + tickLength + textHeight / 2,
-                        width: bidPriceWidth,
-                        height: textHeight,
-                        color: defaultUpColor,
-                        fill: defaultLabelFill
-                    },
-                    {
-                        message: askPrice,
-                        x: clamp(center + askPriceWidth / 2, width - paddingX, xAsk),
-                        y: height - paddingY + tickLength + textHeight / 2,
-                        width: askPriceWidth,
-                        height: textHeight,
-                        color: defaultDownColor,
-                        fill: defaultLabelFill
-                    }
-                ]
-
-                const volLabels = [
-                    {
-                        message: bidVolume,
-                        x: paddingX - tickLength - bidVolumeWidth / 2,
-                        y: yBid,
-                        width: bidVolumeWidth,
-                        height: textHeight,
-                        color: defaultUpColor,
-                        fill: defaultLabelFill
-                    },
-                    {
-                        message: askVolume,
-                        x: width - paddingX + tickLength + askVolumeWidth / 2,
-                        y: yAsk,
-                        width: askVolumeWidth,
-                        height: textHeight,
-                        color: defaultDownColor,
-                        fill: defaultLabelFill
-                    }
-                ]
-
-                const changeLabels = [
-                    {
-                        message: change,
-                        x: (xBid + center) / 2,
-                        y: yBid,
-                        width: changeWidth,
-                        height: changeHeight,
-                        color: defaultUpColor,
-                        fill: defaultLabelFill
-                    },
-                    {
-                        message: change,
-                        x: (center + xAsk) / 2,
-                        y: yAsk,
-                        width: changeWidth,
-                        height: changeHeight,
-                        color: defaultDownColor,
-                        fill: defaultLabelFill
-                    }
-                ]
-
-                const bidVolTick = [
-                    [ [ paddingX - tickLength, yBid ], [ paddingX, yBid ] ],
-                    [ [ xBid, height - paddingY ], [ xBid, height - paddingY + tickLength ] ]
-                ]
-                const askVolTick = [
-                    [ [ width - paddingX, yAsk ], [ width - paddingX + tickLength, yAsk ] ],
-                    [ [ xAsk, height - paddingY ], [ xAsk, height - paddingY + tickLength ] ]
-                ]
-
-                const changeText = formatEqChange(eqChange)
-                const paddingXCenter = measureX(changeText) / 2
-                const paddingYCenter = textHeight
-
-                front.clearRect(0, 0, width, height)
-                front.setTransform(1, 0, 0, 1, 0, 0)
-                front.scale(devicePixelRatio, devicePixelRatio)
-
-                front.save()
-
-                drawClip({
-                    context: front,
-                    points: [
-                        [ paddingX, paddingY - paddingYCenter / 2 ],
-                        [ center - paddingXCenter, paddingY - paddingYCenter / 2 ],
-                        [ center - paddingXCenter, paddingY + paddingYCenter ],
-                        [ center + paddingXCenter, paddingY + paddingYCenter ],
-                        [ center + paddingXCenter, paddingY - paddingYCenter / 2 ],
-                        [ width - paddingX, paddingY - paddingYCenter / 2 ],
-                        [ width - paddingX, height - paddingY ],
-                        [ paddingX, height - paddingY ]
-                    ]
-                })
-
-                drawOverlays({
-                    context: front,
-                    overlays: [
-                        [
-                            [ paddingX, paddingY ],
-                            [ xBid, height - paddingY ]
-                        ],
-                        [
-                            [ xAsk, paddingY ],
-                            [ width - paddingX, height - paddingY ]
-                        ]
-                    ]
-                })
-
-                drawLines({
-                    context: front,
-                    stroke: {
-                        color: defaultUpColor,
-                        thickness: 1,
-                        style: 'dashed'
-                    },
-                    lines: [
-                        [ [ paddingX, yBid ], [ center, yBid ] ],
-                        [ [ xBid, paddingY ], [ xBid, height - paddingY ] ]
-                    ]
-                })
-
-                drawLines({
-                    context: front,
-                    stroke: {
-                        color: defaultDownColor,
-                        thickness: 1,
-                        style: 'dashed'
-                    },
-                    lines: [
-                        [ [ xAsk, paddingY ], [ xAsk, height - paddingY ] ],
-                        [ [ center, yAsk ], [ width - paddingX, yAsk ] ]
-                    ]
-                })
-
-                front.restore()
-
-                drawPoints({
-                    context: front,
-                    points: [
-                        [ xBid, yBid ],
-                        [ xAsk, yAsk ]
-                    ]
-                })
-
-                drawLines({
-                    context: front,
-                    stroke: {
-                        color: defaultUpColor,
-                        thickness: 1,
-                        style: 'solid'
-                    },
-                    lines: showVolTick ? bidVolTick : ([])
-                })
-
-                drawLines({
-                    context: front,
-                    stroke: {
-                        color: defaultDownColor,
-                        thickness: 1,
-                        style: 'solid'
-                    },
-                    lines: showVolTick ? askVolTick : ([])
-                })
-
-                drawLabels({
-                    context: front,
-                    labels: showVolTick
-                        ? ([ ...priceLabels, ...volLabels, ...changeLabels ])
-                        : ([ ...priceLabels, ...changeLabels ])
-                })
-            }
-        } else {
-            front.clearRect(0, 0, width, height)
-        }
-    }
+    const onPointerMove = useCallback(e => setCursor(
+        pointer(e, e.target)
+    ), [])
 
     const onPointerEnter = onPointerMove
 
-    const onPointerLeave = _ => front.clearRect(0, 0, ...size)
+    const onPointerLeave = useCallback(_ => setCursor([]), [])
 
     useEffect((symbol, precision) => {
         const splitBook = reduce((splitted, book) => {
@@ -1263,6 +993,281 @@ const BookChart = ({
             context.setTransform(1, 0, 0, 1, 0, 0)
         }
     }, [ back, size, zoom, bid, ask, tick, showVolTick ])
+
+    useLayoutEffect((context, [ width, height ], zoom, bid, ask, [ x, y ]) => {
+        const transform = scaleZoomTo([ width / 2, 0 ], zoom, zoomIdentity)
+        const textHeight = defaultFontSize * 1.5
+
+        const measureX = xMeasure(context)
+
+        const paddingX = add(
+            measureX(
+                formatVolume(
+                    maxVolume(bid, ask)
+                )
+            ),
+            tickLength
+        )
+        const paddingY = textHeight + tickLength
+
+        const withinXBound = clamp(paddingX, width - paddingX, x) === x
+        const withinYBound = clamp(paddingY, height - paddingY, y) === y
+
+        if(withinXBound && withinYBound) {
+            const [ eqPrice, eqChange ] = calculateEq(bid, ask)
+
+            const center = round(width / 2)
+
+            const [ bXScale, aXScale ] = zipWith(
+                compose(rescaleX(transform), scale),
+                [ [ paddingX, center ], [ center, width - paddingX ] ],
+                priceDomain(bid, ask)
+            )
+
+            const sBids = sliceBid(bXScale, bid)
+            const sAsks = sliceAsk(aXScale, ask)
+
+            const sufficient = [ sBids, sAsks ].every(data => data.length > 1)
+
+            if(sufficient) {
+                const [ bYScale, aYScale ] = zipWith(
+                    compose(rescaleY(volumeTransform), scale),
+                    [ [ height - paddingY, paddingY ], [ height - paddingY, paddingY ] ],
+                    volumeDomain(sBids, sAsks)
+                )
+
+                const interpolateBid = scaleLinear().domain([ paddingX, center ])
+                const interpolateAsk = scaleLinear().domain([ center, width - paddingX ])
+
+                const withinBidBound = clamp(paddingX, center, x) === x
+                const withinAskBound = clamp(center, width - paddingX, x) === x
+
+                const xBid = withinBidBound ? x : interpolateBid.invert(1 - interpolateAsk(x))
+                const iBid = binarySearch(head, bXScale.invert(xBid), sBids)
+                const oBid = head(sBids[ iBid ]) > bXScale.invert(xBid) ? -1 : 0
+                const yBid = bYScale(
+                    last(sBids[ Math.max(0, iBid + oBid) ])
+                )
+
+                const xAsk = withinAskBound ? x : interpolateAsk.invert(1 - interpolateBid(x))
+                const iAsk = binarySearch(head, aXScale.invert(xAsk), sAsks)
+                const oAsk = head(sAsks[ iAsk ]) > aXScale.invert(xAsk) ? - 1 : 0
+                const yAsk = aYScale(
+                    last(sAsks[ Math.max(0, iAsk + oAsk) ])
+                )
+
+                const formatPrice = priceFormatter(
+                    precisionFixed(
+                        absDiff(
+                            ...take(2, bid).map(head)
+                        )
+                    )
+                )
+
+                const bidPrice = formatPrice(
+                    bXScale.invert(xBid)
+                )
+
+                const askPrice = formatPrice(
+                    aXScale.invert(xAsk)
+                )
+
+                const bidVolume = formatVolume(
+                    bYScale.invert(yBid)
+                )
+
+                const askVolume = formatVolume(
+                    aYScale.invert(yAsk)
+                )
+
+                const bidPriceWidth = measureX(bidPrice)
+                const askPriceWidth = measureX(askPrice)
+                const bidVolumeWidth = measureX(bidVolume)
+                const askVolumeWidth = measureX(askVolume)
+
+                const change = formatCursorChange(absDiff(bXScale.invert(xBid), eqPrice) / eqPrice)
+
+                const changeWidth = measureX(change)
+                const changeHeight = textHeight
+
+                const priceLabels = [
+                    {
+                        message: bidPrice,
+                        x: clamp(0, center - bidPriceWidth / 2, xBid),
+                        y: height - paddingY + tickLength + textHeight / 2,
+                        width: bidPriceWidth,
+                        height: textHeight,
+                        color: defaultUpColor,
+                        fill: defaultLabelFill
+                    },
+                    {
+                        message: askPrice,
+                        x: clamp(center + askPriceWidth / 2, width - paddingX, xAsk),
+                        y: height - paddingY + tickLength + textHeight / 2,
+                        width: askPriceWidth,
+                        height: textHeight,
+                        color: defaultDownColor,
+                        fill: defaultLabelFill
+                    }
+                ]
+
+                const volLabels = [
+                    {
+                        message: bidVolume,
+                        x: paddingX - tickLength - bidVolumeWidth / 2,
+                        y: yBid,
+                        width: bidVolumeWidth,
+                        height: textHeight,
+                        color: defaultUpColor,
+                        fill: defaultLabelFill
+                    },
+                    {
+                        message: askVolume,
+                        x: width - paddingX + tickLength + askVolumeWidth / 2,
+                        y: yAsk,
+                        width: askVolumeWidth,
+                        height: textHeight,
+                        color: defaultDownColor,
+                        fill: defaultLabelFill
+                    }
+                ]
+
+                const changeLabels = [
+                    {
+                        message: change,
+                        x: (xBid + center) / 2,
+                        y: yBid,
+                        width: changeWidth,
+                        height: changeHeight,
+                        color: defaultUpColor,
+                        fill: defaultLabelFill
+                    },
+                    {
+                        message: change,
+                        x: (center + xAsk) / 2,
+                        y: yAsk,
+                        width: changeWidth,
+                        height: changeHeight,
+                        color: defaultDownColor,
+                        fill: defaultLabelFill
+                    }
+                ]
+
+                const bidVolTick = [
+                    [ [ paddingX - tickLength, yBid ], [ paddingX, yBid ] ],
+                    [ [ xBid, height - paddingY ], [ xBid, height - paddingY + tickLength ] ]
+                ]
+                const askVolTick = [
+                    [ [ width - paddingX, yAsk ], [ width - paddingX + tickLength, yAsk ] ],
+                    [ [ xAsk, height - paddingY ], [ xAsk, height - paddingY + tickLength ] ]
+                ]
+
+                const changeText = formatEqChange(eqChange)
+                const paddingXCenter = measureX(changeText) / 2
+                const paddingYCenter = textHeight
+
+                context.scale(devicePixelRatio, devicePixelRatio)
+
+                context.save()
+
+                drawClip({
+                    context: context,
+                    points: [
+                        [ paddingX, paddingY - paddingYCenter / 2 ],
+                        [ center - paddingXCenter, paddingY - paddingYCenter / 2 ],
+                        [ center - paddingXCenter, paddingY + paddingYCenter ],
+                        [ center + paddingXCenter, paddingY + paddingYCenter ],
+                        [ center + paddingXCenter, paddingY - paddingYCenter / 2 ],
+                        [ width - paddingX, paddingY - paddingYCenter / 2 ],
+                        [ width - paddingX, height - paddingY ],
+                        [ paddingX, height - paddingY ]
+                    ]
+                })
+
+                drawOverlays({
+                    context: context,
+                    overlays: [
+                        [
+                            [ paddingX, paddingY ],
+                            [ xBid, height - paddingY ]
+                        ],
+                        [
+                            [ xAsk, paddingY ],
+                            [ width - paddingX, height - paddingY ]
+                        ]
+                    ]
+                })
+
+                drawLines({
+                    context: context,
+                    stroke: {
+                        color: defaultUpColor,
+                        thickness: 1,
+                        style: 'dashed'
+                    },
+                    lines: [
+                        [ [ paddingX, yBid ], [ center, yBid ] ],
+                        [ [ xBid, paddingY ], [ xBid, height - paddingY ] ]
+                    ]
+                })
+
+                drawLines({
+                    context: context,
+                    stroke: {
+                        color: defaultDownColor,
+                        thickness: 1,
+                        style: 'dashed'
+                    },
+                    lines: [
+                        [ [ xAsk, paddingY ], [ xAsk, height - paddingY ] ],
+                        [ [ center, yAsk ], [ width - paddingX, yAsk ] ]
+                    ]
+                })
+
+                context.restore()
+
+                drawPoints({
+                    context: context,
+                    points: [
+                        [ xBid, yBid ],
+                        [ xAsk, yAsk ]
+                    ]
+                })
+
+                drawLines({
+                    context: context,
+                    stroke: {
+                        color: defaultUpColor,
+                        thickness: 1,
+                        style: 'solid'
+                    },
+                    lines: showVolTick ? bidVolTick : ([])
+                })
+
+                drawLines({
+                    context: context,
+                    stroke: {
+                        color: defaultDownColor,
+                        thickness: 1,
+                        style: 'solid'
+                    },
+                    lines: showVolTick ? askVolTick : ([])
+                })
+
+                drawLabels({
+                    context: context,
+                    labels: showVolTick
+                        ? ([ ...priceLabels, ...volLabels, ...changeLabels ])
+                        : ([ ...priceLabels, ...changeLabels ])
+                })
+            }
+        }
+
+        return () => {
+            context.clearRect(0, 0, width, height)
+            context.setTransform(1, 0, 0, 1, 0, 0)
+        }
+    }, [ front, size, zoom, bid, ask, cursor ])
 
     return (
         loading
