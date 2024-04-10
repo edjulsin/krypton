@@ -988,6 +988,7 @@ const drawMainChart = ({
         height: Math.max(...volumeScale.range()),
         timeScale: timeScale,
         priceScale: volumeScale,
+        order: order,
         chart: {
             price: -1,
             previous: chart.previous,
@@ -1003,7 +1004,8 @@ const drawMainChart = ({
             priceScale: ps,
             width: width,
             height: height,
-            chart: chart
+            chart: chart,
+            order: order
         })
 
         drawPulse({
@@ -1031,7 +1033,8 @@ const drawMainChart = ({
             priceScale: ps,
             width: width,
             height: height,
-            chart: chart
+            chart: chart,
+            order: order
         })
     }
 

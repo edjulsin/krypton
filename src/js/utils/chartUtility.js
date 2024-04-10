@@ -1000,9 +1000,10 @@ const highLowChart = ({ context, data, timeScale, priceScale, chart, width }) =>
     })
 }
 
-const HLCChart = ({ context, data, timeScale, priceScale, chart, height }) => {
+const HLCChart = ({ context, data, timeScale, priceScale, chart, height, order }) => {
     const ts = compose(round, timeScale, P.mts)
     const ps = o(round, priceScale)
+    const [ min, max ] = order < 0 ? ([ 0, height ]) : ([ height, 0 ])
     const [ s, ...rest ] = data
     const e = last(rest)
 
@@ -1051,31 +1052,31 @@ const HLCChart = ({ context, data, timeScale, priceScale, chart, height }) => {
         )
     })
 
-    const topClip = new Path2D(highStroke)
-    const bottomClip = new Path2D(lowStroke)
+    const highClip = new Path2D(highStroke)
+    const lowClip = new Path2D(lowStroke)
 
-    const topFill = new Path2D(closeStroke)
-    const bottomFill = new Path2D(closeStroke)
+    const highFill = new Path2D(closeStroke)
+    const lowFill = new Path2D(closeStroke)
 
-    topClip.lineTo(m, height)
-    topClip.lineTo(x, height)
+    highClip.lineTo(m, min)
+    highClip.lineTo(x, min)
 
-    bottomClip.lineTo(m, 0)
-    bottomClip.lineTo(x, 0)
+    lowClip.lineTo(m, max)
+    lowClip.lineTo(x, max)
 
-    topFill.lineTo(m, 0)
-    topFill.lineTo(x, 0)
+    highFill.lineTo(m, max)
+    highFill.lineTo(x, max)
 
-    bottomFill.lineTo(m, height)
-    bottomFill.lineTo(x, height)
+    lowFill.lineTo(m, min)
+    lowFill.lineTo(x, min)
 
     context.save()
-    context.clip(topClip)
-    context.clip(bottomClip)
+    context.clip(highClip)
+    context.clip(lowClip)
     context.fillStyle = head(chart.fill)
-    context.fill(topFill)
+    context.fill(highFill)
     context.fillStyle = last(chart.fill)
-    context.fill(bottomFill)
+    context.fill(lowFill)
     context.restore()
 
     context.setLineDash(strokePattern.solid)
