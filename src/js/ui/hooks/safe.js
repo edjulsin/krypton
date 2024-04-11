@@ -1,11 +1,7 @@
-import { none, ifElse, is, identity, always, compose } from 'ramda'
+import { none, is, always, compose, unless } from 'ramda'
 import { nilOrEmpty } from '../../utils'
 
-const safeReturn = ifElse(
-    is(Function),
-    identity,
-    always
-)
+const safeReturn = unless(is(Function), always)
 
 const safeCall = (cb, ...args) =>
     cb.length === 0 || none(nilOrEmpty, args)

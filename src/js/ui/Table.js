@@ -620,14 +620,11 @@ const Table = ({ maps, onSymbolChange }) => {
 
         const noop = () => { }
 
-        const run = setTimeout(
-            () => init()
-                .then(() => setInterval(() => task().catch(noop), 15000))
-                .catch(noop),
-            1500
+        const interval = init().then(() =>
+            setInterval(() => task().catch(noop), 15000)
         )
 
-        return () => clearTimeout(run)
+        return () => interval.then(clearInterval).catch(noop)
     }, [])
 
     return (
