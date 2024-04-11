@@ -820,7 +820,9 @@ const BookChart = ({
             const [ bXTicks, bYTicks ] = ticks.bid[ tick ](measurements, [ bXScale, bYScale ], sBids)
             const [ aXTicks, aYTicks ] = ticks.ask[ tick ](measurements, [ aXScale, aYScale ], sAsks)
 
-            const bXFiltered = tick === 'volume'
+            const isVolumeTick = tick === 'volume'
+
+            const bXFiltered = isVolumeTick
                 ? bXTicks
                 : filterTicks(
                     mx,
@@ -828,7 +830,7 @@ const BookChart = ({
                     bXTicks
                 )
 
-            const aXFiltered = tick === 'volume'
+            const aXFiltered = isVolumeTick
                 ? aXTicks
                 : filterTicks(
                     mx,
@@ -836,11 +838,11 @@ const BookChart = ({
                     aXTicks
                 )
 
-            const bXReduced = tick === 'volume' ? bXTicks : init(bXTicks)
-            const aXReduced = tick === 'volume' ? aXTicks : tail(aXTicks)
+            const bXReduced = isVolumeTick ? bXTicks : init(bXTicks)
+            const aXReduced = isVolumeTick ? aXTicks : tail(aXTicks)
 
-            const bYReduced = tick === 'volume' ? bYTicks : bYTicks.length > 1 ? init(bYTicks) : bYTicks
-            const aYReduced = tick === 'volume' ? aYTicks : aYTicks.length > 1 ? tail(aYTicks) : aYTicks
+            const bYReduced = isVolumeTick ? bYTicks : bYTicks.length > 1 ? init(bYTicks) : bYTicks
+            const aYReduced = isVolumeTick ? aYTicks : aYTicks.length > 1 ? tail(aYTicks) : aYTicks
 
             const bYFiltered = showVolTick ? filterTicks(my, bYScale, bYReduced) : ([])
             const aYFiltered = showVolTick ? filterTicks(my, aYScale, aYReduced) : ([])
