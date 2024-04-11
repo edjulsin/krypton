@@ -72,50 +72,50 @@ const sortBid = sort(([ a ], [ b ]) =>
 
 const bidSingle = curry((_, [ xScale ], data) => {
     const i = interpolateNumber(...xScale.domain())
-    const max = last(data)
-    const xs = [ i(0), i(.5), head(max) ].filter(price =>
-        price <= head(max)
-    )
-    const ys = xs.map(x =>
-        last(data[ binarySearch(head, x, data) ])
-    )
-    return [ xs, ys ]
+    const [ x, y ] = last(data)
+    const xs = [ i(0), i(.5) ].filter(price => price < x)
+    const ys = xs.map(x => {
+        const idx = binarySearch(head, x, data)
+        const offset = head(data[ idx ]) > x ? -1 : 0
+        return last(data[ Math.max(idx + offset, 0) ])
+    })
+    return [ [ ...xs, x ], [ ...ys, y ] ]
 })
 
 const askSingle = curry((_, [ xScale ], data) => {
     const i = interpolateNumber(...xScale.domain())
-    const min = head(data)
-    const xs = [ head(min), i(.5), i(1) ].filter(price =>
-        price >= head(min)
-    )
-    const ys = xs.map(x =>
-        last(data[ binarySearch(head, x, data) ])
-    )
-    return [ xs, ys ]
+    const [ x, y ] = head(data)
+    const xs = [ i(.5), i(1) ].filter(price => price > x)
+    const ys = xs.map(x => {
+        const idx = binarySearch(head, x, data)
+        const offset = head(data[ idx ]) > x ? -1 : 0
+        return last(data[ Math.max(idx + offset, 0) ])
+    })
+    return [ [ x, ...xs ], [ y, ...ys ] ]
 })
 
 const bidDouble = curry((_, [ xScale ], data) => {
     const i = interpolateNumber(...xScale.domain())
-    const max = last(data)
-    const xs = [ i(0), i(.34), i(.67), head(max) ].filter(price =>
-        price <= head(max)
-    )
-    const ys = xs.map(x =>
-        last(data[ binarySearch(head, x, data) ])
-    )
-    return [ xs, ys ]
+    const [ x, y ] = last(data)
+    const xs = [ i(0), i(.34), i(.67) ].filter(price => price < x)
+    const ys = xs.map(x => {
+        const idx = binarySearch(head, x, data)
+        const offset = head(data[ idx ]) > x ? -1 : 0
+        return last(data[ Math.max(idx + offset, 0) ])
+    })
+    return [ [ ...xs, x ], [ ...ys, y ] ]
 })
 
 const askDouble = curry((_, [ xScale ], data) => {
     const i = interpolateNumber(...xScale.domain())
-    const min = head(data)
-    const xs = [ head(min), i(.34), i(.67), i(1) ].filter(price =>
-        price >= head(min)
-    )
-    const ys = xs.map(x =>
-        last(data[ binarySearch(head, x, data) ])
-    )
-    return [ xs, ys ]
+    const [ x, y ] = head(data)
+    const xs = [ i(.34), i(.67), i(1) ].filter(price => price > x)
+    const ys = xs.map(x => {
+        const idx = binarySearch(head, x, data)
+        const offset = head(data[ idx ]) > x ? -1 : 0
+        return last(data[ Math.max(idx + offset, 0) ])
+    })
+    return [ [ x, ...xs ], [ y, ...ys ] ]
 })
 
 const volume = curry((measurements, scales, data) => {
