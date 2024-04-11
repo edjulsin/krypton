@@ -303,9 +303,6 @@ const drawBid = ({ context, xScale, yScale, ticks, data }) => {
     context.stroke()
     context.fill()
 
-    context.save()
-    context.clip()
-
     drawLines({
         context: context,
         stroke: {
@@ -322,8 +319,6 @@ const drawBid = ({ context, xScale, yScale, ticks, data }) => {
             ]
         })
     })
-
-    context.restore()
 }
 
 const drawAsk = ({ context, xScale, yScale, data, ticks }) => {
@@ -387,9 +382,6 @@ const drawAsk = ({ context, xScale, yScale, data, ticks }) => {
     context.stroke()
     context.fill()
 
-    context.save()
-    context.clip()
-
     drawLines({
         context: context,
         stroke: {
@@ -406,8 +398,6 @@ const drawAsk = ({ context, xScale, yScale, data, ticks }) => {
             ]
         })
     })
-
-    context.restore()
 }
 
 const volumeTransform = zoomIdentity.translate(0, 50 - 50 * .98).scale(.98)
@@ -837,6 +827,7 @@ const BookChart = ({
                     bXScale.copy().range([ paddingX, center - eqPriceWidth / 2 ]),
                     bXTicks
                 )
+
             const aXFiltered = tick === 'volume'
                 ? aXTicks
                 : filterTicks(
@@ -844,6 +835,9 @@ const BookChart = ({
                     aXScale.copy().range([ center + eqPriceWidth / 2, width - paddingX ]),
                     aXTicks
                 )
+
+            const bXReduced = tick === 'volume' ? bXTicks : init(bXTicks)
+            const aXReduced = tick === 'volume' ? aXTicks : tail(aXTicks)
 
             const bYReduced = tick === 'volume' ? bYTicks : bYTicks.length > 1 ? init(bYTicks) : bYTicks
             const aYReduced = tick === 'volume' ? aYTicks : aYTicks.length > 1 ? tail(aYTicks) : aYTicks
@@ -858,7 +852,7 @@ const BookChart = ({
                 xScale: bXScale,
                 yScale: bYScale,
                 data: sBids,
-                ticks: zip(bXTicks, bYReduced)
+                ticks: zip(bXReduced, bYReduced)
             })
 
             drawAsk({
@@ -866,7 +860,7 @@ const BookChart = ({
                 xScale: aXScale,
                 yScale: aYScale,
                 data: sAsks,
-                ticks: zip(aXTicks, aYReduced)
+                ticks: zip(aXReduced, aYReduced)
             })
 
             drawLines({
