@@ -5899,8 +5899,6 @@ const Separator = () => (
     <svg
         className='separator'
         viewBox='0 0 25 25'
-        width={ 25 }
-        height={ 25 }
     >
         <line
             x1={ 12.5 }
