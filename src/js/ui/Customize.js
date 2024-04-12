@@ -830,7 +830,7 @@ const Stroke = memo(function Stroke({
         <TargetPlacements
             trigger={ defaultTrigger }
             onClose={ setControl }
-            direction='right left'
+            direction='left right'
             alignment='center'
             display='inline'
             data={
@@ -884,7 +884,7 @@ const Fill = memo(function Fill({
         <TargetPlacements
             trigger={ defaultTrigger }
             onClose={ setControl }
-            direction='right left'
+            direction='left right'
             alignment='center'
             display='inline'
             data={

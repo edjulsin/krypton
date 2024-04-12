@@ -40,6 +40,8 @@ const emptyStr = ''
 
 const defaultListGrid = [ [ 0, 0 ], [ 0, 0 ], [ 0, 0 ] ]
 
+const defaultCoordinate = [ 0, 0 ]
+
 const defaultMaxSize = [ 'none', 'none' ]
 
 const defaultData = 'Insert your placements data.'
@@ -189,7 +191,8 @@ const Placement = ({
             direction: defaultDirection,
             pending: true,
             autoClose: 0,
-            autoOpen: 0
+            autoOpen: 0,
+            coordinate: defaultCoordinate
         }
     })
 
@@ -481,21 +484,17 @@ const CoordinatePlacements = ({
     ...attributes
 }) => {
     const calculate = useCallback(state => {
-        if('coordinate' in state) {
-            const [ placement ] = reducePlacementsBySelectors(
-                state.alignment,
-                state.direction,
-                getCoordinatePlacements(
-                    addRects(state.containerMargin, state.container),
-                    addRects(state.dataMargin, state.data),
-                    state.coordinate
-                )
+        const [ placement ] = reducePlacementsBySelectors(
+            state.alignment,
+            state.direction,
+            getCoordinatePlacements(
+                addRects(state.containerMargin, state.container),
+                addRects(state.dataMargin, state.data),
+                state.coordinate
             )
+        )
 
-            return { ...state, result: placement.translate }
-        } else {
-            return state
-        }
+        return { ...state, result: placement.translate }
     }, [])
 
     return (
