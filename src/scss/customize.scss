@@ -163,11 +163,11 @@
 
         &-inputs {
             display: flex;
-            height: 100%;
         }
 
         &-input {
             @include fullSize;
+            display: block;
             outline: none;
             background-color: transparent;
             text-align: center;

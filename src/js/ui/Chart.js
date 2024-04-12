@@ -5457,6 +5457,7 @@ const ChartCalendarForm = ({
             onFocus={ onFocus }
         />
         <TimeClock
+            display='inline'
             container={ container }
             control={ control }
             clear={ clear }

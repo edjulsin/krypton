@@ -314,9 +314,7 @@
         }
 
         &-form {
-            display: grid;
-            grid-auto-flow: column;
-            height: 100%;
+            display: flex;
             column-gap: .2rem;
         }
 
