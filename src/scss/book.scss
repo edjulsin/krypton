@@ -2,8 +2,6 @@
     @include fullSize;
     display: flex;
     flex-direction: column;
-    min-width: 33rem;
-    min-height: 23rem;
 
     &-header {
         display: flex;
