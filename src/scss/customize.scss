@@ -156,8 +156,7 @@
     }
 
     &-channel {
-        display: grid;
-        grid-auto-flow: column;
+        display: flex;
         width: 90%;
         column-gap: .2rem;
 
