@@ -5,7 +5,6 @@ const retrySocket = retry({
     resetOnSuccess: true,
     delay: (error, count) => {
         if(count < 5) {
-            console.log(error)
             const offline = !navigator.onLine
             const active = () => document.visibilityState === 'visible'
             const onActive = fromEvent(document, 'visibilitychange')
