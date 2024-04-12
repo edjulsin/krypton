@@ -54,11 +54,14 @@ const Main = () => {
                 })
             },
             closeObserver: {
-                next: () => displayStatus({
-                    type: 'failed',
-                    message: 'Websocket Connection is now offline.',
-                    autoClose: 0
-                })
+                next: (e) => {
+                    console.log(e)
+                    displayStatus({
+                        type: 'failed',
+                        message: 'Websocket Connection is now offline.',
+                        autoClose: 0
+                    })
+                }
             }
         })
 
