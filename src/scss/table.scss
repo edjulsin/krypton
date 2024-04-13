@@ -67,16 +67,13 @@
 
     &-form {
         display: flex;
-        justify-content: center;
         column-gap: .2rem;
         width: 95%;
     }
 
     &-input {
-        display: grid;
-        grid-template-columns: 1fr auto;
-        align-items: center;
-        @include fullSize;
+        display: flex;
+        width: 100%;
         @include formEffect;
         border-radius: 5px;
 

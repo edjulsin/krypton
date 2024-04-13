@@ -46,12 +46,9 @@
 
     &-date {
         @include outline;
-        display: grid;
-        grid-template-columns: 1fr auto;
-        align-items: center;
+        display: flex;
         border-radius: 5px;
         @include formEffect;
-        
 
         &-input {
             background-color: transparent;
