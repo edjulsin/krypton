@@ -5,38 +5,19 @@ const retrySocket = retry({
     resetOnSuccess: true,
     delay: (error, count) => {
         if(count < 5) {
-            const offline = !navigator.onLine
-            const active = () => document.visibilityState === 'visible'
-            const onActive = fromEvent(document, 'visibilitychange')
-            const onConnected = fromEvent(window, 'online')
+            const idle = () => document.visibilityState === 'hidden'
             const onInternet = fromFetch('/platform/status')
-            const onError = catchError(() =>
-                timer(60000 * count)
+            const onActive = fromEvent(document, 'visibilitychange').pipe(
+                concatMap(() => onInternet)
             )
-            const timeout = timer(15000)
-            if(offline) {
-                return timeout.pipe(
-                    concatMap(() =>
-                        onConnected.pipe(
-                            concatMap(() =>
-                                iif(active, onInternet, onActive)
-                            ),
-                            onError
-                        )
-                    )
+            return timer(15000).pipe(
+                concatMap(() =>
+                    iif(idle, onActive, onInternet)
+                ),
+                catchError(() =>
+                    timer(60000 * count)
                 )
-            } else {
-                return timeout.pipe(
-                    concatMap(() =>
-                        onInternet.pipe(
-                            concatMap(v =>
-                                iif(active, of(v), onActive)
-                            ),
-                            onError
-                        )
-                    )
-                )
-            }
+            )
         } else {
             return []
         }
