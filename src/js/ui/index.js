@@ -87,10 +87,7 @@ const Main = () => {
             )
             const subscription = merge(platform, maintenance).subscribe(subscribe)
             return () => subscription.unsubscribe()
-        }).pipe(
-            retrySocket,
-            share()
-        )
+        }).pipe(retrySocket)
 
         const onPlatform = info => {
             if(info.platform.status) {
