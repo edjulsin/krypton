@@ -13,5 +13,5 @@
         <img alt='Krypton Dashboard' src='/src/assets/images/screenshot/Krypton.png' />
     </a>
 </div>
-<br><br>&#9888; Make sure your OS have the latest update when accessing from tablet or mobile.
+<br>&#9888; Make sure your OS have the latest update when accessing from tablet or mobile.
 <br><br>See Krypton live <a href='https://krypton-navy.vercel.app/'>here</a>.
