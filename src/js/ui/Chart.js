@@ -923,7 +923,7 @@ const drawMainChart = ({
         )
     ]).reduce((acc, [ value, values ]) => {
         const filtered = values.filter(({ id }) => label.value[ id ])
-        const labelHeight = font.size * 1.8
+        const labelHeight = font.size * 2
         const y = head(
             adjustLabel(
                 pair(
@@ -1263,7 +1263,7 @@ const drawVerticalAxis = ({
     })
 
     const labelWidth = width
-    const labelHeight = font.size * 1.8
+    const labelHeight = font.size * 2
 
     const labels = sortLabel(head, height / 2, [
         pair(
@@ -1406,7 +1406,7 @@ const drawVerticalCursor = ({
         x: width / 2,
         y: priceScale(price),
         width: width,
-        height: font.size * 1.8,
+        height: font.size * 2,
         radius: orientation === 'right' ? ([ 0, 5, 5, 0 ]) : ([ 5, 0, 0, 5 ])
     })
 })
