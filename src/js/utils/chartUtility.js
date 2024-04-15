@@ -38,6 +38,24 @@ const defaultChartColors = [ defaultUpColor, defaultDownColor ]
 
 const defaultFont = 'krypton-sans-serif'
 
+const round = Math.round
+const floor = Math.floor
+const ceil = Math.ceil
+
+const crisp = curry((offset, value) => floor(value) + offset)
+
+const odd = value => {
+    const floored = floor(value)
+    const offset = Number(floored % 2 === 0)
+    return floored - offset
+}
+
+const even = value => {
+    const floored = floor(value)
+    const offset = Number(floored % 2 !== 0)
+    return floored - offset
+}
+
 const readableTextColor = background =>
     colord('white').isReadable(background)
         ? defaultWhiteColor
@@ -346,7 +364,7 @@ const drawTexts = ({ context, font = {}, texts }) => {
         context.fillText(
             message,
             round(x),
-            round(y + 1)
+            round(y)
         )
     )
 }
@@ -367,7 +385,11 @@ const drawLabels = ({ context, font = {}, labels }) => {
         context.fillStyle = colord(fill).alpha(1).toRgbString()
         context.fill(rect)
         context.fillStyle = color ? color : defaultChartColors.includes(fill) ? defaultWhiteColor : readableTextColor(fill)
-        context.fillText(message, round(x), round(y + 1))
+        context.fillText(
+            message,
+            round(x),
+            round(y)
+        )
     })
 }
 
@@ -419,28 +441,9 @@ const drawTooltip = ({ context, fill = defaultLabelFill, font = {}, messages, x,
         context.fillText(
             message,
             round(x),
-            round(yOrigin + rowHeight * row + rowHeight / 2 + 1)
+            round(yOrigin + rowHeight * row + rowHeight / 2)
         )
     )
-}
-
-
-const round = Math.round
-const floor = Math.floor
-const ceil = Math.ceil
-
-const crisp = curry((offset, value) => floor(value) + offset)
-
-const odd = value => {
-    const floored = floor(value)
-    const offset = Number(floored % 2 === 0)
-    return floored - offset
-}
-
-const even = value => {
-    const floored = floor(value)
-    const offset = Number(floored % 2 !== 0)
-    return floored - offset
 }
 
 const areaChart = ({
