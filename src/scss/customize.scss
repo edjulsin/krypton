@@ -140,9 +140,19 @@
             display: flex;
             align-items: center;
             flex-basis: 25%;
-      
-            & > * {
-                flex-basis: 100%;
+
+            &:first-child {
+                & > * {
+                    border-top-left-radius: 5px;
+                    border-bottom-left-radius: 5px;
+                }
+            }
+
+            &:last-child {
+                & > * {
+                    border-top-right-radius: 5px;
+                    border-bottom-right-radius: 5px;
+                }
             }
         }
 
@@ -162,9 +172,11 @@
 
         &-inputs {
             display: flex;
+            column-gap: .2rem;
         }
 
         &-input {
+            border-radius: 5px;
             @include fullSize;
             display: block;
             outline: none;

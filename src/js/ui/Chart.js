@@ -3654,7 +3654,7 @@ const ChartInfo = memo(({ info }) => {
     useEffect(_ => {
         const show = setTimeout(() => setVisible(true), 0)
 
-        const hide = setTimeout(() => setVisible(false), 10000)
+        const hide = setTimeout(() => setVisible(false), 15000)
 
         return () => [ show, hide ].forEach(clearTimeout)
     }, [ info ])
@@ -4003,6 +4003,7 @@ const ChartDeficit = () => (
 
 const ChartCenter = ({
     info,
+    setInfo,
     container,
     clear,
     socket,
@@ -4713,6 +4714,16 @@ const ChartCenter = ({
             )
         }
     }, [ symbol, timeInterval ])
+
+    useEffect(loading => {
+        setInfo(info => {
+            if(is(Object, info) || loading) {
+                return info
+            } else {
+                return { value: 'Try to move/zoom the chart using mouse or touch.' }
+            }
+        })
+    }, [ plot.loading ])
 
     useEffect(transit => setPlot(plot => {
         const result = { ...plot, transit }
@@ -6347,6 +6358,7 @@ const Chart = ({ socket, maps, symbol }) => {
                 setPlacement={ setPlacement }
             />
             <ChartCenter
+                setInfo={ setInfo }
                 info={ info }
                 container={ container }
                 clear={ clear }

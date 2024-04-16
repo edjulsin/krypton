@@ -632,10 +632,11 @@ const Channel = ({
         <div className='customize-channel'>
             <div className='customize-channel-select'>
                 <Select
-                    clear={ clear }
-                    data={ menu }
                     alignment='center'
                     direction='top'
+                    outlined={ false }
+                    clear={ clear }
+                    data={ menu }
                     control={ control }
                 >
                     { toUpper(channel.id) }
