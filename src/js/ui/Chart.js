@@ -4717,10 +4717,10 @@ const ChartCenter = ({
 
     useEffect(loading => {
         setInfo(info => {
-            if(is(Object, info) || loading) {
+            if(loading) {
                 return info
             } else {
-                return { value: 'Try to move/zoom the chart using mouse or touch.' }
+                return isNil(info) ? { value: 'Try to move/zoom the chart using mouse or touch.' } : info
             }
         })
     }, [ plot.loading ])
