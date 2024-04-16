@@ -20,7 +20,7 @@
         background-image: url('../assets/images/misc/interlace.svg');
         background-size: .6rem .6rem;
         background-clip: padding-box;
-        padding: 1px;
+        border: 1px solid white;
       
         & > *:first-child {
             border-top-left-radius: 5px;
