@@ -352,7 +352,7 @@ const drawPulse = ({ context, pulse, frame }) => {
     context.stroke()
 }
 
-const declareFont = font => `${font.weight || 400} ${font.size ? pixelToRem(font.size) + 'rem' : '1.2rem'} ${font.family || defaultFont}`
+const declareFont = font => `${font.weight || 400} ${pixelToRem(font.size || 12) + 'rem'} ${font.family || defaultFont}`
 
 const drawTexts = ({ context, font = {}, texts }) => {
     context.font = declareFont(font)
