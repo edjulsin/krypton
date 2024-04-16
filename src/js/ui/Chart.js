@@ -4720,7 +4720,7 @@ const ChartCenter = ({
             if(loading) {
                 return info
             } else {
-                return isNil(info) ? { value: 'Try to move/zoom the chart using mouse or touch.' } : info
+                return isNil(info) ? ({ value: 'Try to move/zoom the chart using mouse or touch.' }) : info
             }
         })
     }, [ plot.loading ])
