@@ -162,21 +162,25 @@ const TableInfo = ({ rate, maps, volume, data }) => (
     </div>
 )
 
-const TableInput = ({ input, setInput }) => (
-    <div className='table-input'>
-        <input
-            title='Search Trading Pair'
-            id='table-input-form'
-            className='table-input-form'
-            type='text'
-            value={ input }
-            onChange={ e => setInput(e.target.value + '') }
-        />
-        <Button onClick={ () => setInput(input ? '' : input) }>
-            <Icon name={ input ? 'close' : 'search' } />
-        </Button>
-    </div>
-)
+const TableInput = ({ input, setInput }) => {
+    const [ ref, setRef ] = useState({})
+    return (
+        <div className='table-input'>
+            <input
+                ref={ setRef }
+                title='Search Trading Pair'
+                id='table-input-form'
+                className='table-input-form'
+                type='text'
+                value={ input }
+                onChange={ e => setInput(e.target.value + '') }
+            />
+            <Button onClick={ input ? () => setInput('') : () => ref.focus() }>
+                <Icon name={ input ? 'close' : 'search' } />
+            </Button>
+        </div>
+    )
+}
 
 const TableSelect = ({ container, price, setPrice }) => {
     const [ control, setControl ] = useState({})
