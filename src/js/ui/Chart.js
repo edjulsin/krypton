@@ -1683,16 +1683,12 @@ const calculatePlotSelected = plot => {
 }
 
 const calculatePlotSource = plot => {
-    if(plot.loading) {
-        return plot
-    } else {
-        const normalized = normalizeTimestamp(defaultTickCount, plot.data)
-        const source = isHeikinashi(plot.type) ? heikinashiAdjuster(normalized) : normalized
-        const previous = nth(-2, source)
-        const recent = nth(-1, source)
-        const recentChange = on(subtract, price(plot.price), recent, previous)
-        return { ...plot, source, recent, recentChange }
-    }
+    const normalized = normalizeTimestamp(defaultTickCount, plot.data)
+    const source = isHeikinashi(plot.type) ? heikinashiAdjuster(normalized) : normalized
+    const previous = nth(-2, source)
+    const recent = nth(-1, source)
+    const recentChange = on(subtract, price(plot.price), recent, previous)
+    return { ...plot, source, recent, recentChange }
 }
 
 const calculatePlotCursor = plot => {
@@ -4118,7 +4114,7 @@ const ChartCenter = ({
 
     const textRatio = textScale(axis.font.size)
 
-    const defaultPrecision = plot.loading
+    const defaultPrecision = plot.loading || plot.deficit
         ? 0
         : absDiff(
             ...take(
@@ -4162,7 +4158,7 @@ const ChartCenter = ({
 
     const enableReset = !identical(head(plot.transform), defaultXtransform)
 
-    const enableScroll = plot.loading
+    const enableScroll = plot.loading || plot.deficit
         ? false
         : !eqBy(P.mts, plot.end, plot.recent)
 
@@ -4193,7 +4189,7 @@ const ChartCenter = ({
 
     const setSize = useCallback(size => setPlot(plot => {
         const [ tx, width ] = [ plot.transform, size ].map(head)
-        if(plot.loading) {
+        if(plot.loading || plot.deficit) {
             return { ...plot, size }
         } else {
             const scaleExtent = pair(
@@ -4608,9 +4604,14 @@ const ChartCenter = ({
         ]
     }), [])
 
-    useEffect((symbol, timeInterval) => { // jaggy caused by state change and drawing operation begin without waiting for pending to complete.
+    useEffect((symbol, timeInterval) => { // jaggy caused by state change and draw operation begin without waiting for pending to complete.
         const onSnapshot = data => {
             if(data.length > 0) {
+                setInfo(info =>
+                    isEmpty(info)
+                        ? ({ value: 'Try to move/zoom the chart using mouse or touch.' })
+                        : info
+                )
                 setPlot(
                     compose(
                         calculatePlot,
@@ -4625,7 +4626,10 @@ const ChartCenter = ({
                 )
             } else {
                 setPlot(
-                    assoc('deficit', true)
+                    mergeLeft({
+                        deficit: true,
+                        loading: false
+                    })
                 )
             }
         }
@@ -4714,16 +4718,6 @@ const ChartCenter = ({
             )
         }
     }, [ symbol, timeInterval ])
-
-    useEffect(loading => {
-        setInfo(info => {
-            if(loading) {
-                return info
-            } else {
-                return isEmpty(info) ? ({ value: 'Try to move/zoom the chart using mouse or touch.' }) : info
-            }
-        })
-    }, [ plot.loading ])
 
     useEffect(transit => setPlot(plot => {
         const result = { ...plot, transit }
