@@ -412,7 +412,7 @@ const drawTooltip = ({ context, fill = defaultLabelFill, font = {}, messages, x,
     )
 
     const colWidth = odd(metrics.reduce((a, b) => Math.max(a, b.width), 0) * 1.2)
-    const rowHeight = round((font.size || 12) * 1.7)
+    const rowHeight = round((font.size || 12) * 2)
     const verticalOffset = 7
 
     const path = new Path2D()
