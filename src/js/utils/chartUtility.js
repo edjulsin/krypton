@@ -843,40 +843,37 @@ const columnChart = ({ context, data, timeScale, priceScale, chart, height }) =>
         price(chart.price)
     )
 
-    if(type === 'stroke') {
-        data.forEach((d, i) => {
-            const color = Number(
-                chart.previous && i > 0
-                    ? P.close(data[ i - 1 ]) > P.close(d)
-                    : P.open(d) > P.close(d)
-            )
-
-            const x = ts(d)
-            const y = ps(d)
-
-            paths[ color ].moveTo(x, y)
-            paths[ color ].lineTo(x, height)
-        })
-
-    } else {
-        data.forEach((d, i) => {
-            const color = Number(
-                chart.previous && i > 0
-                    ? P.close(data[ i - 1 ]) > P.close(d)
-                    : P.open(d) > P.close(d)
-            )
-
-            const x = ts(d)
-            const y = ps(d)
-
-            paths[ color ].rect(
-                x - width / 2,
-                y,
-                width,
-                height - y
-            )
-        })
+    const drawStroke = ({ path, x, y, height }) => {
+        path.moveTo(x, y)
+        path.lineTo(x, height)
     }
+
+    const drawRect = ({ path, x, y, width, height }) => {
+        path.rect(
+            x - width / 2,
+            y,
+            width,
+            height - y
+        )
+    }
+
+    const draw = type === 'stroke' ? drawStroke : drawRect
+
+    data.forEach((d, i) => {
+        const color = Number(
+            chart.previous && i > 0
+                ? P.close(data[ i - 1 ]) > P.close(d)
+                : P.open(d) > P.close(d)
+        )
+
+        draw({
+            path: paths[ color ],
+            x: ts(d),
+            y: ps(d),
+            width: width,
+            height: height
+        })
+    })
 
     context.lineWidth = 1
     context.setLineDash(strokePattern.solid)
