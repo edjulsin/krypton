@@ -6,7 +6,7 @@ const retrySocket = retry({
     delay: (error, count) => {
         if(count < 5) {
             const idle = () => document.visibilityState === 'hidden'
-            const onLine = fromFetch('/platform/status').pipe(
+            const onLine = fromFetch('/api/platform/status').pipe(
                 catchError(() =>
                     timer(60000 * count)
                 )

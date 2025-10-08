@@ -4,7 +4,8 @@ const { createProxyMiddleware } = require('http-proxy-middleware')
 const proxy = createProxyMiddleware({
     target: 'https://api-pub.bitfinex.com/v2',
     changeOrigin: true,
-    pathFilter: [ '/ticker', '/tickers', '/book', '/candles', '/platform', '/conf' ],
+    pathFilter: [ '/api/ticker', '/api/tickers', '/api/book', '/api/candles', '/api/platform', '/api/conf' ],
+    pathRewrite: { '^/api': '' },
     on: {
         proxyRes: (proxyRes, req, res) => {
             proxyRes[ 'Access-Control-Allow-Origin' ] = '*'

@@ -92,7 +92,7 @@ const Main = () => {
         const onPlatform = info => {
             if(info.platform.status) {
                 setMaintenance('')
-                fetchJSON('/conf/pub:map:currency:sym')
+                fetchJSON('/api/conf/pub:map:currency:sym')
                     .then(head)
                     .then(fromPairs)
                     .then(setMaps)

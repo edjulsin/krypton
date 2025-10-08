@@ -15,9 +15,10 @@ module.exports = common({
         client: { overlay: true },
         proxy: [
             {
-                context: [ '/ticker', '/tickers', '/book', '/candles', '/platform', '/conf' ],
+                context: [ '/api/ticker', '/api/tickers', '/api/book', '/api/candles', '/api/platform', '/api/conf' ],
                 changeOrigin: true,
                 target: 'https://api-pub.bitfinex.com/v2',
+                pathRewrite: { '^/api': '' }
             }
         ]
     },

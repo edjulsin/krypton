@@ -4729,7 +4729,7 @@ const ChartCenter = ({
     }), [ timeDestination ])
 
     useEffect((symbol, timeInterval, [ start, end ]) => {
-        fetchJSON(`/candles/trade:${timeInterval}:${symbol}/hist?start=${start}&end=${end}&sort=${1}&limit=10000`)
+        fetchJSON(`/api/candles/trade:${timeInterval}:${symbol}/hist?start=${start}&end=${end}&sort=${1}&limit=10000`)
             .then(update =>
                 setPlot(plot => {
                     const result = {

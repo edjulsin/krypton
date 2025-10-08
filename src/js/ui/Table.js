@@ -480,11 +480,11 @@ const Table = ({ maps, onSymbolChange }) => {
     ]), [])
 
     useEffect(() => {
-        const symbols = () => fetchJSON('/conf/pub:list:pair:exchange').then(([ symbols ]) =>
+        const symbols = () => fetchJSON('/api/conf/pub:list:pair:exchange').then(([ symbols ]) =>
             new Set(symbols)
         )
 
-        const data = () => fetchJSON('/tickers?symbols=ALL')
+        const data = () => fetchJSON('/api/tickers?symbols=ALL')
 
         const table = reduce((acc, curr) =>
             assocPath(extractSymbol(curr), curr, acc)
@@ -513,7 +513,7 @@ const Table = ({ maps, onSymbolChange }) => {
                             return v
                         }
                     })
-                    return fetchJSON('/tickers?symbols=' + symbols.join(',')).then(fix).then(
+                    return fetchJSON('/api/tickers?symbols=' + symbols.join(',')).then(fix).then(
                         table(formatted)
                     )
                 } else {

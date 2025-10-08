@@ -1,12 +1,12 @@
 {
 	"rewrites": [
 		{
-			"source": "/:path*",
+			"source": "/api/:path*",
 			"destination": "https://api-pub.bitfinex.com/v2/:path*"
 		},
-		{ 
-			"source": "/(.*)", 
-			"destination": "/" 
+		{
+			"source": "/(.*)",
+			"destination": "/"
 		}
 	]
 }
