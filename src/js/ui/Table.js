@@ -34,7 +34,7 @@ const symbolName = o(head, extractSymbol)
 const priceName = o(last, extractSymbol)
 
 const exchangeVolume = curry((rate, currency, data) =>
-    P.volume(data) * (currency === 'SELF' ? 1 : rate[ symbolName(data) ][ currency ])
+    P.volume(data) * (currency === 'SELF' ? 1 : rate[symbolName(data)][currency])
 )
 
 const prices = [
@@ -56,7 +56,7 @@ const prices = [
 
 const defaultPrice = 'ANY'
 
-const volumes = [ 'self', 'btc', 'usd', 'eth', 'try', 'jpy' ].map(toUpper)
+const volumes = ['self', 'btc', 'usd', 'eth', 'try', 'jpy'].map(toUpper)
 
 const volumesIndex = {
     SELF: 0,
@@ -77,7 +77,7 @@ const TableStat = ({ rate, maps, volume, data }) => {
         <ul className='table-stat'>
             <li className='table-stat-item'>
                 <span className='table-stat-value'>
-                    { extractSymbol(data).map(v => maps[ v ] || v).join('/') }
+                    {extractSymbol(data).map(v => maps[v] || v).join('/')}
                 </span>
             </li>
             <li className='table-stat-item'>
@@ -101,7 +101,7 @@ const TableStat = ({ rate, maps, volume, data }) => {
                     }
                 </span>
                 <span className='table-stat-label'>
-                    { volume }
+                    {volume}
                 </span>
             </li>
             <li className={
@@ -157,33 +157,33 @@ const TableStat = ({ rate, maps, volume, data }) => {
 
 const TableInfo = ({ rate, maps, volume, data }) => (
     <div className='table-info'>
-        <CryptoIcon size={ 32 } name={ maps[ symbolName(data) ] || symbolName(data) } />
-        <TableStat rate={ rate } maps={ maps } volume={ volume } data={ data } />
+        <CryptoIcon size={32} name={maps[symbolName(data)] || symbolName(data)} />
+        <TableStat rate={rate} maps={maps} volume={volume} data={data} />
     </div>
 )
 
 const TableInput = ({ input, setInput }) => {
-    const [ ref, setRef ] = useState({})
+    const [ref, setRef] = useState({})
     return (
         <div className='table-input'>
             <input
-                ref={ setRef }
+                ref={setRef}
                 title='Search Trading Pair'
                 id='table-input-form'
                 className='table-input-form'
                 type='text'
-                value={ input }
-                onChange={ e => setInput(e.target.value + '') }
+                value={input}
+                onChange={e => setInput(e.target.value + '')}
             />
-            <Button onClick={ input ? () => setInput('') : () => ref.focus() }>
-                <Icon name={ input ? 'close' : 'search' } />
+            <Button onClick={input ? () => setInput('') : () => ref.focus()}>
+                <Icon name={input ? 'close' : 'search'} />
             </Button>
         </div>
     )
 }
 
 const TableSelect = ({ container, price, setPrice }) => {
-    const [ control, setControl ] = useState({})
+    const [control, setControl] = useState({})
 
     const onMouseLeave = () => setControl({
         visible: false,
@@ -192,11 +192,11 @@ const TableSelect = ({ container, price, setPrice }) => {
 
     return (
         <Select
-            container={ container }
-            control={ control }
+            container={container}
+            control={control}
             direction='bottom'
             alignment='center'
-            onMouseLeave={ onMouseLeave }
+            onMouseLeave={onMouseLeave}
             data={
                 prices.map(text => {
                     return {
@@ -206,7 +206,7 @@ const TableSelect = ({ container, price, setPrice }) => {
                     }
                 })
             }
-            preview={ toUpper(price) }
+            preview={toUpper(price)}
         />
     )
 }
@@ -227,16 +227,16 @@ const TableForm = ({ container, form, setForm }) => {
     return (
         <div className='table-form'>
             <TableInput
-                input={ form.symbol }
-                setInput={ setInput }
+                input={form.symbol}
+                setInput={setInput}
             />
             <TableSelect
-                container={ container }
-                price={ form.price }
-                setPrice={ setPrice }
+                container={container}
+                price={form.price}
+                setPrice={setPrice}
             />
-            <Button title='Show Favorites' display='inline' onClick={ () => setFavorited(!form.favorited) }>
-                <Icon name={ form.favorited ? 'blackstar' : 'whitestar' } />
+            <Button title='Show Favorites' display='inline' onClick={() => setFavorited(!form.favorited)}>
+                <Icon name={form.favorited ? 'blackstar' : 'whitestar'} />
             </Button>
         </div>
     )
@@ -245,19 +245,19 @@ const TableForm = ({ container, form, setForm }) => {
 const TableHeader = ({ sort, setSort, volume, setVolume }) => {
     const Sort = ({ order }) => (
         <span
-            className={ 'table-header-' + (order === 0 ? 'sort' : order > 0 ? 'asc' : 'dsc') }
+            className={'table-header-' + (order === 0 ? 'sort' : order > 0 ? 'asc' : 'dsc')}
         >
         </span>
     )
 
     const Item = ({ name, order, onClick }) => (
         <li className='table-header-item'>
-            <Button size='big' onClick={ onClick } >
+            <Button size='big' onClick={onClick} >
                 <span className='table-header-split'>
                     <span className='table-header-name'>
-                        { name }
+                        {name}
                     </span>
-                    <Sort order={ order } />
+                    <Sort order={order} />
                 </span>
             </Button>
         </li>
@@ -271,22 +271,22 @@ const TableHeader = ({ sort, setSort, volume, setVolume }) => {
     })
 
     const changeVolume = () => setVolume(volume => {
-        const position = volumesIndex[ volume ]
+        const position = volumesIndex[volume]
         const index = position + 1 === volumes.length ? 0 : position + 1
-        return volumes[ index ]
+        return volumes[index]
     })
 
     const sortByVolume = () => sortBy('volume')
 
     return (
         <menu className='table-header'>
-            <Item name='NAME' order={ sort.prop === 'symbol' ? sort.order : 0 } onClick={ () => sortBy('symbol') } />
-            <Item name='LAST' order={ sort.prop === 'price' ? sort.order : 0 } onClick={ () => sortBy('price') } />
-            <Item name='24H' order={ sort.prop === 'changeRelative' ? sort.order : 0 } onClick={ () => sortBy('changeRelative') } />
+            <Item name='NAME' order={sort.prop === 'symbol' ? sort.order : 0} onClick={() => sortBy('symbol')} />
+            <Item name='LAST' order={sort.prop === 'price' ? sort.order : 0} onClick={() => sortBy('price')} />
+            <Item name='24H' order={sort.prop === 'changeRelative' ? sort.order : 0} onClick={() => sortBy('changeRelative')} />
             <li className='table-header-item'>
                 <Button
                     size='big'
-                    onClick={ sortByVolume }
+                    onClick={sortByVolume}
                 >
                     <span className='table-header-split'>
                         <span className='table-header-name'>
@@ -294,11 +294,11 @@ const TableHeader = ({ sort, setSort, volume, setVolume }) => {
                         </span>
                         <span
                             className='table-header-volume'
-                            onClick={ noPropagation(changeVolume) }
+                            onClick={noPropagation(changeVolume)}
                         >
-                            { volume }
+                            {volume}
                         </span>
-                        <Sort order={ sort.prop === 'volume' ? sort.order : 0 } />
+                        <Sort order={sort.prop === 'volume' ? sort.order : 0} />
                     </span>
                 </Button>
             </li>
@@ -307,17 +307,17 @@ const TableHeader = ({ sort, setSort, volume, setVolume }) => {
 }
 
 const TableList = ({ rate, maps, filter, sort, volume, data, onSelect }) => {
-    const [ container, setContainer ] = useState({})
-    const [ [ start, end ], setSlice ] = useState(() =>
-        ([ 0, data.length ])
+    const [container, setContainer] = useState({})
+    const [[start, end], setSlice] = useState(() =>
+        ([0, data.length])
     )
 
-    const [ columns, setColumns ] = useState([ 0, 0, 0, 0 ])
+    const [columns, setColumns] = useState([0, 0, 0, 0])
 
-    const [ favorite, setFavorite ] = useState(() =>
+    const [favorite, setFavorite] = useState(() =>
         data.reduce((a, b) => ({
             ...a,
-            [ extractSymbol(b).map(v => maps[ v ] || v).map(toUpper).join('') ]: false
+            [extractSymbol(b).map(v => maps[v] || v).map(toUpper).join('')]: false
         }), {})
     )
 
@@ -330,38 +330,38 @@ const TableList = ({ rate, maps, filter, sort, volume, data, onSelect }) => {
             data.length,
             start + Math.ceil(getNodeHeight(target) / defaultListHeight) + 2
         )
-        return [ start, end ]
+        return [start, end]
     })
 
     useEffect(container => {
-        const subscription = resizeObserver([ container ]).subscribe(() =>
+        const subscription = resizeObserver([container]).subscribe(() =>
             onScroll({ target: container })
         )
 
         setColumns(() => {
-            const elements = [ ...container.firstElementChild.children ]
+            const elements = [...container.firstElementChild.children]
             const columns = elements.reduce(
-                (a, b) => zipWith(Math.max, [ ...b.firstElementChild.firstElementChild.children ].map(getNodeWidth), a),
-                [ 0, 0, 0, 0 ]
+                (a, b) => zipWith(Math.max, [...b.firstElementChild.firstElementChild.children].map(getNodeWidth), a),
+                [0, 0, 0, 0]
             )
             return columns.map(Math.round)
         })
 
         return () => subscription.unsubscribe()
-    }, [ container ])
+    }, [container])
 
     const filtered = data.filter(value => {
-        const [ symbol, price ] = extractSymbol(value).map(v => maps[ v ] || v).map(toUpper)
-        const [ sFilter, pFilter ] = [ filter.symbol, filter.price === 'ANY' ? '' : filter.price ].map(toUpper)
+        const [symbol, price] = extractSymbol(value).map(v => maps[v] || v).map(toUpper)
+        const [sFilter, pFilter] = [filter.symbol, filter.price === 'ANY' ? '' : filter.price].map(toUpper)
         const matchBySymbol = (symbol + price).includes(sFilter)
         const matchByPrice = price.endsWith(pFilter)
-        const matchByFavorite = !filter.favorited || filter.favorited === favorite[ symbol + price ]
+        const matchByFavorite = !filter.favorited || filter.favorited === favorite[symbol + price]
         return matchBySymbol && matchByPrice && matchByFavorite
     })
 
     const fn = sort.prop === 'volume'
         ? exchangeVolume(rate, volume)
-        : sort.prop === 'symbol' ? symbolName : P[ sort.prop ]
+        : sort.prop === 'symbol' ? symbolName : P[sort.prop]
 
     const sorted = sort.order === 0
         ? filtered
@@ -380,43 +380,43 @@ const TableList = ({ rate, maps, filter, sort, volume, data, onSelect }) => {
     return (
         <div
             className='table-list'
-            ref={ setContainer }
-            onScroll={ onScroll }
+            ref={setContainer}
+            onScroll={onScroll}
         >
-            <menu className='table-list-menu' style={ { height: pixelToRem(filtered.length * defaultListHeight) + 'rem' } }>
+            <menu className='table-list-menu' style={{ height: pixelToRem(filtered.length * defaultListHeight) + 'rem' }}>
                 {
                     sliced.map((value, i) => {
-                        const [ symbol, price ] = extractSymbol(value).map(v => maps[ v ] || v)
-                        const duplicated = i > 0 ? symbol === extractSymbol(sliced[ i - 1 ]).map(v => maps[ v ] || v).at(0) : false
+                        const [symbol, price] = extractSymbol(value).map(v => maps[v] || v)
+                        const duplicated = i > 0 ? symbol === extractSymbol(sliced[i - 1]).map(v => maps[v] || v).at(0) : false
                         const id = toUpper(symbol + price)
-                        const favorited = favorite[ id ]
+                        const favorited = favorite[id]
                         return (
                             <li
                                 className='table-list-item'
-                                key={ id }
-                                style={ {
+                                key={id}
+                                style={{
                                     top: pixelToRem((start + i) * defaultListHeight) + 'rem',
                                     height: pixelToRem(defaultListHeight) + 'rem'
-                                } }
+                                }}
                             >
                                 <Button
                                     display='block'
                                     color='white'
-                                    onClick={ () => onSelect(value) }
+                                    onClick={() => onSelect(value)}
                                 >
                                     <span
                                         className='table-list-grid'
-                                        style={ {
+                                        style={{
                                             display: 'grid',
                                             gridTemplateColumns: gridTemplateColumns
-                                        } }
+                                        }}
                                     >
                                         <span className='table-list-symbol'>
                                             <span className='table-list-icon'>
-                                                { duplicated ? null : <CryptoIcon size={ 16 } name={ symbol } /> }
+                                                {duplicated ? null : <CryptoIcon size={16} name={symbol} />}
                                             </span>
                                             <span className='table-list-name'>
-                                                { duplicated ? null : symbol }
+                                                {duplicated ? null : symbol}
                                             </span>
                                         </span>
                                         <span className='table-list-price'>
@@ -428,7 +428,7 @@ const TableList = ({ rate, maps, filter, sort, volume, data, onSelect }) => {
                                                 }
                                             </span>
                                             <span className='table-list-currency'>
-                                                { price }
+                                                {price}
                                             </span>
                                         </span>
                                         <span className={
@@ -452,8 +452,8 @@ const TableList = ({ rate, maps, filter, sort, volume, data, onSelect }) => {
                                         </span>
                                     </span>
                                 </Button>
-                                <Button title='Add To Favorites' onClick={ () => setFavorite({ ...favorite, [ id ]: !favorited }) }>
-                                    <Icon name={ favorited ? 'blackstar' : 'whitestar' } />
+                                <Button title='Add To Favorites' onClick={() => setFavorite({ ...favorite, [id]: !favorited })}>
+                                    <Icon name={favorited ? 'blackstar' : 'whitestar'} />
                                 </Button>
                             </li>
                         )
@@ -465,13 +465,13 @@ const TableList = ({ rate, maps, filter, sort, volume, data, onSelect }) => {
 }
 
 const Table = ({ maps, onSymbolChange }) => {
-    const [ container, setContainer ] = useState({})
-    const [ data, setData ] = useState([])
-    const [ rate, setRate ] = useState({})
-    const [ selected, setSelected ] = useState([])
-    const [ volume, setVolume ] = useState(defaultVolume)
-    const [ filter, setFilter ] = useState({ symbol: '', price: defaultPrice, favorited: false })
-    const [ sort, setSort ] = useState({ prop: '', order: 0 })
+    const [container, setContainer] = useState({})
+    const [data, setData] = useState([])
+    const [rate, setRate] = useState({})
+    const [selected, setSelected] = useState([])
+    const [volume, setVolume] = useState(defaultVolume)
+    const [filter, setFilter] = useState({ symbol: '', price: defaultPrice, favorited: false })
+    const [sort, setSort] = useState({ prop: '', order: 0 })
 
 
     const onSelect = useCallback(batch([
@@ -480,7 +480,7 @@ const Table = ({ maps, onSymbolChange }) => {
     ]), [])
 
     useEffect(() => {
-        const symbols = () => fetchJSON('/api/conf/pub:list:pair:exchange').then(([ symbols ]) =>
+        const symbols = () => fetchJSON('/api/conf/pub:list:pair:exchange').then(([symbols]) =>
             new Set(symbols)
         )
 
@@ -491,7 +491,7 @@ const Table = ({ maps, onSymbolChange }) => {
         )
 
         const stream = () =>
-            Promise.all([ symbols(), data() ]).then(([ symbols, data ]) =>
+            Promise.all([symbols(), data()]).then(([symbols, data]) =>
                 data.filter(v => {
                     const symbol = P.symbol(v).slice(1)
                     return !symbol.includes('TEST') && !symbol.includes('ALT') && symbols.has(symbol)
@@ -499,10 +499,10 @@ const Table = ({ maps, onSymbolChange }) => {
             ).then(v => {
                 const formatted = table({}, v)
                 const symbols = Object.keys(formatted).reduce((arr, key) => {
-                    if('USD' in formatted[ key ]) {
+                    if('USD' in formatted[key]) {
                         return arr
                     } else {
-                        return arr.concat([ 't' + key + (key.length > 3 ? ':' : '') + 'USD' ])
+                        return arr.concat(['t' + key + (key.length > 3 ? ':' : '') + 'USD'])
                     }
                 }, [])
                 if(symbols.length) {
@@ -534,41 +534,38 @@ const Table = ({ maps, onSymbolChange }) => {
                         BTC: 1 / P.price(table.BTC.UST),
                         USD: P.price(table.UST.USD),
                         ETH: 1 / P.price(table.ETH.UST),
-                        TRY: 1 / P.price(table.TRY.UST),
-                        JPY: 1 / P.price(table.JPY.UST)
+                        TRY: 1 / P.price(table.TRY.UST)
                     },
                     BTC: {
                         BTC: 1,
                         USD: P.price(table.BTC.USD),
                         ETH: 1 / P.price(table.ETH.BTC),
-                        TRY: P.price(table.BTC.TRY),
-                        JPY: P.price(table.BTC.JPY)
+                        TRY: P.price(table.BTC.TRY)
                     },
                     USD: {
                         BTC: 1 / P.price(table.BTC.USD),
                         USD: 1,
                         ETH: 1 / P.price(table.ETH.USD),
-                        TRY: 1 / P.price(table.TRY.USD),
-                        JPY: 1 / P.price(table.JPY.USD)
+                        TRY: 1 / P.price(table.TRY.USD)
                     }
                 }
 
                 const rate = keys(table).reduce((acc, symbol) => ({
                     ...acc,
-                    [ symbol ]: vols.reduce((obj, volume) => {
+                    [symbol]: vols.reduce((obj, volume) => {
                         if(symbol === volume) {
-                            return { ...obj, [ volume ]: 1 }
+                            return { ...obj, [volume]: 1 }
                         } else {
                             const strategies = [
-                                [ [ symbol, volume ], () => P.price(table[ symbol ][ volume ]) ],
-                                [ [ volume, symbol ], () => 1 / P.price(table[ volume ][ symbol ]) ],
-                                [ [ symbol, 'UST' ], () => P.price(table[ symbol ].UST) * exchange.UST[ volume ] ],
-                                [ [ symbol, 'BTC' ], () => P.price(table[ symbol ].BTC) * exchange.BTC[ volume ] ],
-                                [ [ symbol, 'USD' ], () => P.price(table[ symbol ].USD) * exchange.USD[ volume ] ],
+                                [[symbol, volume], () => P.price(table[symbol][volume])],
+                                [[volume, symbol], () => 1 / P.price(table[volume][symbol])],
+                                [[symbol, 'UST'], () => P.price(table[symbol].UST) * exchange.UST[volume]],
+                                [[symbol, 'BTC'], () => P.price(table[symbol].BTC) * exchange.BTC[volume]],
+                                [[symbol, 'USD'], () => P.price(table[symbol].USD) * exchange.USD[volume]],
                             ]
                             return {
                                 ...obj,
-                                [ volume ]: strategies.find(([ path ]) => hasPath(path, table))?.at(1)() ?? 0
+                                [volume]: strategies.find(([path]) => hasPath(path, table))?.at(1)() ?? 0
                             }
                         }
                     }, {})
@@ -633,7 +630,7 @@ const Table = ({ maps, onSymbolChange }) => {
 
     return (
         <div
-            ref={ setContainer }
+            ref={setContainer}
             id='table'
             className='table'
         >
@@ -643,31 +640,31 @@ const Table = ({ maps, onSymbolChange }) => {
                     : (
                         <>
                             <TableInfo
-                                volume={ volume }
-                                data={ selected }
-                                rate={ rate }
-                                maps={ maps }
+                                volume={volume}
+                                data={selected}
+                                rate={rate}
+                                maps={maps}
 
                             />
                             <TableForm
-                                container={ container }
-                                form={ filter }
-                                setForm={ setFilter }
+                                container={container}
+                                form={filter}
+                                setForm={setFilter}
                             />
                             <TableHeader
-                                sort={ sort }
-                                setSort={ setSort }
-                                volume={ volume }
-                                setVolume={ setVolume }
+                                sort={sort}
+                                setSort={setSort}
+                                volume={volume}
+                                setVolume={setVolume}
                             />
                             <TableList
-                                rate={ rate }
-                                volume={ volume }
-                                maps={ maps }
-                                filter={ filter }
-                                data={ data }
-                                onSelect={ onSelect }
-                                sort={ sort }
+                                rate={rate}
+                                volume={volume}
+                                maps={maps}
+                                filter={filter}
+                                data={data}
+                                onSelect={onSelect}
+                                sort={sort}
                             />
                         </>
                     )
