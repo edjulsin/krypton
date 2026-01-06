@@ -1,12 +1,15 @@
+@use "color";
+@use "mixin";
+
 .slider {
     position: relative;
 
     &-pointer {
-        @include flexCenter;
+        @include mixin.flexCenter;
         position: absolute;
         top: 0;
         left: 0;
-        border: 2px solid $white;
+        border: 2px solid color.$white;
         border-radius: 50%;
 
         &-fill {

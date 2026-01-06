@@ -1,6 +1,9 @@
+@use "color";
+@use "mixin";
+
 .customize {
     cursor: initial;
-    @include flexCenter;
+    @include mixin.flexCenter;
     flex-direction: column;
     padding-bottom: 2rem;
     row-gap: 1rem;
@@ -15,7 +18,7 @@
     &-preview {
         width: 2.1rem;
         height: 2.1rem;
-        @include flexCenter;
+        @include mixin.flexCenter;
         border-radius: 5px;
         background-image: url('../assets/images/misc/interlace.svg');
         background-size: .6rem .6rem;
@@ -48,7 +51,7 @@
     }
 
     &-color {
-        @include flexCenter;
+        @include mixin.flexCenter;
         flex-direction: column;
         width: 100%;
         row-gap: 2rem;
@@ -145,7 +148,7 @@
         }
 
         &-label {
-            color: $darkwhite;
+            color: color.$darkwhite;
         }
     }
 
@@ -161,14 +164,14 @@
 
         &-input {
             border-radius: 5px;
-            @include fullSize;
+            @include mixin.fullSize;
             display: block;
             outline: none;
             background-color: transparent;
             text-align: center;
             padding: 0;
             margin: 0;
-            @include formEffect(transparent);
+            @include mixin.formEffect(transparent);
         }
     }
 }

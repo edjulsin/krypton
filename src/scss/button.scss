@@ -1,3 +1,6 @@
+@use "color";
+@use "mixin";
+
 .button {
     background-color: transparent;
     text-align: center;
@@ -12,16 +15,16 @@
     min-height: max-content;
 
     &-outlined {
-        @include outline;
+        @include mixin.outline;
     }
 
     &-inline {
-        @include flexCenter;
+        @include mixin.flexCenter;
     }
 
     &-block {
-        @include flexCenter;
-        @include fullSize;
+        @include mixin.flexCenter;
+        @include mixin.fullSize;
     }
 
     &-slim {
@@ -45,31 +48,31 @@
     }
 
     &-dark {
-        color: $darkwhite;
+        color: color.$darkwhite;
 
         &:hover {
-            @include highlighted;
+            @include mixin.highlighted;
         }
     }
 
     &-medium {
-        color: $mediumwhite;
+        color: color.$mediumwhite;
 
         &:hover {
-            @include highlighted;
+            @include mixin.highlighted;
         }
     }
 
     &-white {
-        color: $white;
+        color: color.$white;
 
         &:hover {
-            @include highlighted;
+            @include mixin.highlighted;
         }
     }
 
     &-highlighted {
-        @include highlighted;
+        @include mixin.highlighted;
     }
 
     &-underlined {

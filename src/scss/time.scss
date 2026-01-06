@@ -1,10 +1,13 @@
+@use "color";
+@use "mixin";
+
 .time {
     &-clock {
-        @include flexCenter;
+        @include mixin.flexCenter;
     }
 
     &-calendar {
-        @include flexCenter;
+        @include mixin.flexCenter;
         flex-direction: column;
         row-gap: 1rem;
         text-align: center;
@@ -31,11 +34,11 @@
             white-space: nowrap;
             min-width: 11rem;
             user-select: none;
-            color: $darkwhite;
+            color: color.$darkwhite;
         }
 
         &-day {
-            color: $darkwhite;
+            color: color.$darkwhite;
             font-size: 1.2rem;
         }
 
@@ -45,10 +48,10 @@
     }
 
     &-date {
-        @include outline;
+        @include mixin.outline;
         display: flex;
         border-radius: 5px;
-        @include formEffect;
+        @include mixin.formEffect;
 
         &-input {
             background-color: transparent;
@@ -59,7 +62,7 @@
             padding: 0px .5rem;
             color: currentColor;
             pointer-events: auto;
-            @include fullSize;
+            @include mixin.fullSize;
         }
     }
 }

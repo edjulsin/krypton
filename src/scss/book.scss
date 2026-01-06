@@ -1,5 +1,8 @@
+@use "color";
+@use "mixin";
+
 .book {
-    @include fullSize;
+    @include mixin.fullSize;
     display: flex;
     flex-direction: column;
 
@@ -11,22 +14,22 @@
 
     &-title {
         font-size: 1.5rem;
-        color: $darkwhite;
+        color: color.$darkwhite;
     }
 
     &-control {
-        @include flexCenter;
+        @include mixin.flexCenter;
         column-gap: 10px;
     }
 
     &-loader {
-        @include flexCenter;
+        @include mixin.flexCenter;
         width: 100%;
         height: 100%;
     }
 
     &-slider {
-        background-color: $black;
+        background-color: color.$black;
         border-radius: 10px;
         width: 8rem;
         height: 1.5rem;

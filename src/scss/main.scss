@@ -1,3 +1,5 @@
+@use "color";
+
 .main {
     display: grid;
     grid-template-columns: auto 1fr;
@@ -14,7 +16,7 @@
     }
 
     & > * {
-        background-color: $dark;
+        background-color: color.$dark;
         padding: 1rem;
         border-radius: 5px;
     }

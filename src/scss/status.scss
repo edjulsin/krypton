@@ -1,24 +1,27 @@
+@use "color";
+@use "mixin";
+
 .status {
-    @include flexCenter;
+    @include mixin.flexCenter;
     border-radius: 5px;
     padding: .3rem .6rem;
     cursor: pointer;
 
     & > * {
-        @include flexCenter;
+        @include mixin.flexCenter;
     }
 
     &-icon {
         &-success {
-            color: $up;
+            color: color.$up;
         }
     
         &-failed {
-            color: $down;
+            color: color.$down;
         }
     
         &-network {
-            color: $eq;
+            color: color.$eq;
         }
     }
 }

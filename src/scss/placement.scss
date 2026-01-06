@@ -1,22 +1,25 @@
+@use "color";
+@use "mixin";
+
 .placement {
     &-inline {
-        @include flexCenter;
+        @include mixin.flexCenter;
     }
 
     &-block {
-        @include flexCenter;
-        @include fullSize;
+        @include mixin.flexCenter;
+        @include mixin.fullSize;
     }
 
     &-target {
-        @include fullSize;
+        @include mixin.fullSize;
     }
 
     &-tooltip {
-        @include flexCenter;
+        @include mixin.flexCenter;
         white-space: nowrap;
         min-width: max-content;
-        color: $white;
+        color: color.$white;
         padding: .3rem .8rem;
         font-size: 1.3rem;
         font-weight: 300;
@@ -67,14 +70,14 @@
         &-separator {
             display: block;
             height: 1px;
-            background-color: $border;
+            background-color: color.$border;
         }
     }
 
     &-lists {
         overflow-x: hidden;
         overflow-y: auto;
-        @include thinScrollBar;
+        @include mixin.thinScrollBar;
         font-weight: 300;
 
         &-scrollenabled {
@@ -98,8 +101,8 @@
         top: 0;
         left: 0;
         position: absolute;
-        @include outline;
-        @include background;
+        @include mixin.outline;
+        @include mixin.background;
         border-radius: 5px;
     }
 }

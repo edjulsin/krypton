@@ -1,5 +1,8 @@
+@use "color";
+@use "mixin";
+
 .check {
-    @include size(2.1rem, 2.1rem);
+    @include mixin.size(2.1rem, 2.1rem);
     margin: 0px;
     padding: 0px;
     outline: none;
@@ -13,16 +16,16 @@
     &-enabled {
         background-image: url('../assets/images/misc/check.svg');   
         background-position: center;
-        background-color: $blue;
-        border-color: $blue;
+        background-color: color.$blue;
+        border-color: color.$blue;
     }
 
     &-disabled {
         background-color: transparent;
-        border-color: $darkwhite; 
+        border-color: color.$darkwhite; 
 
         &:hover {
-            border-color: $mediumwhite;
+            border-color: color.$mediumwhite;
         }
     }
 }

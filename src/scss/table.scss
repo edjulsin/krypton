@@ -1,3 +1,6 @@
+@use "color";
+@use "mixin";
+
 .table {
     display: flex;
     flex-direction: column;
@@ -37,7 +40,7 @@
         }
 
         &-label {
-            color: $darkgrey;
+            color: color.$darkgrey;
         }
 
         &-up, &-down {
@@ -49,7 +52,7 @@
         }
 
         &-up {
-            color: $up;
+            color: color.$up;
 
             & > *:nth-child(2) {
                 background-image: url('../assets/images/misc/caretup.svg');
@@ -57,7 +60,7 @@
         }
 
         &-down {
-            color: $down;
+            color: color.$down;
 
             & > *:nth-child(2) {
                 background-image: url('../assets/images/misc/caretdown.svg');
@@ -74,7 +77,7 @@
     &-input {
         display: flex;
         width: 100%;
-        @include formEffect;
+        @include mixin.formEffect;
         border-radius: 5px;
 
         &-form {
@@ -132,14 +135,14 @@
     }
     
     &-list {
-        @include fullSize;
-        @include thinScrollBar;
+        @include mixin.fullSize;
+        @include mixin.thinScrollBar;
         overflow-y: scroll;
         overflow-x: hidden;
         font-size: 1.2rem;
 
         &-currency {
-            color: $darkwhite;
+            color: color.$darkwhite;
         }
 
         &-menu {
@@ -177,11 +180,11 @@
         }
 
         &-up {
-            color: $up;
+            color: color.$up;
         }
     
         &-down {
-            color: $down;
+            color: color.$down;
         }
     }
 }

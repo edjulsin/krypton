@@ -1,5 +1,7 @@
+@use "mixin";
+
 .canvas {
-    @include fullSize;
+    @include mixin.fullSize;
     position: relative;
     user-select: none;
 

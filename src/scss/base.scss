@@ -1,3 +1,7 @@
+@use "color";
+@use "font";
+@use "mixin";
+
 *,
 *::before,
 *::after {
@@ -7,7 +11,7 @@
 html {
     overflow-x: hidden;
     overflow-y: scroll;
-    @include thinScrollBar;
+    @include mixin.thinScrollBar;
     font-size: 62.5%;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 
@@ -45,10 +49,10 @@ body {
     line-height: 1.6em;
     font-weight: 400;
     font-style: normal;
-    font-family: $font-sans-serif;
-    color: $grey;
+    font-family: font.$font-sans-serif;
+    color: color.$grey;
     text-rendering: optimizeLegibility;
-    background: $black;
+    background: color.$black;
 }
 
 p,

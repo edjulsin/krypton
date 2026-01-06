@@ -1,11 +1,14 @@
+@use "color";
+@use "mixin";
+
 .chart {
-    @include fullSize;
-    @include flexCenter;
+    @include mixin.fullSize;
+    @include mixin.flexCenter;
     flex-direction: column;
     row-gap: 1rem;
 
     &-deficit {
-        @include fullSize;
+        @include mixin.fullSize;
     }
 
     &-info {
@@ -15,15 +18,15 @@
         bottom: 1rem;
         left: 50%;
         padding: .3rem .6rem;
-        @include outline;
-        @include background;
+        @include mixin.outline;
+        @include mixin.background;
         border-radius: 5px;
         transform: translate(calc(-50% + .5px), calc(-50% + .5px));
         transition: visibility 1s ease-in-out, opacity 1s ease-in-out;
-        @include flexCenter;
+        @include mixin.flexCenter;
 
         &-icon {
-            color: $eq;
+            color: color.$eq;
         }
 
         &-text {
@@ -40,18 +43,18 @@
         left: 50%;
         transform: translate(calc(-50% + .5px), calc(-50% + .5px));
 
-        @include flexCenter;
+        @include mixin.flexCenter;
         column-gap: 1.5rem;
    
 
         &-item {
-            @include flexCenter;
+            @include mixin.flexCenter;
             border-radius: 5px;
             transition: visibility 150ms ease-in-out, opacity 150ms ease-in-out;
         }
 
         &-button {
-            @include background;
+            @include mixin.background;
         }
     }
 
@@ -63,7 +66,7 @@
         transform: translate(calc(-50% + .5px), calc(-50% + .5px));
 
         &-button {
-            @include background;
+            @include mixin.background;
         }
     }
 
@@ -78,19 +81,19 @@
         font-size: 1.3rem;
 
         &-item {
-            @include flexCenter;
+            @include mixin.flexCenter;
             column-gap: .25rem;
         }
 
         &-value {
             height: 100%;
-            @include flexCenter;
+            @include mixin.flexCenter;
         }
 
         &-label {
             height: 100%;
-            @include flexCenter;
-            color: $darkgrey;
+            @include mixin.flexCenter;
+            color: color.$darkgrey;
         }
     }
 
@@ -106,7 +109,7 @@
     &-top, &-bottom {
         display: flex;
         justify-content: space-between;
-        @include size(100%, auto);
+        @include mixin.size(100%, auto);
 
         & > * {
             display: flex;
@@ -135,19 +138,19 @@
     }
 
     &-center {
-        @include fullSize;
+        @include mixin.fullSize;
         border-radius: 5px;
         min-width: 32rem;
         min-height: 35rem;
 
         &-grid {
-            @include fullSize;
+            @include mixin.fullSize;
             position: relative;
         }
     }
 
     &-main {
-        @include fullSize;
+        @include mixin.fullSize;
         position: relative;
         cursor: crosshair;
 
@@ -184,7 +187,7 @@
             white-space: nowrap;
             font-size: 1.3rem;
             font-weight: 400;
-            color: $mediumwhite;
+            color: color.$mediumwhite;
         }
 
         &-activelabel {
@@ -192,7 +195,7 @@
             pointer-events: auto;
 
             &:hover {
-                color: $white;
+                color: color.$white;
             }
         }
 
@@ -207,8 +210,8 @@
         }
 
         &-main {
-            border-top: 1px solid $border;
-            border-bottom: 1px solid $border;
+            border-top: 1px solid color.$border;
+            border-bottom: 1px solid color.$border;
         }
 
         &-title {
@@ -218,7 +221,7 @@
 
         &-navigation {
             padding: 1rem;
-            border-right: 1px solid $border;
+            border-right: 1px solid color.$border;
             display: flex;
             flex-direction: column;
             row-gap: .2rem;
@@ -244,7 +247,7 @@
             padding: 1rem;
             overflow-x: hidden;
             overflow-y: auto;
-            @include thinScrollBar;
+            @include mixin.thinScrollBar;
             scrollbar-gutter: stable;
 
             & > * {
@@ -306,10 +309,10 @@
             max-height: 30rem;
             overflow-x: hidden;
             overflow-y: auto;
-            @include thinScrollBar;
+            @include mixin.thinScrollBar;
             scrollbar-gutter: stable;
-            border-top: 1px solid $border;
-            border-bottom: 1px solid $border;
+            border-top: 1px solid color.$border;
+            border-bottom: 1px solid color.$border;
             padding-top: 1rem;
             padding-bottom: 1rem;
         }

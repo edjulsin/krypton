@@ -1,5 +1,7 @@
+@use "mixin";
+
 .maintenance {
-    @include flexCenter;
+    @include mixin.flexCenter;
     flex-direction: column;
     height: 100vh;
     padding: 1rem;

@@ -1,5 +1,7 @@
+@use "color";
+
 .footer {
-    color: $darkgrey;
+    color: color.$darkgrey;
     font-weight: 400;
     font-size: 1.6rem;
     margin-top: auto;
@@ -16,7 +18,7 @@
             height: 1px;
             width: 10rem;
             margin-left: 1rem;
-            background: linear-gradient(to right, rgba($darkgrey, .3), rgba($darkgrey, .1));
+            background: linear-gradient(to right, rgba(color.$darkgrey, .3), rgba(color.$darkgrey, .1));
 
             @media only screen and (max-width: 37.5em) {
                 & {
