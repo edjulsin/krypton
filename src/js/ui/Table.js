@@ -42,7 +42,6 @@ const prices = [
     'usd',
     'btc',
     'eur',
-    'jpy',
     'eth',
     'gbp',
     'usdt',
@@ -56,15 +55,14 @@ const prices = [
 
 const defaultPrice = 'ANY'
 
-const volumes = ['self', 'btc', 'usd', 'eth', 'try', 'jpy'].map(toUpper)
+const volumes = ['self', 'btc', 'usd', 'eth', 'try'].map(toUpper)
 
 const volumesIndex = {
     SELF: 0,
     BTC: 1,
     USD: 2,
     ETH: 3,
-    TRY: 4,
-    JPY: 5
+    TRY: 4
 }
 
 const defaultVolume = 'USD'
