@@ -21,7 +21,7 @@ import namesPlugin from 'colord/plugins/names'
 import Canvas from './Canvas';
 import Loader from './Loader';
 
-extend([ a11yPlugin, namesPlugin ]);
+extend([a11yPlugin, namesPlugin]);
 
 const defaultAreaFill = colord('white').alpha(0).toHex()
 
@@ -39,23 +39,23 @@ const defaultHLCCloseColor = '#9A9A9A'
 
 const timeDomain = compose(
     map(P.mts),
-    juxt([ head, last ])
+    juxt([head, last])
 )
 
 const volumeDomain = v => {
-    const [ min, max ] = extent(v, P.volume)
+    const [min, max] = extent(v, P.volume)
     if(min === max) {
         if(min === 0 && max === 0) {
-            return [ 0, 1 ]
+            return [0, 1]
         } else {
-            return [ min - min * .5, max + max * .5 ]
+            return [min - min * .5, max + max * .5]
         }
     } else {
-        return [ min, max ]
+        return [min, max]
     }
 }
 
-const scaleTimeInterval = curry((timeScale, [ a, b ]) =>
+const scaleTimeInterval = curry((timeScale, [a, b]) =>
     on(absDiff, o(timeScale, P.mts), a, b)
 )
 
@@ -65,8 +65,8 @@ const calculateScaleExtent = curry((min, max, distance, scale) =>
 
 const applyTransform = zipWith((a, b) => is(Function, a) ? a(b) : a)
 
-const defaultXScaleExtent = [ .1, 100 ]
-const defaultYScaleExtent = [ -Infinity, Infinity ]
+const defaultXScaleExtent = [.1, 100]
+const defaultYScaleExtent = [-Infinity, Infinity]
 
 const defaultScaleExtent = [
     defaultXScaleExtent,
@@ -77,21 +77,21 @@ const defaultXtransform = zoomIdentity
 
 const defaultYTransform = zoomIdentity
 
-const defaultTransform = [ defaultXtransform, defaultYTransform ]
+const defaultTransform = [defaultXtransform, defaultYTransform]
 
 const defaultPlotWidth = 1920
 
 const defaultPlotHeight = 1080
 
-const defaultPlotSize = [ defaultPlotWidth, defaultPlotHeight ]
+const defaultPlotSize = [defaultPlotWidth, defaultPlotHeight]
 
-const defaultDomain = [ 0, 1 ]
+const defaultDomain = [0, 1]
 
-const defaultTimeRange = [ 0, defaultPlotWidth ]
+const defaultTimeRange = [0, defaultPlotWidth]
 
-const defaultPriceRange = [ 0, defaultPlotHeight ]
+const defaultPriceRange = [0, defaultPlotHeight]
 
-const defaultVolumeRange = [ defaultPlotHeight, defaultPlotHeight * 0.8 ]
+const defaultVolumeRange = [defaultPlotHeight, defaultPlotHeight * 0.8]
 
 const timeScale = scaleUtc()
 
@@ -139,11 +139,11 @@ const timeFormats = [
 const calculateZoomTransition = curry((t0, t1, i) => {
     const interpolator = on(
         interpolateArray,
-        props([ 'x', 'y', 'k' ])
+        props(['x', 'y', 'k'])
     )
 
     const output = compose(
-        map(([ x, y, k ]) =>
+        map(([x, y, k]) =>
             zoomIdentity.translate(x, y).scale(k)
         ),
         juxt(
@@ -259,7 +259,7 @@ const timeZones = [
 
 const defaultTimeZone = 0
 
-const getTimeZone = tz => timeZones[ tz ]
+const getTimeZone = tz => timeZones[tz]
 
 const getTimeZoneOffset = compose(last, getTimeZone)
 
@@ -278,8 +278,8 @@ const formatTimeZoneOffset = v => {
         hoursToMilliseconds(hours % 1)
     )
     const format = compose(Math.trunc, Math.abs)
-    const suffix = [ hours, minutes ].map(format).filter(v => v).join(':')
-    return [ prefix, suffix ].filter(v => v).join('')
+    const suffix = [hours, minutes].map(format).filter(v => v).join(':')
+    return [prefix, suffix].filter(v => v).join('')
 }
 
 const getTimeZoneUTC = compose(
@@ -310,40 +310,40 @@ const tickInterval = data => {
 const normalizeTimestamp = curry((sampleSize, data) => {
     const intervals = takeLast(sampleSize, data).reduce((a, b, i, arr) => {
         if(i + 1 < arr.length) {
-            const items = [ b, arr[ i + 1 ] ]
+            const items = [b, arr[i + 1]]
             const interval = on(absDiff, P.mts, ...items)
-            return { ...a, [ interval ]: interval in a ? a[ interval ].concat([ items ]) : [ items ] }
+            return { ...a, [interval]: interval in a ? a[interval].concat([items]) : [items] }
         } else {
             return a
         }
     }, {})
-    const keys = Object.keys(intervals).sort((a, b) => intervals[ b ].length - intervals[ a ].length)
+    const keys = Object.keys(intervals).sort((a, b) => intervals[b].length - intervals[a].length)
     const interval = tickInterval(
-        head(intervals[ head(keys) ])
+        head(intervals[head(keys)])
     )
     const normalized = data.reduce((acc, curr) => {
         if(isEmpty(acc)) {
-            return [ curr ]
+            return [curr]
         } else {
             const prev = last(acc)
-            const [ start, end ] = [ prev, curr ].map(P.mts)
+            const [start, end] = [prev, curr].map(P.mts)
             const dummy = P.close(prev)
             const filler = interval.range(interval.offset(start, 1), end).map(v => {
-                return [ v.getTime(), dummy, dummy, dummy, dummy, 0 ]
+                return [v.getTime(), dummy, dummy, dummy, dummy, 0]
             })
-            return acc.concat(filler).concat([ curr ])
+            return acc.concat(filler).concat([curr])
         }
     }, [])
     const recent = last(normalized)
     const dummy = P.close(recent)
     const filler = interval.range(interval.offset(P.mts(recent), 1), Date.now()).map(v => {
-        return [ v.getTime(), dummy, dummy, dummy, dummy, 0 ]
+        return [v.getTime(), dummy, dummy, dummy, dummy, 0]
     })
     return normalized.concat(filler)
 })
 
 const formatRequest = curry((tickInterval, dates) =>
-    zipWithCall([ tickInterval.floor, tickInterval.ceil ], dates).map(getTime)
+    zipWithCall([tickInterval.floor, tickInterval.ceil], dates).map(getTime)
 )
 
 const formatDestination = curry((tickInterval, dates) =>
@@ -428,7 +428,7 @@ const timeRanges = [
         interval: '1W',
         generate: compose(
             getTimes,
-            juxt([ v => utcYear.offset(v, -3), identity ]),
+            juxt([v => utcYear.offset(v, -3), identity]),
             utcMonday
         )
     },
@@ -437,7 +437,7 @@ const timeRanges = [
         interval: '1D',
         generate: compose(
             getTimes,
-            juxt([ v => utcYear.offset(v, -1), identity ]),
+            juxt([v => utcYear.offset(v, -1), identity]),
             utcDay
         )
     },
@@ -446,7 +446,7 @@ const timeRanges = [
         interval: '12h',
         generate: compose(
             getTimes,
-            juxt([ v => utcMonth.offset(v, -3), identity ]),
+            juxt([v => utcMonth.offset(v, -3), identity]),
             utcHour.every(12)
         )
     },
@@ -455,7 +455,7 @@ const timeRanges = [
         interval: '6h',
         generate: compose(
             getTimes,
-            juxt([ v => utcMonth.offset(v, -1), identity ]),
+            juxt([v => utcMonth.offset(v, -1), identity]),
             utcHour.every(6)
         )
     },
@@ -464,7 +464,7 @@ const timeRanges = [
         interval: '1h',
         generate: compose(
             getTimes,
-            juxt([ v => utcWeek.offset(v, -1), identity ]),
+            juxt([v => utcWeek.offset(v, -1), identity]),
             utcHour.every(1)
         )
     },
@@ -473,7 +473,7 @@ const timeRanges = [
         interval: '30m',
         generate: compose(
             getTimes,
-            juxt([ v => utcDay.offset(v, -3), identity ]),
+            juxt([v => utcDay.offset(v, -3), identity]),
             utcMinute.every(30)
         )
 
@@ -483,7 +483,7 @@ const timeRanges = [
         interval: '15m',
         generate: compose(
             getTimes,
-            juxt([ v => utcDay.offset(v, -1), identity ]),
+            juxt([v => utcDay.offset(v, -1), identity]),
             utcMinute.every(15)
         )
     },
@@ -492,7 +492,7 @@ const timeRanges = [
         interval: '5m',
         generate: compose(
             getTimes,
-            juxt([ v => utcHour.offset(v, -6), identity ]),
+            juxt([v => utcHour.offset(v, -6), identity]),
             utcMinute.every(5)
         )
     },
@@ -501,7 +501,7 @@ const timeRanges = [
         interval: '1m',
         generate: compose(
             getTimes,
-            juxt([ v => utcHour.offset(v, -1), identity ]),
+            juxt([v => utcHour.offset(v, -1), identity]),
             utcMinute
         )
     }
@@ -523,13 +523,13 @@ const defaultHeikinashiPriceSource = 6
 
 const defaultHighLowPriceSource = 2
 
-const heikinashiAdjuster = ([ start, ...rest ]) => {
-    const [ mts, open, close, high, low, volume ] = start
+const heikinashiAdjuster = ([start, ...rest]) => {
+    const [mts, open, close, high, low, volume] = start
     const averagePrice = price(defaultHeikinashiPriceSource)
     return rest.reduce((a, b) => {
         const prev = last(a)
         const close = averagePrice(b)
-        const open = mean([ P.open(prev), P.close(prev) ])
+        const open = mean([P.open(prev), P.close(prev)])
         const high = Math.max(
             P.high(b),
             P.open(b),
@@ -540,15 +540,15 @@ const heikinashiAdjuster = ([ start, ...rest ]) => {
             P.open(b),
             P.close(b)
         )
-        return a.concat([ [ P.mts(b), open, close, high, low, P.volume(b) ] ])
-    }, [ [
+        return a.concat([[P.mts(b), open, close, high, low, P.volume(b)]])
+    }, [[
         mts,
         open,
         averagePrice(start),
         Math.max(high, open, close),
         Math.min(low, open, close),
         volume
-    ] ])
+    ]])
 }
 const pricePrecisions = [
     -1,
@@ -560,20 +560,20 @@ const pricePrecisions = [
 const defaultPricePrecision = head(pricePrecisions)
 
 const precisionScale = scaleLinear()
-    .domain([ 0, 10 ])
-    .range([ 1, 2.8 ])
+    .domain([0, 10])
+    .range([1, 2.8])
 
 const toPrecision = curry((precision, value) =>
     format(`.${precision}f`)(value)
 )
 
-const transformers = [ identity, add(-1), identity, multiply(100) ]
-const precisions = [ identity, always(2), identity, always(2) ]
-const suffixes = [ 'f', '%', 'f', 'f' ]
-const formatters = transpose([ transformers, precisions, suffixes ])
+const transformers = [identity, add(-1), identity, multiply(100)]
+const precisions = [identity, always(2), identity, always(2)]
+const suffixes = ['f', '%', 'f', 'f']
+const formatters = transpose([transformers, precisions, suffixes])
 
 const priceFormatter = curry((priceAlgorithm, pricePrecision, price) => {
-    const [ transformer, precision, suffix ] = formatters[ priceAlgorithm ]
+    const [transformer, precision, suffix] = formatters[priceAlgorithm]
     const value = transformer(price)
     return format(`.${precision(pricePrecision)}${suffix}`)(value)
 })
@@ -591,15 +591,15 @@ const formatPercent = new Intl.NumberFormat('en-US', {
 }).format
 
 const priceAlgorithms = [
-    [ 'regular', 'auto' ],
-    [ 'percent', '%' ],
-    [ 'logarithmic', 'log' ],
-    [ 'index', 'i' ]
+    ['regular', 'auto'],
+    ['percent', '%'],
+    ['logarithmic', 'log'],
+    ['index', 'i']
 ]
 
 const defaultPriceAlgorithm = 0
 
-const logAlgorithms = [ 1, 3 ]
+const logAlgorithms = [1, 3]
 
 const isLogAlgorithm = v => logAlgorithms.includes(v)
 
@@ -639,8 +639,8 @@ const formatGridTemplate = map(
 )
 
 const getGridTemplate = curry((placements, templates) =>
-    zip(placements, templates).map(([ placement, template ]) =>
-        placementsFunction[ placement ](template)
+    zip(placements, templates).map(([placement, template]) =>
+        placementsFunction[placement](template)
     )
 )
 
@@ -649,8 +649,8 @@ const formatGridAreas = o(
     map(v => `'${v.join(' ')}'`)
 )
 
-const getGridAreas = curry(([ x, y ], templates) =>
-    [ placementsFunction[ x ], map(placementsFunction[ y ]) ].reduce(applyTo, templates)
+const getGridAreas = curry(([x, y], templates) =>
+    [placementsFunction[x], map(placementsFunction[y])].reduce(applyTo, templates)
 )
 
 const defaultStatus = ({ chart, precision, change, data }) => {
@@ -659,7 +659,7 @@ const defaultStatus = ({ chart, precision, change, data }) => {
     const index = Number(
         chart.previous ? change < 0 : P.open(data) > P.close(data)
     )
-    const color = defaultChartColors[ index ]
+    const color = defaultChartColors[index]
     const percent = change / close || 0
     return [
         { id: 'change', label: '', value: (change > 0 ? '+' : '') + format(`.${precision}f`)(change), color: color },
@@ -670,7 +670,7 @@ const defaultStatus = ({ chart, precision, change, data }) => {
 
 const ohlcStatus = ({ data, change, precision, chart }) => {
     const color = chartPriceColor(3, { chart, change, data })
-    const [ , open, close, high, low ] = data.map(
+    const [, open, close, high, low] = data.map(
         toPrecision(precision)
     )
 
@@ -745,7 +745,7 @@ const highLowStatus = ({ data, precision, chart }) => {
     return [
         { id: 'ohlc', label: '', value: precise(high), color: color },
         { id: 'ohlc', label: '', value: precise(low), color: color },
-        { id: 'volume', label: 'Vol', value: formatVolume(volume), color: defaultChartColors[ index ] }
+        { id: 'volume', label: 'Vol', value: formatVolume(volume), color: defaultChartColors[index] }
     ]
 }
 
@@ -777,14 +777,14 @@ const chartStatus = curry((type, props) => {
         lineStatus,
         lineStatus
     ]
-    return fns[ type ](props).map(v => {
+    return fns[type](props).map(v => {
         return { ...v, color: colord(v.color).alpha(1).toRgbString() }
     })
 })
 
 const drawMainChart = ({
     context,
-    size: [ width, height ],
+    size: [width, height],
     frame,
     symbol,
     timeScale,
@@ -803,7 +803,7 @@ const drawMainChart = ({
     line,
     label,
     font,
-    grid: [ xGrid, yGrid ],
+    grid: [xGrid, yGrid],
     showTimeTooltip,
     timeFormat,
     order,
@@ -815,7 +815,7 @@ const drawMainChart = ({
     const pPrice = price(chart.price, findLast(v => P.mts(v) < P.mts(end), data))
     const sPrice = price(chart.price, start)
 
-    const [ low, high ] = priceExtent(juxt([ P.low, P.high ]), data)
+    const [low, high] = priceExtent(juxt([P.low, P.high]), data)
     const volume = P.volume(end)
 
     const ts = timeScale.copy().domain(
@@ -877,11 +877,11 @@ const drawMainChart = ({
 
     const yTicks = priceScale.ticks(yCount).map(priceScale)
 
-    const allowedLabels = [ 'symbol', 'high', 'low', 'volume' ]
+    const allowedLabels = ['symbol', 'high', 'low', 'volume']
 
     const ltr = direction === 'right'
 
-    const radius = ltr ? ([ 5, 0, 0, 5 ]) : ([ 0, 5, 5, 0 ])
+    const radius = ltr ? ([5, 0, 0, 5]) : ([0, 5, 5, 0])
 
     const labels = sortLabel(head, height / 2, [
         pair(
@@ -921,17 +921,17 @@ const drawMainChart = ({
             Y.volume,
             singleton({ id: 'volume', message: 'Volume', fill: volumeColor })
         )
-    ]).reduce((acc, [ value, values ]) => {
-        const filtered = values.filter(({ id }) => label.value[ id ])
+    ]).reduce((acc, [value, values]) => {
+        const filtered = values.filter(({ id }) => label.value[id])
         const labelHeight = font.size * 2
         const y = head(
             adjustLabel(
                 pair(
                     value,
-                    [ value, value + filtered.length * labelHeight ]
+                    [value, value + filtered.length * labelHeight]
                 ),
                 acc.map(({ value, y, height }) =>
-                    pair(value, [ y, y + height ])
+                    pair(value, [y, y + height])
                 )
             )
         )
@@ -959,7 +959,7 @@ const drawMainChart = ({
         context: context,
         stroke: xGrid,
         lines: xTicks.map(x =>
-            zip([ x, x ], [ 0, height ])
+            zip([x, x], [0, height])
         )
     })
 
@@ -967,7 +967,7 @@ const drawMainChart = ({
         context: context,
         stroke: yGrid,
         lines: yTicks.map(y =>
-            zip([ 0, width ], [ y, y ])
+            zip([0, width], [y, y])
         )
     })
 
@@ -976,7 +976,7 @@ const drawMainChart = ({
         lines: log
             ? singleton({
                 stroke: { thickness: 1, color: defaultWhiteColor, style: 'solid' },
-                line: zip([ 0, width ], [ priceScale(1), priceScale(1) ])
+                line: zip([0, width], [priceScale(1), priceScale(1)])
             })
             : ([])
     })
@@ -1044,7 +1044,7 @@ const drawMainChart = ({
             ? xTicks.map(x => {
                 return {
                     stroke: session.stroke,
-                    line: zip([ x, x ], [ 0, height ])
+                    line: zip([x, x], [0, height])
                 }
             })
             : ([])
@@ -1053,11 +1053,11 @@ const drawMainChart = ({
     drawMultiLines({
         context: context,
         lines: Object.keys(line.value).reduce((acc, key) => {
-            if(line.value[ key ]) {
-                return acc.concat([ {
-                    stroke: lineStroke[ key ],
-                    line: zip([ 0, width ], [ Y[ key ], Y[ key ] ])
-                } ])
+            if(line.value[key]) {
+                return acc.concat([{
+                    stroke: lineStroke[key],
+                    line: zip([0, width], [Y[key], Y[key]])
+                }])
             } else {
                 return acc
             }
@@ -1067,9 +1067,9 @@ const drawMainChart = ({
     drawLabels({ context, font, labels })
 
     if(showTimeTooltip) {
-        const value = data[ binarySearch(P.mts, timeScale.invert(width / 2), data) ]
+        const value = data[binarySearch(P.mts, timeScale.invert(width / 2), data)]
         const time = P.mts(value)
-        const date = utcFormat(timeFormats[ timeFormat ])(time)
+        const date = utcFormat(timeFormats[timeFormat])(time)
         const hour = millisecondsToClock(time).slice(0, -3)
         const x = timeScale(time)
         const y = isOHLC(type)
@@ -1088,7 +1088,7 @@ const drawMainChart = ({
         drawTooltip({
             context: context,
             font: font,
-            messages: [ date, hour ],
+            messages: [date, hour],
             x: x,
             y: y
         })
@@ -1097,24 +1097,24 @@ const drawMainChart = ({
 
 const drawMainCursor = ({
     context,
-    size: [ width, height ],
+    size: [width, height],
     timeScale,
     priceScale,
     crosshair,
     cursor
 }) => {
-    const [ x, y ] = zipWithCall([ timeScale, priceScale ], cursor)
+    const [x, y] = zipWithCall([timeScale, priceScale], cursor)
 
     drawLines({
         context: context,
         stroke: crosshair,
-        lines: [ zip([ x, x ], [ 0, height ]), zip([ 0, width ], [ y, y ]) ]
+        lines: [zip([x, x], [0, height]), zip([0, width], [y, y])]
     })
 }
 
 const drawHorizontalAxis = ({
     context,
-    size: [ width, height ],
+    size: [width, height],
     timeScale,
     timeOffset,
     data,
@@ -1152,21 +1152,21 @@ const drawHorizontalAxis = ({
 
 const drawHorizontalCursor = ({
     context,
-    size: [ width, height ],
+    size: [width, height],
     timeScale,
     timeOffset,
     timeFormat,
-    cursor: [ time ],
+    cursor: [time],
     font,
     orientation
 }) => {
     const value = time + timeOffset
-    const date = utcFormat(timeFormats[ timeFormat ])(value)
+    const date = utcFormat(timeFormats[timeFormat])(value)
     const hour = millisecondsToClock(value).slice(0, -3)
     const message = date + '   ' + hour
     const rectWidth = context.measureText(message.toUpperCase()).width * 1.3
     const rectHeight = height
-    const radius = orientation === 'bottom' ? ([ 0, 0, 5, 5 ]) : ([ 5, 5, 0, 0 ])
+    const radius = orientation === 'bottom' ? ([0, 0, 5, 5]) : ([5, 5, 0, 0])
 
     drawLabels({
         context: context,
@@ -1189,7 +1189,7 @@ const drawHorizontalCursor = ({
 
 const drawVerticalAxis = ({
     context,
-    size: [ width, height ],
+    size: [width, height],
     now,
     priceAlgorithm,
     pricePrecision,
@@ -1216,7 +1216,7 @@ const drawVerticalAxis = ({
     const pPrice = price(chart.price, findLast(v => P.mts(v) < P.mts(end), data))
 
     const volume = P.volume(end)
-    const [ low, high ] = priceExtent(juxt([ P.low, P.high ]), data)
+    const [low, high] = priceExtent(juxt([P.low, P.high]), data)
 
     const countdown = tickInterval(data).offset(P.mts(recent), 1) - now
 
@@ -1331,17 +1331,17 @@ const drawVerticalAxis = ({
                 fill: volumeColor
             })
         )
-    ]).reduce((acc, [ value, values ]) => {
-        const filtered = values.filter(({ id }) => label.value[ id ])
+    ]).reduce((acc, [value, values]) => {
+        const filtered = values.filter(({ id }) => label.value[id])
         const x = width / 2
         const y = head(
             adjustLabel(
                 pair(
                     value,
-                    [ value, value + filtered.length * labelHeight ]
+                    [value, value + filtered.length * labelHeight]
                 ),
                 acc.map(({ value, y, height }) =>
-                    pair(value, [ y, y + height ])
+                    pair(value, [y, y + height])
                 )
             )
         )
@@ -1358,8 +1358,8 @@ const drawVerticalAxis = ({
                     width: labelWidth,
                     height: labelHeight,
                     radius: orientation === 'right'
-                        ? ([ 0, topRadius, bottomRadius, 0 ])
-                        : ([ topRadius, 0, 0, bottomRadius ])
+                        ? ([0, topRadius, bottomRadius, 0])
+                        : ([topRadius, 0, 0, bottomRadius])
                 }
             })
         )
@@ -1386,11 +1386,11 @@ const drawVerticalAxis = ({
 
 const drawVerticalCursor = ({
     context,
-    size: [ width, height ],
+    size: [width, height],
     priceScale,
     priceAlgorithm,
     pricePrecision,
-    cursor: [ _, price ],
+    cursor: [_, price],
     font,
     orientation
 }) => drawLabels({
@@ -1407,7 +1407,7 @@ const drawVerticalCursor = ({
         y: priceScale(price),
         width: width,
         height: font.size * 2,
-        radius: orientation === 'right' ? ([ 0, 5, 5, 0 ]) : ([ 5, 0, 0, 5 ])
+        radius: orientation === 'right' ? ([0, 5, 5, 0]) : ([5, 0, 0, 5])
     })
 })
 
@@ -1417,8 +1417,8 @@ const resetCanvas = curry((context, size) => {
 })
 
 const calculatePlotScale = plot => {
-    const [ width, height ] = plot.size
-    const [ tx, ty ] = plot.transform
+    const [width, height] = plot.size
+    const [tx, ty] = plot.transform
 
     const intv = tickInterval(plot.source)
 
@@ -1434,17 +1434,17 @@ const calculatePlotScale = plot => {
 
     const interval = scaleTimeInterval(ts, plot.source)
 
-    const [ xMin, xMax ] = zipWithAdd(
+    const [xMin, xMax] = zipWithAdd(
         zipWithAdd(
             timeDomain(plot.source).map(ts),
-            [ interval * 1.5, -interval * 1.5 ]
+            [interval * 1.5, -interval * 1.5]
         ),
-        [ -defaultPlotWidth, width ].map(v => v / tx.k)
+        [-defaultPlotWidth, width].map(v => v / tx.k)
     )
 
     const xt = constrainZoomTranslate(
-        [ [ xMin, -Infinity ], [ xMax, Infinity ] ],
-        [ [ 0, 0 ], [ defaultPlotWidth, defaultPlotHeight ] ],
+        [[xMin, -Infinity], [xMax, Infinity]],
+        [[0, 0], [defaultPlotWidth, defaultPlotHeight]],
         tx
     )
 
@@ -1454,7 +1454,7 @@ const calculatePlotScale = plot => {
         .translate(width - defaultPlotWidth)
         .scale(defaultPlotWidth / width)
         .rescaleX(
-            xt.rescaleX(ts).range([ 0, width ])
+            xt.rescaleX(ts).range([0, width])
         )
 
     const clampIndex = clamp(0, plot.source.length - 1)
@@ -1463,7 +1463,7 @@ const calculatePlotScale = plot => {
         binarySearch(P.mts, v.getTime(), plot.source)
     )
 
-    const [ start, end ] = indexes.map(v => plot.source[ v ])
+    const [start, end] = indexes.map(v => plot.source[v])
 
     const view = plot.source.slice(
         ...zipWithCall(
@@ -1492,7 +1492,7 @@ const calculatePlotScale = plot => {
                 plot.autoFit
                     ? priceExtent(
                         isOHLC(plot.type)
-                            ? juxt([ P.low, P.high ])
+                            ? juxt([P.low, P.high])
                             : o(
                                 replicate,
                                 price(plot.price)
@@ -1516,7 +1516,7 @@ const calculatePlotScale = plot => {
                 .scale(.6)
                 .rescaleY(ps)
         )
-        .range([ 0, height ])
+        .range([0, height])
 
     const vs = defaultVolumeScale()
         .domain(
@@ -1526,7 +1526,7 @@ const calculatePlotScale = plot => {
         )
         .clamp(true)
 
-    const volumeScale = vs.range([ height, height * 0.8 ])
+    const volumeScale = vs.range([height, height * 0.8])
 
     const scaleExtent = pair(
         calculateScaleExtent( // 1 being minimum distance between tick and width / 2 being maximum
@@ -1550,7 +1550,7 @@ const calculatePlotScale = plot => {
         timeDomain: ts.domain(),
         priceDomain: ps.domain(),
         volumeDomain: vs.domain(),
-        transform: [ xt, yt ]
+        transform: [xt, yt]
     }
 }
 
@@ -1561,11 +1561,11 @@ const calculatePlotTransit = plot => {
         const domain = plot.timeScale.domain().map(getTime)
         const interval = scaleTimeInterval(plot.timeScale, plot.source)
         const offset = absDiff(...domain) / 2
-        const formatSingle = juxt([ add(-offset), add(offset) ])
+        const formatSingle = juxt([add(-offset), add(offset)])
         const formatMultiple = compose(
             getTimes,
             map(plot.timeScale.invert),
-            zipWithAdd([ -interval / 2, interval / 2 ]),
+            zipWithAdd([-interval / 2, interval / 2]),
             map(plot.timeScale),
             formatDestination(
                 tickInterval(plot.source)
@@ -1582,8 +1582,8 @@ const calculatePlotTransit = plot => {
         if(absDiff(...destination) === 0) {
             return { ...plot, transit }
         } else {
-            const result = [ single, destination ]
-            const surplus = [ destination, head(plot.source) ]
+            const result = [single, destination]
+            const surplus = [destination, head(plot.source)]
                 .map(head)
                 .reduce(subtract)
 
@@ -1600,14 +1600,14 @@ const calculatePlotDestination = plot => {
     if(isEmpty(plot.destination)) {
         return plot
     } else {
-        const [ width ] = plot.size
-        const [ single, value ] = plot.destination
-        const [ xScaleExtent ] = plot.scaleExtent
+        const [width] = plot.size
+        const [single, value] = plot.destination
+        const [xScaleExtent] = plot.scaleExtent
 
         const xs = value.map(plot.timeScale)
         const xt = o(
             chain(
-                scaleZoomTo([ defaultPlotWidth - (width / 2), 0 ]),
+                scaleZoomTo([defaultPlotWidth - (width / 2), 0]),
                 compose(
                     clamp(...xScaleExtent),
                     multiply(
@@ -1616,7 +1616,7 @@ const calculatePlotDestination = plot => {
                     prop('k')
                 )
             ),
-            translateZoomBy([ (width / 2) - mean(xs), 0 ])
+            translateZoomBy([(width / 2) - mean(xs), 0])
         )
 
         const yt = identity
@@ -1626,7 +1626,7 @@ const calculatePlotDestination = plot => {
             showTimeTooltip: single,
             autoFit: true,
             destination: [],
-            transform: zipWithCall([ xt, yt ], plot.transform)
+            transform: zipWithCall([xt, yt], plot.transform)
         }
     }
 }
@@ -1648,7 +1648,7 @@ const calculatePlotRequest = plot => {
         return plot
     } else {
         const interval = tickInterval(plot.source)
-        const request = formatRequest(interval, [ interval.offset(start, -5), end ])
+        const request = formatRequest(interval, [interval.offset(start, -5), end])
         return { ...plot, request }
     }
 }
@@ -1660,22 +1660,22 @@ const calculatePlotSelected = plot => {
         const selectedChange = locked ? plot.selectedChange : plot.recentChange
         return { ...plot, selected, selectedChange }
     } else {
-        const [ x, min ] = [ plot.cursor, timeDomain(plot.view) ].map(head)
+        const [x, min] = [plot.cursor, timeDomain(plot.view)].map(head)
         const index = x < min
             ? -1
             : binarySearch(P.mts, x, plot.view)
 
         const selected = index < 0
             ? ([])
-            : plot.view[ index ]
+            : plot.view[index]
 
         const selectedChange = index <= 0
             ? Infinity
             : on(
                 subtract,
                 price(plot.price),
-                plot.view[ index ],
-                plot.view[ index - 1 ]
+                plot.view[index],
+                plot.view[index - 1]
             )
 
         return { ...plot, selected, selectedChange }
@@ -1711,7 +1711,7 @@ const calculatePlotCursor = plot => {
 }
 
 const calculatePlotTimeRange = plot => {
-    const timeRange = [ plot.start, plot.end ].map(P.mts)
+    const timeRange = [plot.start, plot.end].map(P.mts)
     return { ...plot, timeRange }
 }
 
@@ -1727,7 +1727,7 @@ const calculatePlot = compose(
 
 const Reset = <Icon name='reset' />
 
-const isPlacement = ref => ref.className.includes('placement')
+const isPlacement = ref => ref?.className.includes('placement') ?? false
 
 const isPlacementEvent = compose(
     isPlacement,
@@ -1738,43 +1738,43 @@ const isPlacementEvent = compose(
 const ChartSettingHeader = ({ onClose }) => (
     <div className='chart-setting-header draggable'>
         <h3 className='chart-setting-title'>Settings</h3>
-        <Button title='Close Settings' display='inline' size='big' onClick={ onClose }>
+        <Button title='Close Settings' display='inline' size='big' onClick={onClose}>
             <Icon name='close' />
         </Button>
     </div>
 )
 
 const ChartSettingNavigation = ({ container, type, navigation, setNavigation }) => {
-    const [ size, setSize ] = useState('big')
+    const [size, setSize] = useState('big')
 
     useEffect(container => {
-        const subscription = resizeObserver([ container ]).subscribe(() =>
+        const subscription = resizeObserver([container]).subscribe(() =>
             setSize(getNodeWidth(container) < 370 ? 'slim' : 'big')
         )
 
         return () => subscription.unsubscribe()
-    }, [ container ])
+    }, [container])
     return (
         <menu className='chart-setting-navigation'>
             {
                 [
-                    [ 'chart' + type, 'type' ],
-                    [ 'status', 'status' ],
-                    [ 'scale', 'scale' ],
-                    [ 'pencil', 'general' ]
-                ].map(([ icon, id ], idx) =>
-                    <ChartSettingItem key={ id }>
+                    ['chart' + type, 'type'],
+                    ['status', 'status'],
+                    ['scale', 'scale'],
+                    ['pencil', 'general']
+                ].map(([icon, id], idx) =>
+                    <ChartSettingItem key={id}>
                         <Button
                             display='block'
-                            size={ size }
-                            highlighted={ idx === navigation }
-                            onClick={ useCallback(() => setNavigation(idx), []) }
+                            size={size}
+                            highlighted={idx === navigation}
+                            onClick={useCallback(() => setNavigation(idx), [])}
                         >
                             <span className='chart-setting-icon'>
-                                <Icon name={ icon } />
+                                <Icon name={icon} />
                             </span>
                             <span className='chart-setting-text'>
-                                { capitalizeWord(id) }
+                                {capitalizeWord(id)}
                             </span>
                         </Button>
                     </ChartSettingItem>
@@ -1785,8 +1785,8 @@ const ChartSettingNavigation = ({ container, type, navigation, setNavigation }) 
 }
 
 const ChartSettingContent = ({ onScroll, children }) => {
-    const [ transition, setTransition ] = useState(null)
-    const [ scrolled, setScrolled ] = useState(false)
+    const [transition, setTransition] = useState(null)
+    const [scrolled, setScrolled] = useState(false)
 
     const onScrolled = () => {
         setScrolled(true)
@@ -1795,16 +1795,16 @@ const ChartSettingContent = ({ onScroll, children }) => {
         )
     }
 
-    useEffect(transition => () => clearTimeout(transition), [ transition ])
+    useEffect(transition => () => clearTimeout(transition), [transition])
 
-    useLayoutEffect(onScroll, [ scrolled ])
+    useLayoutEffect(onScroll, [scrolled])
 
     return (
         <menu
             className='chart-setting-content'
-            onScroll={ onScrolled }
+            onScroll={onScrolled}
         >
-            { children }
+            {children}
         </menu>
     )
 }
@@ -1812,13 +1812,13 @@ const ChartSettingContent = ({ onScroll, children }) => {
 const ChartSettingMain = ({ container, type, onScroll, navigation, setNavigation, content }) => (
     <div className='chart-setting-main'>
         <ChartSettingNavigation
-            container={ container }
-            type={ type }
-            navigation={ navigation }
-            setNavigation={ setNavigation }
+            container={container}
+            type={type}
+            navigation={navigation}
+            setNavigation={setNavigation}
         />
-        <ChartSettingContent onScroll={ onScroll }>
-            { content }
+        <ChartSettingContent onScroll={onScroll}>
+            {content}
         </ChartSettingContent>
     </div>
 )
@@ -1845,15 +1845,15 @@ const ChartSettingFooter = ({
                 },
             ].map(({ id, onClick }) =>
                 <ChartSettingItem
-                    key={ id }
-                    className={ 'chart-setting-' + id }
+                    key={id}
+                    className={'chart-setting-' + id}
                 >
                     <Button
                         size='big'
-                        outlined={ true }
-                        onClick={ onClick }
+                        outlined={true}
+                        onClick={onClick}
                     >
-                        { capitalizeWord(id) }
+                        {capitalizeWord(id)}
                     </Button>
                 </ChartSettingItem>
             )
@@ -1875,21 +1875,21 @@ const ChartSettingPopup = ({
 }) => (
     <div
         className='chart-setting'
-        onPointerDown={ onPointerDown }
+        onPointerDown={onPointerDown}
     >
-        <ChartSettingHeader onClose={ onSave } />
+        <ChartSettingHeader onClose={onSave} />
         <ChartSettingMain
-            container={ container }
-            type={ type }
-            navigation={ navigation }
-            setNavigation={ setNavigation }
-            content={ content }
-            onScroll={ onScroll }
+            container={container}
+            type={type}
+            navigation={navigation}
+            setNavigation={setNavigation}
+            content={content}
+            onScroll={onScroll}
         />
         <ChartSettingFooter
-            onRestore={ onRestore }
-            onCancel={ onCancel }
-            onSave={ onSave }
+            onRestore={onRestore}
+            onCancel={onCancel}
+            onSave={onSave}
         />
     </div>
 )
@@ -1904,9 +1904,9 @@ const ChartSettingSpanLabel = ({
         className={
             appendClassName('chart-setting-passivelabel', className)
         }
-        { ...attributes }
+        {...attributes}
     >
-        { value || children }
+        {value || children}
     </span>
 )
 
@@ -1920,9 +1920,9 @@ const ChartSettingLabel = ({
         className={
             appendClassName('chart-setting-activelabel', className)
         }
-        { ...attributes }
+        {...attributes}
     >
-        { value || children }
+        {value || children}
     </label>
 )
 
@@ -1936,9 +1936,9 @@ const ChartSettingItem = ({
         className={
             appendClassName('chart-setting-item', className)
         }
-        { ...attributes }
+        {...attributes}
     >
-        { value || children }
+        {value || children}
     </li>
 )
 
@@ -1950,30 +1950,30 @@ const ChartSettingLine = ({
 }) =>
     <>
         {
-            Object.entries(line.value).map(([ id ]) =>
-                <ChartSettingItem key={ 'line' + id }>
+            Object.entries(line.value).map(([id]) =>
+                <ChartSettingItem key={'line' + id}>
                     <ChartSettingLabel
-                        htmlFor={ id + 'line' }
-                        value={ capitalizeWords(id + ' ' + 'line') }
+                        htmlFor={id + 'line'}
+                        value={capitalizeWords(id + ' ' + 'line')}
                     />
                     <CheckInput
-                        id={ id + 'line' }
-                        checked={ line.value[ id ] }
+                        id={id + 'line'}
+                        checked={line.value[id]}
                         onChange={
                             useCallback(compose(
                                 setLine,
-                                assocPath([ 'value', id ])
+                                assocPath(['value', id])
                             ), [])
                         }
                     />
                     <Stroke
-                        control={ control }
-                        clear={ clear }
-                        value={ line.stroke[ id ] }
+                        control={control}
+                        clear={clear}
+                        value={line.stroke[id]}
                         onChange={
                             useCallback(compose(
                                 setLine,
-                                assocPath([ 'stroke', id ])
+                                assocPath(['stroke', id])
                             ), [])
                         }
                     />
@@ -1994,10 +1994,10 @@ const ChartSettingPrecision = ({
             value='Price Precision'
         />
         <Select
-            control={ control }
-            container={ container }
-            clear={ clear }
-            preview={ pricePrecision >= 0 ? pricePrecision > 0 ? '1' + '/' + (pricePrecision + '') : 'Integer' : 'Default' }
+            control={control}
+            container={container}
+            clear={clear}
+            preview={pricePrecision >= 0 ? pricePrecision > 0 ? '1' + '/' + (pricePrecision + '') : 'Integer' : 'Default'}
             data={
                 useMemo(() => (
                     pricePrecisions.map(precision => {
@@ -2007,7 +2007,7 @@ const ChartSettingPrecision = ({
                             onClick: () => setPricePrecision(precision)
                         }
                     })
-                ), [ pricePrecision ])
+                ), [pricePrecision])
             }
         />
     </ChartSettingItem>
@@ -2024,10 +2024,10 @@ const ChartSettingTimeZone = ({
             value='Time Zone'
         />
         <Select
-            control={ control }
-            container={ container }
-            clear={ clear }
-            preview={ timeZoneToString(timeZone) }
+            control={control}
+            container={container}
+            clear={clear}
+            preview={timeZoneToString(timeZone)}
             data={
                 useMemo(() => (
                     timeZones.map((_, id) => {
@@ -2037,7 +2037,7 @@ const ChartSettingTimeZone = ({
                             onClick: () => setTimeZone(id)
                         }
                     })
-                ), [ timeZone ])
+                ), [timeZone])
             }
         />
     </ChartSettingItem>
@@ -2056,10 +2056,10 @@ const ChartSettingAreaType = ({
                 value='Price Source'
             />
             <Select
-                control={ control }
-                container={ container }
-                clear={ clear }
-                preview={ priceSources[ areaChart.price ] }
+                control={control}
+                container={container}
+                clear={clear}
+                preview={priceSources[areaChart.price]}
                 data={
                     useMemo(() => (
                         priceSources.map((text, idx) => {
@@ -2071,7 +2071,7 @@ const ChartSettingAreaType = ({
                                 )
                             }
                         })
-                    ), [ areaChart.price ])
+                    ), [areaChart.price])
                 }
             />
         </ChartSettingItem>
@@ -2080,9 +2080,9 @@ const ChartSettingAreaType = ({
                 value='Line'
             />
             <Stroke
-                control={ control }
-                clear={ clear }
-                value={ areaChart.stroke }
+                control={control}
+                clear={clear}
+                value={areaChart.stroke}
                 onChange={
                     useCallback(compose(
                         setAreaChart,
@@ -2094,9 +2094,9 @@ const ChartSettingAreaType = ({
         <ChartSettingItem>
             <ChartSettingSpanLabel value='Fill' />
             <Fill
-                control={ control }
-                clear={ clear }
-                value={ areaChart.fill }
+                control={control}
+                clear={clear}
+                value={areaChart.fill}
                 onChange={
                     useCallback(compose(
                         setAreaChart,
@@ -2118,11 +2118,11 @@ const ChartSettingBarType = ({
         <ChartSettingItem>
             <ChartSettingLabel
                 htmlFor='previous'
-                value={ capitalizeWords('color based on previous') }
+                value={capitalizeWords('color based on previous')}
             />
             <CheckInput
                 id='previous'
-                checked={ barChart.previous }
+                checked={barChart.previous}
                 onChange={
                     useCallback(compose(
                         setBarChart,
@@ -2138,7 +2138,7 @@ const ChartSettingBarType = ({
             />
             <CheckInput
                 id='hlc'
-                checked={ barChart.hlc }
+                checked={barChart.hlc}
                 onChange={
                     useCallback(compose(
                         setBarChart,
@@ -2149,19 +2149,19 @@ const ChartSettingBarType = ({
 
         </ChartSettingItem>
         {
-            ([ 'up', 'down' ]).map((label, idx) =>
-                <ChartSettingItem key={ 'bar' + label }>
+            (['up', 'down']).map((label, idx) =>
+                <ChartSettingItem key={'bar' + label}>
                     <ChartSettingSpanLabel
-                        value={ capitalizeWords(label + ' ' + 'color') }
+                        value={capitalizeWords(label + ' ' + 'color')}
                     />
                     <Fill
-                        control={ control }
-                        clear={ clear }
-                        value={ barChart.fill[ idx ] }
+                        control={control}
+                        clear={clear}
+                        value={barChart.fill[idx]}
                         onChange={
                             useCallback(compose(
                                 setBarChart,
-                                assocPath([ 'fill', idx ])
+                                assocPath(['fill', idx])
                             ), [])
                         }
                     />
@@ -2175,7 +2175,7 @@ const ChartSettingBarType = ({
             />
             <CheckInput
                 id='barthin'
-                checked={ barChart.thin }
+                checked={barChart.thin}
                 onChange={
                     useCallback(compose(
                         setBarChart,
@@ -2198,10 +2198,10 @@ const ChartSettingBaselineType = ({
         <ChartSettingItem key='baseline price'>
             <ChartSettingSpanLabel value='Price Source' />
             <Select
-                control={ control }
-                container={ container }
-                clear={ clear }
-                preview={ priceSources[ baselineChart.price ] }
+                control={control}
+                container={container}
+                clear={clear}
+                preview={priceSources[baselineChart.price]}
                 data={
                     useMemo(() => (
                         priceSources.map((source, idx) => {
@@ -2213,24 +2213,24 @@ const ChartSettingBaselineType = ({
                                 )
                             }
                         })
-                    ), [ baselineChart.price ])
+                    ), [baselineChart.price])
                 }
             />
         </ChartSettingItem>
         {
-            ([ 'top', 'bottom' ]).map(id =>
-                <ChartSettingItem key={ 'baseline' + id + 'stroke' }>
+            (['top', 'bottom']).map(id =>
+                <ChartSettingItem key={'baseline' + id + 'stroke'}>
                     <ChartSettingSpanLabel
-                        value={ capitalizeWords(id + ' ' + 'line') }
+                        value={capitalizeWords(id + ' ' + 'line')}
                     />
                     <Stroke
-                        control={ control }
-                        clear={ clear }
-                        value={ baselineChart[ id ].stroke }
+                        control={control}
+                        clear={clear}
+                        value={baselineChart[id].stroke}
                         onChange={
                             useCallback(compose(
                                 setBaselineChart,
-                                assocPath([ id, 'stroke' ])
+                                assocPath([id, 'stroke'])
                             ), [])
                         }
                     />
@@ -2238,22 +2238,22 @@ const ChartSettingBaselineType = ({
             )
         }
         {
-            ([ 'top', 'bottom' ]).map(id =>
-                <ChartSettingItem key={ 'baseline' + id + 'fill' }>
+            (['top', 'bottom']).map(id =>
+                <ChartSettingItem key={'baseline' + id + 'fill'}>
                     <ChartSettingSpanLabel
-                        value={ capitalizeWords(id + ' ' + 'fill') }
+                        value={capitalizeWords(id + ' ' + 'fill')}
                     />
                     {
-                        baselineChart[ id ].fill.map((fill, key) =>
+                        baselineChart[id].fill.map((fill, key) =>
                             <Fill
-                                control={ control }
-                                key={ 'baseline' + id + 'fill' + (key + '') }
-                                clear={ clear }
-                                value={ fill }
+                                control={control}
+                                key={'baseline' + id + 'fill' + (key + '')}
+                                clear={clear}
+                                value={fill}
                                 onChange={
                                     useCallback(compose(
                                         setBaselineChart,
-                                        assocPath([ id, 'fill', key ])
+                                        assocPath([id, 'fill', key])
                                     ), [])
                                 }
                             />
@@ -2268,12 +2268,12 @@ const ChartSettingBaselineType = ({
                 htmlFor='baselevel'
             />
             <NumberInput
-                style={ { width: '30%' } }
+                style={{ width: '30%' }}
                 id='baselevel'
-                min={ 0 }
-                max={ 100 }
-                step={ 1 }
-                value={ Math.round(baselineChart.level * 100) }
+                min={0}
+                max={100}
+                step={1}
+                value={Math.round(baselineChart.level * 100)}
                 onChange={
                     useCallback(compose(
                         setBaselineChart,
@@ -2297,11 +2297,11 @@ const ChartSettingColumnType = ({
         <ChartSettingItem>
             <ChartSettingLabel
                 htmlFor='previous'
-                value={ capitalizeWords('color based on previous') }
+                value={capitalizeWords('color based on previous')}
             />
             <CheckInput
                 id='previous'
-                checked={ columnChart.previous }
+                checked={columnChart.previous}
                 onChange={
                     useCallback(compose(
                         setColumnChart,
@@ -2313,10 +2313,10 @@ const ChartSettingColumnType = ({
         <ChartSettingItem>
             <ChartSettingSpanLabel value='Price Source' />
             <Select
-                control={ control }
-                container={ container }
-                clear={ clear }
-                preview={ priceSources[ columnChart.price ] }
+                control={control}
+                container={container}
+                clear={clear}
+                preview={priceSources[columnChart.price]}
                 data={
                     useMemo(() => (
                         priceSources.map((source, key) => {
@@ -2328,24 +2328,24 @@ const ChartSettingColumnType = ({
                                 )
                             }
                         })
-                    ), [ columnChart.price ])
+                    ), [columnChart.price])
                 }
             />
         </ChartSettingItem>
         {
-            ([ 'up', 'down' ]).map((label, key) =>
-                <ChartSettingItem key={ 'column' + label }>
+            (['up', 'down']).map((label, key) =>
+                <ChartSettingItem key={'column' + label}>
                     <ChartSettingSpanLabel
-                        value={ capitalizeWords(label + ' ' + 'color') }
+                        value={capitalizeWords(label + ' ' + 'color')}
                     />
                     <Fill
-                        control={ control }
-                        clear={ clear }
-                        value={ columnChart.fill[ key ] }
+                        control={control}
+                        clear={clear}
+                        value={columnChart.fill[key]}
                         onChange={
                             useCallback(compose(
                                 setColumnChart,
-                                assocPath([ 'fill', key ])
+                                assocPath(['fill', key])
                             ), [])
                         }
                     />
@@ -2365,11 +2365,11 @@ const ChartSettingOHLCType = ({
         <ChartSettingItem>
             <ChartSettingLabel
                 htmlFor='previous'
-                value={ capitalizeWords('color based on previous') }
+                value={capitalizeWords('color based on previous')}
             />
             <CheckInput
                 id='previous'
-                checked={ state.previous }
+                checked={state.previous}
                 onChange={
                     useCallback(compose(
                         setState,
@@ -2379,33 +2379,33 @@ const ChartSettingOHLCType = ({
             />
         </ChartSettingItem>
         {
-            [ 'body', 'border', 'wick' ].map((id, key) =>
-                <ChartSettingItem key={ name + id + key }>
+            ['body', 'border', 'wick'].map((id, key) =>
+                <ChartSettingItem key={name + id + key}>
                     <ChartSettingLabel
-                        value={ capitalizeWord(id) }
-                        htmlFor={ name + id }
+                        value={capitalizeWord(id)}
+                        htmlFor={name + id}
                     />
                     <CheckInput
-                        id={ name + id }
-                        checked={ state[ id ].value }
+                        id={name + id}
+                        checked={state[id].value}
                         onChange={
                             useCallback(compose(
                                 setState,
-                                assocPath([ id, 'value' ])
+                                assocPath([id, 'value'])
                             ), [])
                         }
                     />
                     {
-                        state[ id ].color.map((fill, key) =>
+                        state[id].color.map((fill, key) =>
                             <Fill
-                                control={ control }
-                                key={ name + id + 'color' + (key + '') }
-                                clear={ clear }
-                                value={ fill }
+                                control={control}
+                                key={name + id + 'color' + (key + '')}
+                                clear={clear}
+                                value={fill}
                                 onChange={
                                     useCallback(compose(
                                         setState,
-                                        assocPath([ id, 'color', key ])
+                                        assocPath([id, 'color', key])
                                     ), [])
                                 }
                             />
@@ -2424,31 +2424,31 @@ const ChartSettingHighLowType = ({
 }) =>
     <>
         {
-            [ 'body', 'border', 'label' ].map((id, key) =>
-                <ChartSettingItem key={ 'highlow' + id + key }>
+            ['body', 'border', 'label'].map((id, key) =>
+                <ChartSettingItem key={'highlow' + id + key}>
                     <ChartSettingLabel
-                        value={ capitalizeWord(id) }
-                        htmlFor={ 'highlow' + id }
+                        value={capitalizeWord(id)}
+                        htmlFor={'highlow' + id}
                     />
                     <CheckInput
-                        id={ 'highlow' + id }
-                        checked={ highLowChart[ id ].value }
+                        id={'highlow' + id}
+                        checked={highLowChart[id].value}
                         onChange={
                             useCallback(compose(
                                 setHighLowChart,
-                                assocPath([ id, 'value' ])
+                                assocPath([id, 'value'])
                             ), [])
                         }
                     />
                     <Fill
-                        control={ control }
-                        key={ 'highlow' + id + 'color' }
-                        clear={ clear }
-                        value={ highLowChart[ id ].color }
+                        control={control}
+                        key={'highlow' + id + 'color'}
+                        clear={clear}
+                        value={highLowChart[id].color}
                         onChange={
                             useCallback(compose(
                                 setHighLowChart,
-                                assocPath([ id, 'color' ])
+                                assocPath([id, 'color'])
                             ), [])
                         }
                     />
@@ -2465,13 +2465,13 @@ const ChartSettingHLCType = ({
 }) =>
     <>
         {
-            [ 'high', 'low', 'close' ].map((id, key) =>
-                <ChartSettingItem key={ 'HLC' + id + key }>
-                    <ChartSettingSpanLabel value={ `${capitalizeWord(id)} line` } />
+            ['high', 'low', 'close'].map((id, key) =>
+                <ChartSettingItem key={'HLC' + id + key}>
+                    <ChartSettingSpanLabel value={`${capitalizeWord(id)} line`} />
                     <Stroke
-                        control={ control }
-                        clear={ clear }
-                        value={ HLCChart[ id ] }
+                        control={control}
+                        clear={clear}
+                        value={HLCChart[id]}
                         onChange={
                             useCallback(compose(
                                 setHLCChart,
@@ -2488,14 +2488,14 @@ const ChartSettingHLCType = ({
                 {
                     HLCChart.fill.map((fill, key) =>
                         <Fill
-                            key={ 'HLC' + 'fill' + key }
-                            control={ control }
-                            clear={ clear }
-                            value={ fill }
+                            key={'HLC' + 'fill' + key}
+                            control={control}
+                            clear={clear}
+                            value={fill}
                             onChange={
                                 useCallback(compose(
                                     setHLCChart,
-                                    assocPath([ 'fill', key ])
+                                    assocPath(['fill', key])
                                 ), [])
                             }
                         />
@@ -2516,10 +2516,10 @@ const ChartSettingLineType = ({
         <ChartSettingItem>
             <ChartSettingSpanLabel value='Price Source' />
             <Select
-                control={ control }
-                container={ container }
-                clear={ clear }
-                preview={ priceSources[ state.price ] }
+                control={control}
+                container={container}
+                clear={clear}
+                preview={priceSources[state.price]}
                 data={
                     useMemo(() => (
                         priceSources.map((source, idx) => {
@@ -2531,16 +2531,16 @@ const ChartSettingLineType = ({
                                 )
                             }
                         })
-                    ), [ state.price ])
+                    ), [state.price])
                 }
             />
         </ChartSettingItem>
         <ChartSettingItem>
             <ChartSettingSpanLabel value='Line' />
             <Stroke
-                control={ control }
-                clear={ clear }
-                value={ state.stroke }
+                control={control}
+                clear={clear}
+                value={state.stroke}
                 onChange={
                     useCallback(compose(
                         setState,
@@ -2557,15 +2557,15 @@ const ChartSettingStatus = ({
 }) =>
     <>
         {
-            Object.entries(status).map(([ id, value ]) =>
-                <ChartSettingItem key={ 'status' + id }>
+            Object.entries(status).map(([id, value]) =>
+                <ChartSettingItem key={'status' + id}>
                     <ChartSettingLabel
-                        htmlFor={ id + 'status' }
-                        value={ capitalizeWords(id + ' ' + 'status') }
+                        htmlFor={id + 'status'}
+                        value={capitalizeWords(id + ' ' + 'status')}
                     />
                     <CheckInput
-                        id={ id + 'status' }
-                        checked={ value }
+                        id={id + 'status'}
+                        checked={value}
                         onChange={
                             useCallback(compose(
                                 setStatus,
@@ -2589,20 +2589,20 @@ const ChartSettingAxis = ({
         <ChartSettingItem>
             <ChartSettingSpanLabel value='Axis Font' />
             <Fill
-                control={ control }
-                clear={ clear }
-                value={ axis.font.color }
+                control={control}
+                clear={clear}
+                value={axis.font.color}
                 onChange={
                     useCallback(compose(
                         setAxis,
-                        assocPath([ 'font', 'color' ])
+                        assocPath(['font', 'color'])
                     ), [])
                 }
             />
             <Select
-                container={ container }
-                control={ control }
-                clear={ clear }
+                container={container}
+                control={control}
+                clear={clear}
                 data={
                     useMemo(() => (
                         textSizes
@@ -2611,21 +2611,21 @@ const ChartSettingAxis = ({
                                     center: size,
                                     highlighted: axis.font.size === size,
                                     onClick: () => setAxis(
-                                        assocPath([ 'font', 'size' ], size)
+                                        assocPath(['font', 'size'], size)
                                     )
                                 }
                             })
-                    ), [ axis.font.size ])
+                    ), [axis.font.size])
                 }
-                preview={ axis.font.size }
+                preview={axis.font.size}
             />
         </ChartSettingItem>
         <ChartSettingItem>
             <ChartSettingSpanLabel value='Axis Lines' />
             <Stroke
-                control={ control }
-                clear={ clear }
-                value={ axis.stroke }
+                control={control}
+                clear={clear}
+                value={axis.stroke}
                 onChange={
                     useCallback(compose(
                         setAxis,
@@ -2650,30 +2650,30 @@ const ChartSettingScale = ({
 }) =>
     <>
         {
-            Object.entries(label.value).map(([ id ]) =>
-                <ChartSettingItem key={ 'label' + id }>
+            Object.entries(label.value).map(([id]) =>
+                <ChartSettingItem key={'label' + id}>
                     <ChartSettingLabel
-                        value={ capitalizeWords(id + ' ' + 'label') }
-                        htmlFor={ id + 'label' }
+                        value={capitalizeWords(id + ' ' + 'label')}
+                        htmlFor={id + 'label'}
                     />
                     <CheckInput
-                        id={ id + 'label' }
-                        checked={ label.value[ id ] }
+                        id={id + 'label'}
+                        checked={label.value[id]}
                         onChange={
                             useCallback(compose(
                                 setLabel,
-                                assocPath([ 'value', id ])
+                                assocPath(['value', id])
                             ), [])
                         }
                     />
                     <Fill
-                        control={ control }
-                        clear={ clear }
-                        value={ label.fill[ id ] }
+                        control={control}
+                        clear={clear}
+                        value={label.fill[id]}
                         onChange={
                             useCallback(compose(
                                 setLabel,
-                                assocPath([ 'fill', id ]),
+                                assocPath(['fill', id]),
                             ), [])
                         }
                     />
@@ -2683,11 +2683,11 @@ const ChartSettingScale = ({
         <ChartSettingItem>
             <ChartSettingSpanLabel value='Date Format' />
             <Select
-                control={ control }
-                container={ container }
-                clear={ clear }
+                control={control}
+                container={container}
+                clear={clear}
                 direction='left right'
-                preview={ utcFormat(timeFormats[ timeFormat ])(defaultTimeFormatDate) }
+                preview={utcFormat(timeFormats[timeFormat])(defaultTimeFormatDate)}
                 data={
                     useMemo(() => (
                         timeFormats.map((specifier, id) => {
@@ -2697,27 +2697,27 @@ const ChartSettingScale = ({
                                 onClick: () => setTimeFormat(id)
                             }
                         })
-                    ), [ timeFormat ])
+                    ), [timeFormat])
                 }
             />
         </ChartSettingItem>
         {
-            [ [ 'time', [ 'top', 'bottom' ] ], [ 'price', [ 'left', 'right' ] ] ]
-                .map(([ label, placements ], idx) =>
-                    <ChartSettingItem key={ 'axis' + label }>
+            [['time', ['top', 'bottom']], ['price', ['left', 'right']]]
+                .map(([label, placements], idx) =>
+                    <ChartSettingItem key={'axis' + label}>
                         <ChartSettingSpanLabel
-                            value={ capitalizeWords(label + ' ' + 'axis placement') }
+                            value={capitalizeWords(label + ' ' + 'axis placement')}
                         />
                         <Select
-                            control={ control }
-                            container={ container }
-                            clear={ clear }
-                            preview={ capitalizeWord(placement[ idx ]) }
+                            control={control}
+                            container={container}
+                            clear={clear}
+                            preview={capitalizeWord(placement[idx])}
                             data={
                                 placements.map(orientation => {
                                     return {
                                         center: capitalizeWord(orientation),
-                                        highlighted: orientation === placement[ idx ],
+                                        highlighted: orientation === placement[idx],
                                         onClick: () => setPlacement(
                                             update(idx, orientation)
                                         )
@@ -2742,10 +2742,10 @@ const ChartSettingBackground = ({
         {
             background.map((color, key) =>
                 <Fill
-                    control={ control }
-                    clear={ clear }
-                    key={ 'background' + key }
-                    value={ color }
+                    control={control}
+                    clear={clear}
+                    key={'background' + key}
+                    value={color}
                     onChange={
                         useCallback(compose(
                             setBackground,
@@ -2765,16 +2765,16 @@ const ChartSettingGrid = ({
 }) =>
     <>
         {
-            zip([ 'vertical', 'horizontal' ], grid)
-                .map(([ orientation, stroke ], idx) =>
-                    <ChartSettingItem key={ 'grid' + (idx + '') }>
+            zip(['vertical', 'horizontal'], grid)
+                .map(([orientation, stroke], idx) =>
+                    <ChartSettingItem key={'grid' + (idx + '')}>
                         <ChartSettingSpanLabel
-                            value={ capitalizeWords(orientation + ' ' + 'grid') }
+                            value={capitalizeWords(orientation + ' ' + 'grid')}
                         />
                         <Stroke
-                            control={ control }
-                            clear={ clear }
-                            value={ stroke }
+                            control={control}
+                            clear={clear}
+                            value={stroke}
                             onChange={
                                 useCallback(compose(
                                     setGrid,
@@ -2800,7 +2800,7 @@ const ChartSettingSession = ({
         />
         <CheckInput
             id='session'
-            checked={ session.value }
+            checked={session.value}
             onChange={
                 useCallback(compose(
                     setSession,
@@ -2809,9 +2809,9 @@ const ChartSettingSession = ({
             }
         />
         <Stroke
-            control={ control }
-            clear={ clear }
-            value={ session.stroke }
+            control={control}
+            clear={clear}
+            value={session.stroke}
             onChange={
                 useCallback(compose(
                     setSession,
@@ -2832,10 +2832,10 @@ const ChartSettingCrossHair = ({
     <ChartSettingItem>
         <ChartSettingSpanLabel value='Crosshair' />
         <Stroke
-            control={ control }
-            clear={ clear }
-            value={ crosshair }
-            onChange={ setCrosshair }
+            control={control}
+            clear={clear}
+            value={crosshair}
+            onChange={setCrosshair}
         />
     </ChartSettingItem>
 
@@ -2850,8 +2850,8 @@ const ChartSettingNavigationVisibility = ({
     <ChartSettingItem>
         <ChartSettingSpanLabel value='Navigation Visibility' />
         <Select
-            control={ control }
-            clear={ clear }
+            control={control}
+            clear={clear}
             alignment='end'
             direction='top'
             data={
@@ -2861,9 +2861,9 @@ const ChartSettingNavigationVisibility = ({
                         highlighted: id === navigationVisibility,
                         onClick: () => setNavigationVisibility(id)
                     }
-                }), [ navigationVisibility ])
+                }), [navigationVisibility])
             }
-            preview={ capitalizeWords(UIVisibilities[ navigationVisibility ]) }
+            preview={capitalizeWords(UIVisibilities[navigationVisibility])}
         />
     </ChartSettingItem >
 
@@ -2873,17 +2873,17 @@ const ChartTimeInterval = ({
     setTimeInterval,
     clear
 }) => {
-    const [ highlighted, setHighlighted ] = useState(false)
-    const [ menu, setMenu ] = useState(() =>
-        timeIntervals.map(([ group, values ], i0) => {
+    const [highlighted, setHighlighted] = useState(false)
+    const [menu, setMenu] = useState(() =>
+        timeIntervals.map(([group, values], i0) => {
             return {
                 type: 'collapse',
                 collapsed: false,
                 center: toUpper(group),
                 onChange: () => setMenu(
-                    modifyPath([ i0, 'collapsed' ], not)
+                    modifyPath([i0, 'collapsed'], not)
                 ),
-                data: values.map(([ interval, label ], i1) => {
+                data: values.map(([interval, label], i1) => {
                     return {
                         type: 'favorite',
                         id: interval,
@@ -2891,7 +2891,7 @@ const ChartTimeInterval = ({
                         highlighted: false,
                         favorited: false,
                         onChange: () => setMenu(
-                            modifyPath([ i0, 'data', i1, 'favorited' ], not)
+                            modifyPath([i0, 'data', i1, 'favorited'], not)
                         ),
                         onClick: () => {
                             setTimeInterval(interval)
@@ -2936,7 +2936,7 @@ const ChartTimeInterval = ({
                 })
             }
         })
-    ), [ timeInterval ])
+    ), [timeInterval])
 
     return (
         <menu className='chart-interval'>
@@ -2944,20 +2944,20 @@ const ChartTimeInterval = ({
                 displayList
                     .filter(() => displayList.length > 1)
                     .map(({ id, center, onClick, highlighted }) =>
-                        <li className='chart-interval-item' key={ id }>
+                        <li className='chart-interval-item' key={id}>
                             <TooltipPlacements
-                                container={ container }
-                                data={ center }
+                                container={container}
+                                data={center}
                                 direction='bottom'
                                 alignment='center'
                             >
                                 <Button
                                     display='block'
                                     size='big'
-                                    highlighted={ highlighted }
-                                    onClick={ onClick }
+                                    highlighted={highlighted}
+                                    onClick={onClick}
                                 >
-                                    { id }
+                                    {id}
                                 </Button>
                             </TooltipPlacements>
                         </li>
@@ -2967,28 +2967,28 @@ const ChartTimeInterval = ({
                 takeLast(1, displayList).map(({ id, center }) =>
                     <li className='chart-interval-item' key='lasttimeinterval'>
                         <ToggleMenuPlacements
-                            container={ container }
-                            clear={ clear }
+                            container={container}
+                            clear={clear}
                             containerMargin='0 -45 0 0'
                             targetMargin='0 0 0 5'
                             alignment='start'
                             direction='bottom'
-                            onToggle={ onToggle }
-                            data={ menu }
+                            onToggle={onToggle}
+                            data={menu}
                         >
                             <TooltipPlacements
-                                container={ container }
+                                container={container}
                                 targetMargin='0 0 0 5'
                                 direction='bottom'
                                 alignment='start'
-                                data={ displayList.length > 1 ? 'Time interval' : center }
+                                data={displayList.length > 1 ? 'Time interval' : center}
                             >
                                 <Button
                                     display='block'
                                     size='big'
-                                    highlighted={ highlighted }
+                                    highlighted={highlighted}
                                 >
-                                    { displayList.length > 1 ? <Icon name='angledown' /> : id }
+                                    {displayList.length > 1 ? <Icon name='angledown' /> : id}
                                 </Button>
                             </TooltipPlacements>
                         </ToggleMenuPlacements>
@@ -3005,18 +3005,18 @@ const ChartType = ({
     setType,
     clear
 }) => {
-    const [ highlighted, setHighlighted ] = useState(false)
-    const [ menu, setMenu ] = useState(() =>
+    const [highlighted, setHighlighted] = useState(false)
+    const [menu, setMenu] = useState(() =>
         types.map((name, id) => {
             return {
                 id: id,
                 type: 'favorite',
-                left: <Icon name={ 'chart' + id } />,
+                left: <Icon name={'chart' + id} />,
                 center: capitalizeWords(name),
                 highlighted: id === type,
                 favorited: false,
                 onChange: () => setMenu(
-                    modifyPath([ id, 'favorited' ], not)
+                    modifyPath([id, 'favorited'], not)
                 ),
                 onClick: () => {
                     setMenu(
@@ -3044,20 +3044,20 @@ const ChartType = ({
         <menu className='chart-type'>
             {
                 displayList.filter(() => displayList.length > 1).map(({ id, center, left, onClick, highlighted }) =>
-                    <li key={ id } className='chart-type-item'>
+                    <li key={id} className='chart-type-item'>
                         <TooltipPlacements
-                            data={ center }
-                            container={ container }
+                            data={center}
+                            container={container}
                             direction='bottom'
                             alignment='center'
                         >
                             <Button
                                 display='block'
                                 size='big'
-                                highlighted={ highlighted }
-                                onClick={ onClick }
+                                highlighted={highlighted}
+                                onClick={onClick}
                             >
-                                { left }
+                                {left}
                             </Button>
                         </TooltipPlacements>
                     </li>
@@ -3067,23 +3067,23 @@ const ChartType = ({
                 takeLast(1, displayList).map(({ center, left }) =>
                     <li className='chart-type-item' key='lasttype'>
                         <ToggleMenuPlacements
-                            container={ container }
-                            clear={ clear }
+                            container={container}
+                            clear={clear}
                             containerMargin='0 -45 0 0'
                             targetMargin='5'
                             direction='bottom'
                             alignment='center'
-                            onToggle={ onToggle }
-                            data={ menu }
+                            onToggle={onToggle}
+                            data={menu}
                         >
                             <TooltipPlacements
-                                container={ container }
-                                data={ displayList.length > 1 ? 'Types' : center }
+                                container={container}
+                                data={displayList.length > 1 ? 'Types' : center}
                                 direction='bottom'
                                 alignment='center'
                             >
-                                <Button display='block' size='big' highlighted={ highlighted }>
-                                    { displayList.length > 1 ? <Icon name='angledown' /> : left }
+                                <Button display='block' size='big' highlighted={highlighted}>
+                                    {displayList.length > 1 ? <Icon name='angledown' /> : left}
                                 </Button>
                             </TooltipPlacements>
                         </ToggleMenuPlacements>
@@ -3152,7 +3152,7 @@ const ChartSetting = ({
     setStepChart
 }) => {
 
-    const [ state, setState ] = useState(() => {
+    const [state, setState] = useState(() => {
         const initial = {
             background,
             navigationVisibility,
@@ -3184,13 +3184,13 @@ const ChartSetting = ({
         return { restore: initial, current: initial }
     })
 
-    const [ navigation, setNavigation ] = useState(0)
+    const [navigation, setNavigation] = useState(0)
 
-    const [ event, setEvent ] = useState({})
+    const [event, setEvent] = useState({})
 
-    const [ control, setControl ] = useState({})
+    const [control, setControl] = useState({})
 
-    const [ highlighted, setHighlighted ] = useState(false)
+    const [highlighted, setHighlighted] = useState(false)
 
     const refreshState = useCallback(state => {
         setBackground(state.background)
@@ -3222,183 +3222,183 @@ const ChartSetting = ({
 
     const types = [
         <ChartSettingAreaType
-            key={ 0 }
-            control={ control }
-            container={ container }
-            clear={ event }
-            areaChart={ areaChart }
-            setAreaChart={ setAreaChart }
+            key={0}
+            control={control}
+            container={container}
+            clear={event}
+            areaChart={areaChart}
+            setAreaChart={setAreaChart}
         />,
         <ChartSettingBarType
-            key={ 1 }
-            control={ control }
-            clear={ event }
-            barChart={ barChart }
-            setBarChart={ setBarChart }
+            key={1}
+            control={control}
+            clear={event}
+            barChart={barChart}
+            setBarChart={setBarChart}
         />,
         <ChartSettingBaselineType
-            key={ 2 }
-            control={ control }
-            container={ container }
-            clear={ event }
-            baselineChart={ baselineChart }
-            setBaselineChart={ setBaselineChart }
+            key={2}
+            control={control}
+            container={container}
+            clear={event}
+            baselineChart={baselineChart}
+            setBaselineChart={setBaselineChart}
         />,
         <ChartSettingOHLCType
-            key={ 3 }
-            control={ control }
-            clear={ event }
+            key={3}
+            control={control}
+            clear={event}
             name='candle'
-            state={ candleChart }
-            setState={ setCandleChart }
+            state={candleChart}
+            setState={setCandleChart}
         />,
         <ChartSettingColumnType
-            key={ 4 }
-            control={ control }
-            clear={ event }
-            container={ container }
-            columnChart={ columnChart }
-            setColumnChart={ setColumnChart }
+            key={4}
+            control={control}
+            clear={event}
+            container={container}
+            columnChart={columnChart}
+            setColumnChart={setColumnChart}
         />,
         <ChartSettingOHLCType
-            key={ 5 }
-            control={ control }
-            container={ container }
-            clear={ event }
+            key={5}
+            control={control}
+            container={container}
+            clear={event}
             name='heikinashi'
-            state={ heikinashiChart }
-            setState={ setHeikinashiChart }
+            state={heikinashiChart}
+            setState={setHeikinashiChart}
         />,
         <ChartSettingHighLowType
-            key={ 6 }
-            control={ control }
-            clear={ event }
-            highLowChart={ highLowChart }
-            setHighLowChart={ setHighLowChart }
+            key={6}
+            control={control}
+            clear={event}
+            highLowChart={highLowChart}
+            setHighLowChart={setHighLowChart}
         />,
         <ChartSettingHLCType
-            key={ 7 }
-            control={ control }
-            clear={ event }
-            HLCChart={ HLCChart }
-            setHLCChart={ setHLCChart }
+            key={7}
+            control={control}
+            clear={event}
+            HLCChart={HLCChart}
+            setHLCChart={setHLCChart}
         />,
         <ChartSettingOHLCType
-            key={ 8 }
-            control={ control }
-            container={ container }
-            clear={ event }
+            key={8}
+            control={control}
+            container={container}
+            clear={event}
             name='hollowcandle'
-            state={ hollowChart }
-            setState={ setHollowChart }
+            state={hollowChart}
+            setState={setHollowChart}
         />,
         <ChartSettingLineType
-            key={ 9 }
-            control={ control }
-            container={ container }
-            clear={ event }
+            key={9}
+            control={control}
+            container={container}
+            clear={event}
             name='line'
-            state={ lineChart }
-            setState={ setLineChart }
+            state={lineChart}
+            setState={setLineChart}
         />,
         <ChartSettingLineType
-            key={ 10 }
-            control={ control }
-            container={ container }
-            clear={ event }
+            key={10}
+            control={control}
+            container={container}
+            clear={event}
             name='marker'
-            state={ markerChart }
-            setState={ setMarkerChart }
+            state={markerChart}
+            setState={setMarkerChart}
         />,
         <ChartSettingLineType
-            key={ 11 }
-            control={ control }
-            container={ container }
-            clear={ event }
+            key={11}
+            control={control}
+            container={container}
+            clear={event}
             name='step'
-            state={ stepChart }
-            setState={ setStepChart }
+            state={stepChart}
+            setState={setStepChart}
         />
     ]
 
     const typeTab = <>
-        { types[ type ] }
+        {types[type]}
         <ChartSettingLine
-            control={ control }
-            clear={ event }
-            line={ line }
-            setLine={ setLine }
+            control={control}
+            clear={event}
+            line={line}
+            setLine={setLine}
         />
         <ChartSettingPrecision
-            control={ control }
-            container={ container }
-            clear={ event }
-            pricePrecision={ pricePrecision }
-            setPricePrecision={ setPricePrecision }
+            control={control}
+            container={container}
+            clear={event}
+            pricePrecision={pricePrecision}
+            setPricePrecision={setPricePrecision}
         />
         <ChartSettingTimeZone
-            control={ control }
-            container={ container }
-            clear={ event }
-            timeZone={ timeZone }
-            setTimeZone={ setTimeZone }
+            control={control}
+            container={container}
+            clear={event}
+            timeZone={timeZone}
+            setTimeZone={setTimeZone}
         />
     </>
 
     const statusTab = <ChartSettingStatus
-        status={ status }
-        setStatus={ setStatus }
+        status={status}
+        setStatus={setStatus}
     />
 
     const scaleTab = <ChartSettingScale
-        control={ control }
-        container={ container }
-        clear={ event }
-        timeFormat={ timeFormat }
-        setTimeFormat={ setTimeFormat }
-        placement={ placement }
-        setPlacement={ setPlacement }
-        label={ label }
-        setLabel={ setLabel }
+        control={control}
+        container={container}
+        clear={event}
+        timeFormat={timeFormat}
+        setTimeFormat={setTimeFormat}
+        placement={placement}
+        setPlacement={setPlacement}
+        label={label}
+        setLabel={setLabel}
     />
 
     const generalTab = <>
         <ChartSettingBackground
-            control={ control }
-            clear={ event }
-            background={ background }
-            setBackground={ setBackground }
+            control={control}
+            clear={event}
+            background={background}
+            setBackground={setBackground}
         />
         <ChartSettingGrid
-            control={ control }
-            clear={ event }
-            grid={ grid }
-            setGrid={ setGrid }
+            control={control}
+            clear={event}
+            grid={grid}
+            setGrid={setGrid}
         />
         <ChartSettingAxis
-            container={ container }
-            control={ control }
-            clear={ event }
-            axis={ axis }
-            setAxis={ setAxis }
+            container={container}
+            control={control}
+            clear={event}
+            axis={axis}
+            setAxis={setAxis}
         />
         <ChartSettingSession
-            control={ control }
-            clear={ event }
-            session={ session }
-            setSession={ setSession }
+            control={control}
+            clear={event}
+            session={session}
+            setSession={setSession}
         />
         <ChartSettingCrossHair
-            control={ control }
-            clear={ event }
-            crosshair={ crosshair }
-            setCrosshair={ setCrosshair }
+            control={control}
+            clear={event}
+            crosshair={crosshair}
+            setCrosshair={setCrosshair}
         />
         <ChartSettingNavigationVisibility
-            control={ control }
-            clear={ event }
-            navigationVisibility={ navigationVisibility }
-            setNavigationVisibility={ setNavigationVisibility }
+            control={control}
+            clear={event}
+            navigationVisibility={navigationVisibility}
+            setNavigationVisibility={setNavigationVisibility}
         />
     </>
 
@@ -3468,28 +3468,28 @@ const ChartSetting = ({
 
     return (
         <PopupPlacements
-            container={ container }
-            clear={ clear }
-            onClose={ setControl }
-            onToggle={ onToggle }
-            control={ setting }
+            container={container}
+            clear={clear}
+            onClose={setControl}
+            onToggle={onToggle}
+            control={setting}
             data={
                 <ChartSettingPopup
-                    container={ container }
-                    type={ type }
-                    onPointerDown={ onPointerDown }
-                    onScroll={ onScroll }
-                    navigation={ navigation }
-                    setNavigation={ setNavigation }
-                    content={ tabs[ navigation ] }
-                    onRestore={ onRestore }
-                    onCancel={ onCancel }
-                    onSave={ onSave }
+                    container={container}
+                    type={type}
+                    onPointerDown={onPointerDown}
+                    onScroll={onScroll}
+                    navigation={navigation}
+                    setNavigation={setNavigation}
+                    content={tabs[navigation]}
+                    onRestore={onRestore}
+                    onCancel={onCancel}
+                    onSave={onSave}
                 />
             }
         >
             <TooltipPlacements
-                container={ container }
+                container={container}
                 data='Settings'
                 alignment='center'
                 direction='bottom'
@@ -3497,7 +3497,7 @@ const ChartSetting = ({
                 <Button
                     display='block'
                     size='big'
-                    highlighted={ highlighted }
+                    highlighted={highlighted}
                 >
                     <Icon name='setting' />
                 </Button>
@@ -3512,7 +3512,7 @@ const ChartFullScreen = ({
     clear
 }) => {
 
-    const [ fullscreen, setFullscreen ] = useState(false)
+    const [fullscreen, setFullscreen] = useState(false)
 
     const onFullscreen = useCallback(curry((container, _) => {
         if(fscreen.fullscreenEnabled) {
@@ -3520,7 +3520,7 @@ const ChartFullScreen = ({
             const enable = () => fscreen.requestFullscreen(container)
             const disable = () => fscreen.exitFullscreen()
 
-            const action = [ [ exited, enable ], [ !exited, disable ] ]
+            const action = [[exited, enable], [!exited, disable]]
 
             action
                 .filter(head)
@@ -3551,19 +3551,19 @@ const ChartFullScreen = ({
 
     return (
         <TooltipPlacements
-            container={ container }
-            clear={ clear }
+            container={container}
+            clear={clear}
             alignment='center'
             direction='bottom'
             containerMargin='0 0 -10 0'
             targetMargin='0 0 0 5'
-            data={ capitalizeWords(`${fullscreen ? 'exit' : 'enter'} fullscreen mode`) }
+            data={capitalizeWords(`${fullscreen ? 'exit' : 'enter'} fullscreen mode`)}
         >
             <Button
                 display='block'
                 size='big'
-                highlighted={ fullscreen }
-                onClick={ onFullscreen(container) }
+                highlighted={fullscreen}
+                onClick={onFullscreen(container)}
             >
                 <Icon name='fullscreen' />
             </Button>
@@ -3577,8 +3577,8 @@ const ChartSnapShot = ({
     setSnapshot
 }) => (
     <TooltipPlacements
-        container={ container }
-        clear={ clear }
+        container={container}
+        clear={clear}
         targetMargin='0 0 0 5'
         alignment='end'
         direction='bottom'
@@ -3587,7 +3587,7 @@ const ChartSnapShot = ({
         <Button
             display='block'
             size='big'
-            onClick={ () => setSnapshot(new Date().getUTCSeconds()) }
+            onClick={() => setSnapshot(new Date().getUTCSeconds())}
         >
             <Icon name='camera' />
         </Button>
@@ -3608,67 +3608,67 @@ const ChartTop = ({
     <div className='chart-top'>
         <div className='chart-top-left'>
             <ChartTimeInterval
-                container={ container }
-                clear={ clear }
-                timeInterval={ timeInterval }
-                setTimeInterval={ setTimeInterval }
+                container={container}
+                clear={clear}
+                timeInterval={timeInterval}
+                setTimeInterval={setTimeInterval}
             />
             <Separator />
             <ChartType
-                container={ container }
-                clear={ clear }
-                type={ type }
-                setType={ setType }
+                container={container}
+                clear={clear}
+                type={type}
+                setType={setType}
             />
         </div>
         <div className='chart-top-right'>
             <Separator />
             <ChartSetting
-                container={ container }
-                clear={ clear }
-                type={ type }
-                setType={ setType }
-                { ...props }
+                container={container}
+                clear={clear}
+                type={type}
+                setType={setType}
+                {...props}
             />
             <ChartFullScreen
-                container={ container }
-                setInfo={ setInfo }
-                clear={ clear }
+                container={container}
+                setInfo={setInfo}
+                clear={clear}
             />
             <ChartSnapShot
-                container={ container }
-                clear={ clear }
-                setSnapshot={ setSnapshot }
+                container={container}
+                clear={clear}
+                setSnapshot={setSnapshot}
             />
         </div>
     </div>
 )
 
 const ChartInfo = memo(({ info }) => {
-    const [ visible, setVisible ] = useState(false)
+    const [visible, setVisible] = useState(false)
 
     useEffect(_ => {
         const show = setTimeout(() => setVisible(true), 0)
 
         const hide = setTimeout(() => setVisible(false), 15000)
 
-        return () => [ show, hide ].forEach(clearTimeout)
-    }, [ info ])
+        return () => [show, hide].forEach(clearTimeout)
+    }, [info])
 
     return (
         <div
             className='chart-info'
-            style={ {
+            style={{
                 visibility: visible ? 'visible' : 'hidden',
                 opacity: Number(visible)
-            } }
-            onClick={ () => setVisible(false) }
+            }}
+            onClick={() => setVisible(false)}
         >
             <span className='chart-info-icon'>
                 <Icon name='info' />
             </span>
             <span className='chart-info-text'>
-                { info.value || null }
+                {info.value || null}
             </span>
         </div>
     )
@@ -3699,7 +3699,7 @@ const ChartStatus = ({
     ]
 
     const stats = loading
-        ? defaultStats.filter(({ id }) => status[ id ]).concat([ { id: 'loader', label: '', value: <Loader />, color: defaultWhiteColor } ])
+        ? defaultStats.filter(({ id }) => status[id]).concat([{ id: 'loader', label: '', value: <Loader />, color: defaultWhiteColor }])
         : defaultStats.concat(
             chartStatus(type, {
                 precision,
@@ -3717,14 +3717,14 @@ const ChartStatus = ({
                     return v
                 }
             })
-        ).filter(({ id }) => status[ id ])
+        ).filter(({ id }) => status[id])
 
     return (
         <ul
             className='chart-status'
             style={
                 zipObj(
-                    [ 'maxWidth', 'maxHeight' ],
+                    ['maxWidth', 'maxHeight'],
                     size.map(v => pixelToRem(v) + 'rem')
                 )
             }
@@ -3732,14 +3732,14 @@ const ChartStatus = ({
             {
                 stats.map(({ id, label, value, color }, i) =>
                     <li
-                        key={ id + label + value + i }
+                        key={id + label + value + i}
                         className='chart-status-item'
                     >
                         <span className='chart-status-label'>
-                            { label ? capitalizeWords(label) : null }
+                            {label ? capitalizeWords(label) : null}
                         </span>
-                        <span style={ { color } } className='chart-status-value'>
-                            { value || null }
+                        <span style={{ color }} className='chart-status-value'>
+                            {value || null}
                         </span>
                     </li>
                 )
@@ -3759,11 +3759,11 @@ const ChartNavigation = memo(({
     visibility
 }) => {
 
-    const [ visible, setVisible ] = useState(true)
+    const [visible, setVisible] = useState(true)
 
     const onNavigation = curry((value, _) =>
         setVisible(visible =>
-            UIVisibilities[ visibility ] === 'visible on mouse over'
+            UIVisibilities[visibility] === 'visible on mouse over'
                 ? value
                 : visible
         )
@@ -3772,13 +3772,13 @@ const ChartNavigation = memo(({
     useEffect(compose(
         setVisible,
         equals(1)
-    ), [ visibility ])
+    ), [visibility])
 
     return (
         <menu
             className='chart-navigation'
-            onPointerEnter={ onNavigation(true) }
-            onPointerLeave={ onNavigation(false) }
+            onPointerEnter={onNavigation(true)}
+            onPointerLeave={onNavigation(false)}
         >
             {
                 [
@@ -3788,19 +3788,19 @@ const ChartNavigation = memo(({
                     { id: 'angleright', label: 'scroll to right', onClick: onPanRight, show: visible },
                     { id: 'reset', label: 'reset chart', onClick: onReset, show: visible && reset }
                 ].map(({ id, label, onClick, show }) =>
-                    <li key={ id } className='chart-navigation-item' style={ { visibility: show ? 'visible' : 'hidden', opacity: Number(show) } }>
+                    <li key={id} className='chart-navigation-item' style={{ visibility: show ? 'visible' : 'hidden', opacity: Number(show) }}>
                         <TooltipPlacements
-                            container={ container }
-                            data={ capitalizeWords(label) }
+                            container={container}
+                            data={capitalizeWords(label)}
                             alignment='center'
                             direction='top'
                         >
                             <Button
                                 className='chart-navigation-button'
-                                outlined={ true }
-                                onClick={ onClick }
+                                outlined={true}
+                                onClick={onClick}
                             >
-                                <Icon size='medium' name={ id } />
+                                <Icon size='medium' name={id} />
                             </Button>
                         </TooltipPlacements>
                     </li>
@@ -3813,16 +3813,16 @@ const ChartNavigation = memo(({
 const ChartTimeScroll = memo(({ container, onTimeScroll }) =>
     <div className='chart-scroll'>
         <TooltipPlacements
-            container={ container }
+            container={container}
             direction='top'
             alignment='center'
             containerMargin='-10 0 -10 0'
-            data={ capitalizeWords('scroll to the most recent') }
+            data={capitalizeWords('scroll to the most recent')}
         >
             <Button
                 className='chart-scroll-button'
-                outlined={ true }
-                onClick={ onTimeScroll }
+                outlined={true}
+                onClick={onTimeScroll}
             >
                 <Icon size='medium' name='scrollright' />
             </Button>
@@ -3831,7 +3831,7 @@ const ChartTimeScroll = memo(({ container, onTimeScroll }) =>
 )
 
 const ChartLevel = memo(({ level, setLevel }) => {
-    const [ ref, setRef ] = useState({})
+    const [ref, setRef] = useState({})
 
     useEffect(ref => {
         const selection = select(ref)
@@ -3848,16 +3848,16 @@ const ChartLevel = memo(({ level, setLevel }) => {
         )
 
         return () => selection.on('.drag', null)
-    }, [ ref ])
+    }, [ref])
 
     return (
         <div
             className='chart-level'
-            ref={ setRef }
-            style={ {
+            ref={setRef}
+            style={{
                 top: 100 - (level * 100) + '%',
                 left: 50 + '%'
-            } }
+            }}
         />
     )
 })
@@ -3879,24 +3879,24 @@ const ChartMain = memo(({
     setLevel
 }) =>
     <ContextMenuPlacements
-        container={ container }
-        data={ menu }
-        clear={ clear }
+        container={container}
+        data={menu}
+        clear={clear}
     >
         <Canvas
             className='chart-main'
-            onResize={ onResize }
-            onZoomStart={ onZoomStart }
-            onZoom={ onZoom }
-            onZoomEnd={ onZoomEnd }
-            onContext={ onContext }
-            onPointerEnter={ onPointerEnter }
-            onPointerMove={ onPointerMove }
-            onPointerLeave={ onPointerLeave }
+            onResize={onResize}
+            onZoomStart={onZoomStart}
+            onZoom={onZoom}
+            onZoomEnd={onZoomEnd}
+            onContext={onContext}
+            onPointerEnter={onPointerEnter}
+            onPointerMove={onPointerMove}
+            onPointerLeave={onPointerLeave}
         >
             {
                 enableLevel
-                    ? <ChartLevel level={ level } setLevel={ setLevel } />
+                    ? <ChartLevel level={level} setLevel={setLevel} />
                     : null
             }
         </Canvas>
@@ -3914,17 +3914,17 @@ const ChartHorizontal = memo(({
     menu
 }) =>
     <ContextMenuPlacements
-        container={ container }
-        data={ menu }
-        clear={ clear }
+        container={container}
+        data={menu}
+        clear={clear}
     >
         <Canvas
             className='chart-horizontal'
-            onResize={ onResize }
-            onZoomStart={ onZoomStart }
-            onZoom={ onZoom }
-            onZoomEnd={ onZoomEnd }
-            onContext={ onContext }
+            onResize={onResize}
+            onZoomStart={onZoomStart}
+            onZoom={onZoom}
+            onZoomEnd={onZoomEnd}
+            onContext={onContext}
         />
     </ContextMenuPlacements>
 )
@@ -3940,17 +3940,17 @@ const ChartVertical = memo(({
     onContext
 }) =>
     <ContextMenuPlacements
-        container={ container }
-        data={ menu }
-        clear={ clear }
+        container={container}
+        data={menu}
+        clear={clear}
     >
         <Canvas
             className='chart-vertical'
-            onResize={ onResize }
-            onZoomStart={ onZoomStart }
-            onZoom={ onZoom }
-            onZoomEnd={ onZoomEnd }
-            onContext={ onContext }
+            onResize={onResize}
+            onZoomStart={onZoomStart}
+            onZoom={onZoom}
+            onZoomEnd={onZoomEnd}
+            onContext={onContext}
         />
     </ContextMenuPlacements>
 )
@@ -3962,28 +3962,28 @@ const ChartOption = memo(({
     tooltip,
     orientation
 }) => {
-    const [ highlighted, setHighlighted ] = useState(false)
+    const [highlighted, setHighlighted] = useState(false)
     const onToggle = useCallback(o(
         setHighlighted,
         prop('visible')
     ), [])
     return (
         <ToggleMenuPlacements
-            container={ container }
-            data={ menu }
-            clear={ clear }
+            container={container}
+            data={menu}
+            clear={clear}
             direction='top bottom'
             alignment='end start'
-            onToggle={ onToggle }
+            onToggle={onToggle}
         >
             <TooltipPlacements
-                container={ container }
-                data={ tooltip }
-                direction={ orientation === 'bottom' ? 'top' : 'bottom' }
+                container={container}
+                data={tooltip}
+                direction={orientation === 'bottom' ? 'top' : 'bottom'}
                 alignment='end start'
-                targetMargin={ orientation === 'bottom' ? '0 5 0 0' : '0 0 0 5' }
+                targetMargin={orientation === 'bottom' ? '0 5 0 0' : '0 0 0 5'}
             >
-                <Button display='block' highlighted={ highlighted }>
+                <Button display='block' highlighted={highlighted}>
                     <Icon name='sunray' size='medium' />
                 </Button>
             </TooltipPlacements>
@@ -4035,7 +4035,7 @@ const ChartCenter = ({
     setLevel,
     maps
 }) => {
-    const [ plot, setPlot ] = useState(() => {
+    const [plot, setPlot] = useState(() => {
         return {
             size: defaultPlotSize,
             data: [],
@@ -4050,13 +4050,13 @@ const ChartCenter = ({
             loading: true,
             request: [],
             completed: false,
-            lock: [ false, false ],
+            lock: [false, false],
             transition: [],
             transit: [],
             destination: [],
             pending: [],
             price: defaultPriceSource,
-            inverted: [ 0, 0 ],
+            inverted: [0, 0],
             pointer: [],
             cursor: [],
             selected: [],
@@ -4078,39 +4078,39 @@ const ChartCenter = ({
         }
     })
 
-    const [ frame, setFrame ] = useState(0)
+    const [frame, setFrame] = useState(0)
 
-    const [ now, setNow ] = useState(Date.now)
+    const [now, setNow] = useState(Date.now)
 
-    const [ [ mainBack, mainFront ], setMainContext ] = useState([])
+    const [[mainBack, mainFront], setMainContext] = useState([])
 
-    const [ [ verticalBack, verticalFront ], setVerticalContext ] = useState([])
+    const [[verticalBack, verticalFront], setVerticalContext] = useState([])
 
-    const [ [ horizontalBack, horizontalFront ], setHorizontalContext ] = useState([])
+    const [[horizontalBack, horizontalFront], setHorizontalContext] = useState([])
 
-    const [ verticalSize, setVerticalSize ] = useState([])
+    const [verticalSize, setVerticalSize] = useState([])
 
-    const [ horizontalSize, setHorizontalSize ] = useState([])
+    const [horizontalSize, setHorizontalSize] = useState([])
 
-    const [ menu, setMenu ] = useState({
+    const [menu, setMenu] = useState({
         horizontal: [],
         vertical: [],
         main: []
     })
 
-    const name = symbol ? splitSymbol(symbol).map(v => maps[ v ] || v).join('/') : ''
+    const name = symbol ? splitSymbol(symbol).map(v => maps[v] || v).join('/') : ''
 
     const getBorder = (stroke, placement) => {
-        const keys = placement.map(v => placementsText[ v ])
+        const keys = placement.map(v => placementsText[v])
         const value = `${stroke.thickness}px ${stroke.style} ${stroke.color}`
         return keys.map(key => {
             return {
-                [ 'border' + capitalizeWord(key) ]: value
+                ['border' + capitalizeWord(key)]: value
             }
         })
     }
 
-    const [ borderX, borderY ] = getBorder(axis.stroke, placement)
+    const [borderX, borderY] = getBorder(axis.stroke, placement)
 
     const textRatio = textScale(axis.font.size)
 
@@ -4137,7 +4137,7 @@ const ChartCenter = ({
             : defaultPrecision
     )
 
-    const decimalRatio = [ plot.log ? 'change' : 'price', 'high', 'low' ].some(v => label.value[ v ])
+    const decimalRatio = [plot.log ? 'change' : 'price', 'high', 'low'].some(v => label.value[v])
         ? precisionScale(precision)
         : 1
 
@@ -4145,15 +4145,15 @@ const ChartCenter = ({
 
     const yAxisWidth = pixelToRem(defaultYAxisWidth * textRatio * decimalRatio) + 'rem'
 
-    const [ gridTemplateRows, gridTemplateCols ] = formatGridTemplate(
+    const [gridTemplateRows, gridTemplateCols] = formatGridTemplate(
         getGridTemplate(placement, [
-            [ `calc(100% - ${xAxisHeight})`, `${xAxisHeight}` ],
-            [ `calc(100% - ${yAxisWidth})`, `${yAxisWidth}` ]
+            [`calc(100% - ${xAxisHeight})`, `${xAxisHeight}`],
+            [`calc(100% - ${yAxisWidth})`, `${yAxisWidth}`]
         ])
     )
 
     const timeOffset = getTimeZoneOffset(
-        [ '1W', '1M' ].includes(timeInterval) ? defaultTimeZone : timeZone
+        ['1W', '1M'].includes(timeInterval) ? defaultTimeZone : timeZone
     )
 
     const enableReset = !identical(head(plot.transform), defaultXtransform)
@@ -4162,7 +4162,7 @@ const ChartCenter = ({
         ? false
         : !eqBy(P.mts, plot.end, plot.recent)
 
-    const enableLevel = types[ type ] === 'baseline'
+    const enableLevel = types[type] === 'baseline'
 
     const order = plot.priceScale.domain().reduce((a, b) =>
         clamp(-1, 1, a - b)
@@ -4181,14 +4181,14 @@ const ChartCenter = ({
             showTimeTooltip: false,
             autoFit: axis.includes('y') || plot.autoFit,
             transform: zipWithCall(
-                [ 'x', 'y' ].map(v => axis.includes(v) ? head : last),
+                ['x', 'y'].map(v => axis.includes(v) ? head : last),
                 zip(defaultTransform, plot.transform)
             )
         })
     })
 
     const setSize = useCallback(size => setPlot(plot => {
-        const [ tx, width ] = [ plot.transform, size ].map(head)
+        const [tx, width] = [plot.transform, size].map(head)
         if(plot.loading || plot.deficit) {
             return { ...plot, size }
         } else {
@@ -4220,7 +4220,7 @@ const ChartCenter = ({
 
     const setTransform = fns => setPlot(plot => {
         const transform = zipWithCall(
-            [ last, plot.log ? head : last ],
+            [last, plot.log ? head : last],
             zip(
                 plot.transform,
                 applyTransform(
@@ -4303,12 +4303,12 @@ const ChartCenter = ({
         width,
     }) => {
         const xt = scaled
-            ? ([ e, t ]) => scaleZoomTo(
-                [ wheeled ? defaultPlotWidth : defaultPlotWidth - width + px, 0 ],
+            ? ([e, t]) => scaleZoomTo(
+                [wheeled ? defaultPlotWidth : defaultPlotWidth - width + px, 0],
                 clamp(...e, dk * t.k),
                 t
             )
-            : o(translateZoomBy([ dx, 0 ]), last)
+            : o(translateZoomBy([dx, 0]), last)
 
         const yt = scaled
             ? last
@@ -4327,11 +4327,11 @@ const ChartCenter = ({
                 last
             )
 
-        setTransform([ xt, yt ])
+        setTransform([xt, yt])
 
         setPlot(plot => {
             const calculate = o(calculatePlotSelected, calculatePlotCursor)
-            return calculate({ ...plot, pointer: [ px, py ] })
+            return calculate({ ...plot, pointer: [px, py] })
         })
     }, [])
 
@@ -4343,15 +4343,15 @@ const ChartCenter = ({
         dxk,
         width
     }) => {
-        const xt = ([ e, t ]) => scaleZoomTo(
-            [ wheeled || !scaled ? defaultPlotWidth : defaultPlotWidth - width + px, 0 ],
+        const xt = ([e, t]) => scaleZoomTo(
+            [wheeled || !scaled ? defaultPlotWidth : defaultPlotWidth - width + px, 0],
             clamp(...e, (scaled ? dk : dxk) * t.k),
             t
         )
 
         const yt = last
 
-        setTransform([ xt, yt ])
+        setTransform([xt, yt])
     }, [])
 
     const onVerticalZoom = useCallback(({
@@ -4363,33 +4363,33 @@ const ChartCenter = ({
         height
     }) => {
         const xt = last
-        const yt = ([ e, t ]) => scaleZoomTo(
-            [ 0, wheeled || !scaled ? defaultPlotHeight / 2 : (py / height) * defaultPlotHeight ],
+        const yt = ([e, t]) => scaleZoomTo(
+            [0, wheeled || !scaled ? defaultPlotHeight / 2 : (py / height) * defaultPlotHeight],
             clamp(...e, (scaled ? dk : dyk) * t.k),
             t
         )
 
-        setTransform([ xt, yt ])
+        setTransform([xt, yt])
     }, [])
 
     const onZoomOut = useCallback(() => {
-        const xt = ([ e, t ]) => scaleZoomTo([ defaultPlotWidth, 0 ], clamp(...e, t.k * 0.8), t)
+        const xt = ([e, t]) => scaleZoomTo([defaultPlotWidth, 0], clamp(...e, t.k * 0.8), t)
         const yt = last
 
-        setTransition(200, [ xt, yt ])
+        setTransition(200, [xt, yt])
     }, [])
 
     const onZoomIn = useCallback(() => {
-        const xt = ([ e, t ]) => scaleZoomTo([ defaultPlotWidth, 0 ], clamp(...e, t.k * 1.2), t)
+        const xt = ([e, t]) => scaleZoomTo([defaultPlotWidth, 0], clamp(...e, t.k * 1.2), t)
         const yt = last
 
-        setTransition(200, [ xt, yt ])
+        setTransition(200, [xt, yt])
     }, [])
 
     const onPanLeft = useCallback(() => setPlot(plot => {
-        const xt = translateZoomBy([ scaleTimeInterval(plot.timeScale, plot.view), 0 ])
+        const xt = translateZoomBy([scaleTimeInterval(plot.timeScale, plot.view), 0])
         const yt = identity
-        const transform = zipWithCall([ xt, yt ], plot.transform)
+        const transform = zipWithCall([xt, yt], plot.transform)
         const calculate = compose(
             calculatePlotTimeRange,
             calculatePlotRequest,
@@ -4399,9 +4399,9 @@ const ChartCenter = ({
     }), [])
 
     const onPanRight = useCallback(() => setPlot(plot => {
-        const xt = translateZoomBy([ -scaleTimeInterval(plot.timeScale, plot.view), 0 ])
+        const xt = translateZoomBy([-scaleTimeInterval(plot.timeScale, plot.view), 0])
         const yt = identity
-        const transform = zipWithCall([ xt, yt ], plot.transform)
+        const transform = zipWithCall([xt, yt], plot.transform)
         const calculate = o(calculatePlotTimeRange, calculatePlotScale)
         return calculate({ ...plot, transform, showTimeTooltip: false })
     }), [])
@@ -4409,14 +4409,14 @@ const ChartCenter = ({
     const onReset = useCallback(() => resetTransform('xy'), [])
 
     const onTimeScroll = useCallback(() => {
-        const xt = ([ , t ]) => translateZoomBy([ (t.invertX(defaultPlotWidth) - defaultPlotWidth) * t.k, 0 ], t)
+        const xt = ([, t]) => translateZoomBy([(t.invertX(defaultPlotWidth) - defaultPlotWidth) * t.k, 0], t)
         const yt = last
 
-        setTransition(500, [ xt, yt ])
+        setTransition(500, [xt, yt])
     }, [])
 
     const getMenu = useCallback(({
-        placement: [ placementX, placementY ],
+        placement: [placementX, placementY],
         lock,
         session,
         line,
@@ -4434,9 +4434,9 @@ const ChartCenter = ({
             },
             { type: 'separator' },
             {
-                center: `Move Time Axis to ${capitalizeWord(placementsText[ placementX ])}`,
+                center: `Move Time Axis to ${capitalizeWord(placementsText[placementX])}`,
                 onClick: () => setPlacement([
-                    placementsText[ placementX ],
+                    placementsText[placementX],
                     placementY
                 ])
             },
@@ -4492,7 +4492,7 @@ const ChartCenter = ({
                 )
             },
             { type: 'separator' },
-            ...priceAlgorithms.map(([ long ], id) => {
+            ...priceAlgorithms.map(([long], id) => {
                 return {
                     type: 'check',
                     checked: price === id,
@@ -4501,23 +4501,23 @@ const ChartCenter = ({
                 }
             }),
             {
-                center: `Move Price Axis to ${capitalizeWord(placementsText[ placementY ])}`,
+                center: `Move Price Axis to ${capitalizeWord(placementsText[placementY])}`,
                 onClick: () => setPlacement([
                     placementX,
-                    placementsText[ placementY ]
+                    placementsText[placementY]
                 ])
             },
             { type: 'separator' },
             {
                 type: 'branch',
                 center: 'Labels',
-                data: Object.entries(label).map(([ id, value ]) => {
+                data: Object.entries(label).map(([id, value]) => {
                     return {
                         type: 'check',
                         checked: value,
                         center: capitalizeWord(id),
                         onClick: () => setLabel(
-                            assocPath([ 'value', id ], !value)
+                            assocPath(['value', id], !value)
                         )
                     }
                 })
@@ -4525,13 +4525,13 @@ const ChartCenter = ({
             {
                 type: 'branch',
                 center: 'Lines',
-                data: Object.entries(line).map(([ id, value ]) => {
+                data: Object.entries(line).map(([id, value]) => {
                     return {
                         type: 'check',
                         checked: value,
                         center: capitalizeWord(id),
                         onClick: () => setLine(
-                            assocPath([ 'value', id ], !value)
+                            assocPath(['value', id], !value)
                         )
                     }
                 })
@@ -4554,27 +4554,27 @@ const ChartCenter = ({
             },
             { type: 'separator' },
             {
-                center: `Move Price Axis to ${capitalizeWord(placementsText[ placementY ])}`,
+                center: `Move Price Axis to ${capitalizeWord(placementsText[placementY])}`,
                 onClick: () => setPlacement([
                     placementX,
-                    placementsText[ placementY ]
+                    placementsText[placementY]
                 ])
             },
             {
-                center: `Move Time Axis to ${capitalizeWord(placementsText[ placementX ])}`,
+                center: `Move Time Axis to ${capitalizeWord(placementsText[placementX])}`,
                 onClick: () => setPlacement([
-                    placementsText[ placementX ],
+                    placementsText[placementX],
                     placementY
                 ])
             },
             { type: 'separator' },
-            ...zip([ 'vertical', 'horizontal' ], lock).map(([ id, lock ], i) => {
+            ...zip(['vertical', 'horizontal'], lock).map(([id, lock], i) => {
                 return {
                     type: 'check',
                     checked: lock,
                     center: capitalizeWords(`lock ${id} cursor`),
                     onClick: () => setPlot(
-                        assocPath([ 'lock', i ], !lock)
+                        assocPath(['lock', i], !lock)
                     )
                 }
             }),
@@ -4582,13 +4582,13 @@ const ChartCenter = ({
             {
                 type: 'branch',
                 center: 'Lines',
-                data: Object.entries(line).map(([ id, value ]) => {
+                data: Object.entries(line).map(([id, value]) => {
                     return {
                         type: 'check',
                         checked: value,
                         center: capitalizeWord(id),
                         onClick: () => setLine(
-                            assocPath([ 'value', id ], !value)
+                            assocPath(['value', id], !value)
                         )
                     }
                 })
@@ -4669,14 +4669,14 @@ const ChartCenter = ({
         })
 
         const snapshot = source.pipe(
-            rx.filter(([ type ]) => type === 'snapshot'),
+            rx.filter(([type]) => type === 'snapshot'),
             rx.map(last),
             rx.map(sortByTimeStamp),
             rx.share()
         )
 
         const update = source.pipe(
-            rx.filter(([ type ]) => type === 'update'),
+            rx.filter(([type]) => type === 'update'),
             rx.map(last),
             rx.bufferCount(2),
             rx.distinctUntilChanged(equals),
@@ -4702,7 +4702,7 @@ const ChartCenter = ({
                     transform: defaultTransform,
                     loading: true,
                     completed: false,
-                    inverted: [ 0, 0 ],
+                    inverted: [0, 0],
                     pointer: [],
                     cursor: [],
                     selected: [],
@@ -4717,7 +4717,7 @@ const ChartCenter = ({
                 sub.unsubscribe()
             )
         }
-    }, [ symbol, timeInterval ])
+    }, [symbol, timeInterval])
 
     useEffect(transit => setPlot(plot => {
         const result = { ...plot, transit }
@@ -4726,9 +4726,9 @@ const ChartCenter = ({
         } else {
             return calculatePlot(result)
         }
-    }), [ timeDestination ])
+    }), [timeDestination])
 
-    useEffect((symbol, timeInterval, [ start, end ]) => {
+    useEffect((symbol, timeInterval, [start, end]) => {
         fetchJSON(`/api/candles/trade:${timeInterval}:${symbol}/hist?start=${start}&end=${end}&sort=${1}&limit=10000`)
             .then(update =>
                 setPlot(plot => {
@@ -4762,9 +4762,9 @@ const ChartCenter = ({
                     assoc('request', [])
                 )
             )
-    }, [ symbol, timeInterval, plot.request ])
+    }, [symbol, timeInterval, plot.request])
 
-    useEffect(([ ms, values ]) => {
+    useEffect(([ms, values]) => {
         const frames = animationFrames(ms)
         const calculatePlotTransform = compose(
             assoc('transform'),
@@ -4804,7 +4804,7 @@ const ChartCenter = ({
         return () => transitions.forEach(transition =>
             transition.unsubscribe()
         )
-    }, [ plot.transition ])
+    }, [plot.transition])
 
     useEffect(price => setPlot(plot => {
         const result = { ...plot, price }
@@ -4813,10 +4813,10 @@ const ChartCenter = ({
         } else {
             return calculatePlotScale(result)
         }
-    }), [ chart.price ])
+    }), [chart.price])
 
     useEffect(type => setPlot(plot => {
-        const transform = [ type, plot.type ].some(isHeikinashi)
+        const transform = [type, plot.type].some(isHeikinashi)
             ? defaultTransform
             : plot.transform
         const result = { ...plot, type, transform }
@@ -4826,7 +4826,7 @@ const ChartCenter = ({
             const calculate = o(calculatePlotScale, calculatePlotSource)
             return calculate(result)
         }
-    }), [ type ])
+    }), [type])
 
     useEffect(algorithm => setPlot(plot => {
         const log = isLogAlgorithm(algorithm)
@@ -4837,9 +4837,9 @@ const ChartCenter = ({
         } else {
             return calculatePlotScale(result)
         }
-    }), [ priceAlgorithm ])
+    }), [priceAlgorithm])
 
-    useEffect(setTimeRange, [ plot.timeRange ])
+    useEffect(setTimeRange, [plot.timeRange])
 
     useEffect(compose(
         setMenu,
@@ -4857,7 +4857,7 @@ const ChartCenter = ({
                 'timeZone'
             ])
         )
-    ), [ placement, plot.lock, session.value, line.value, label.value, priceAlgorithm, plot.invert, plot.autoFit, timeZone ])
+    ), [placement, plot.lock, session.value, line.value, label.value, priceAlgorithm, plot.invert, plot.autoFit, timeZone])
 
     useLayoutEffect(countdown => {
         if(countdown) {
@@ -4867,7 +4867,7 @@ const ChartCenter = ({
 
             return () => clearInterval(interval)
         }
-    }, [ label.value.countdown ])
+    }, [label.value.countdown])
 
     useLayoutEffect((
         context,
@@ -5160,15 +5160,15 @@ const ChartCenter = ({
         const imageContext = image.getContext('2d')
 
         const axisLines = {
-            bottom: [ [ 0, main.canvas.height ], [ image.width, main.canvas.height ] ],
-            top: [ [ 0, horizontal.canvas.height ], [ image.width, horizontal.canvas.height ] ],
-            right: [ [ main.canvas.width, 0 ], [ main.canvas.width, image.height ] ],
-            left: [ [ vertical.canvas.width, 0 ], [ vertical.canvas.width, image.height ] ]
+            bottom: [[0, main.canvas.height], [image.width, main.canvas.height]],
+            top: [[0, horizontal.canvas.height], [image.width, horizontal.canvas.height]],
+            right: [[main.canvas.width, 0], [main.canvas.width, image.height]],
+            left: [[vertical.canvas.width, 0], [vertical.canvas.width, image.height]]
         }
 
         const canvases = getGridAreas(placement, [
-            [ main.canvas, vertical.canvas ],
-            [ horizontal.canvas, new OffscreenCanvas(vertical.canvas.width, horizontal.canvas.height) ]
+            [main.canvas, vertical.canvas],
+            [horizontal.canvas, new OffscreenCanvas(vertical.canvas.width, horizontal.canvas.height)]
         ])
 
         const ref = head(
@@ -5176,9 +5176,9 @@ const ChartCenter = ({
         )
 
         const draws = zipWith(
-            (canvas, [ x, y ]) => ({ canvas, x, y }),
+            (canvas, [x, y]) => ({ canvas, x, y }),
             canvases.flat(),
-            [ [ 0, 0 ], [ ref.width, 0 ], [ 0, ref.height ], [ ref.width, ref.height ] ]
+            [[0, 0], [ref.width, 0], [0, ref.height], [ref.width, ref.height]]
         )
 
         const linearGradient = imageContext.createLinearGradient(0, 0, 0, image.height)
@@ -5198,28 +5198,28 @@ const ChartCenter = ({
         drawLines({
             context: imageContext,
             stroke: axis.stroke,
-            lines: placement.map(v => axisLines[ v ])
+            lines: placement.map(v => axisLines[v])
         })
 
         image.convertToBlob().then(blob => {
             const url = URL.createObjectURL(blob)
             const link = document.createElement('a')
             const format = formatTime(`%e %b '%y`)
-            link.download = `Krypton-${capitalizeWord(types[ type ])}-(${format(new Date())}).png`
+            link.download = `Krypton-${capitalizeWord(types[type])}-(${format(new Date())}).png`
             link.href = url
 
             link.click()
             URL.revokeObjectURL(url)
         })
 
-    }, [ mainBack, verticalBack, horizontalBack, snapshot ])
+    }, [mainBack, verticalBack, horizontalBack, snapshot])
 
     return (
         plot.deficit
             ? <ChartDeficit />
             : <div
                 className='chart-center'
-                style={ {
+                style={{
                     background: `linear-gradient(${background.join(', ')})`,
                     pointerEvents: plot.loading ? 'none' : 'auto',
                     opacity: plot.loading ? .5 : 1,
@@ -5228,108 +5228,108 @@ const ChartCenter = ({
                     gridTemplateColumns: gridTemplateCols,
                     gridTemplateAreas: formatGridAreas(
                         getGridAreas(placement, [
-                            [ 'a00', 'a01' ],
-                            [ 'a10', 'a11' ]
+                            ['a00', 'a01'],
+                            ['a10', 'a11']
                         ])
                     )
-                } }
+                }}
             >
                 <div
                     className='chart-center-grid'
-                    style={ { gridArea: 'a00' } }
+                    style={{ gridArea: 'a00' }}
                 >
                     <ChartMain
-                        container={ container }
-                        clear={ clear }
-                        menu={ menu.main }
-                        onResize={ setSize }
-                        onZoomStart={ onZoomStart }
-                        onZoom={ onMainZoom }
-                        onZoomEnd={ onZoomEnd }
-                        onContext={ setMainContext }
-                        onPointerEnter={ onPointerEnter }
-                        onPointerMove={ onPointerMove }
-                        onPointerLeave={ onPointerLeave }
-                        enableLevel={ enableLevel }
-                        level={ level }
-                        setLevel={ setLevel }
+                        container={container}
+                        clear={clear}
+                        menu={menu.main}
+                        onResize={setSize}
+                        onZoomStart={onZoomStart}
+                        onZoom={onMainZoom}
+                        onZoomEnd={onZoomEnd}
+                        onContext={setMainContext}
+                        onPointerEnter={onPointerEnter}
+                        onPointerMove={onPointerMove}
+                        onPointerLeave={onPointerLeave}
+                        enableLevel={enableLevel}
+                        level={level}
+                        setLevel={setLevel}
                     />
                     <ChartStatus
-                        size={ plot.size }
-                        symbol={ name }
-                        order={ order }
-                        baselinePrice={ baselinePrice }
-                        base={ plot.start }
-                        data={ plot.selected }
-                        change={ plot.selectedChange }
-                        algorithm={ priceAlgorithm }
-                        chart={ chart }
-                        precision={ precision }
-                        type={ type }
-                        status={ status }
-                        interval={ timeInterval }
-                        loading={ plot.loading }
+                        size={plot.size}
+                        symbol={name}
+                        order={order}
+                        baselinePrice={baselinePrice}
+                        base={plot.start}
+                        data={plot.selected}
+                        change={plot.selectedChange}
+                        algorithm={priceAlgorithm}
+                        chart={chart}
+                        precision={precision}
+                        type={type}
+                        status={status}
+                        interval={timeInterval}
+                        loading={plot.loading}
                     />
-                    <ChartInfo info={ info } />
+                    <ChartInfo info={info} />
                     <ChartNavigation
-                        container={ container }
-                        onZoomIn={ onZoomIn }
-                        onZoomOut={ onZoomOut }
-                        onPanLeft={ onPanLeft }
-                        onPanRight={ onPanRight }
-                        onReset={ onReset }
-                        reset={ enableReset }
-                        visibility={ navigationVisibility }
+                        container={container}
+                        onZoomIn={onZoomIn}
+                        onZoomOut={onZoomOut}
+                        onPanLeft={onPanLeft}
+                        onPanRight={onPanRight}
+                        onReset={onReset}
+                        reset={enableReset}
+                        visibility={navigationVisibility}
                     />
                     {
                         enableScroll
                             ? <ChartTimeScroll
-                                container={ container }
-                                onTimeScroll={ onTimeScroll }
+                                container={container}
+                                onTimeScroll={onTimeScroll}
                             />
                             : null
                     }
                 </div>
                 <div
                     className='chart-center-grid'
-                    style={ { gridArea: 'a01', ...borderY } }
+                    style={{ gridArea: 'a01', ...borderY }}
                 >
                     <ChartVertical
-                        container={ container }
-                        clear={ clear }
-                        menu={ menu.vertical }
-                        onResize={ setVerticalSize }
-                        onZoomStart={ onZoomStart }
-                        onZoom={ onVerticalZoom }
-                        onZoomEnd={ onZoomEnd }
-                        onContext={ setVerticalContext }
+                        container={container}
+                        clear={clear}
+                        menu={menu.vertical}
+                        onResize={setVerticalSize}
+                        onZoomStart={onZoomStart}
+                        onZoom={onVerticalZoom}
+                        onZoomEnd={onZoomEnd}
+                        onContext={setVerticalContext}
                     />
                 </div>
                 <div
                     className='chart-center-grid'
-                    style={ { gridArea: 'a10', ...borderX } }
+                    style={{ gridArea: 'a10', ...borderX }}
                 >
                     <ChartHorizontal
-                        container={ container }
-                        clear={ clear }
-                        onZoomStart={ onZoomStart }
-                        onZoom={ onHorizontalZoom }
-                        onZoomEnd={ onZoomEnd }
-                        onResize={ setHorizontalSize }
-                        onContext={ setHorizontalContext }
-                        menu={ menu.horizontal }
+                        container={container}
+                        clear={clear}
+                        onZoomStart={onZoomStart}
+                        onZoom={onHorizontalZoom}
+                        onZoomEnd={onZoomEnd}
+                        onResize={setHorizontalSize}
+                        onContext={setHorizontalContext}
+                        menu={menu.horizontal}
                     />
                 </div>
                 <div
                     className='chart-center-grid'
-                    style={ { gridArea: 'a11', ...borderX, ...borderY } }
+                    style={{ gridArea: 'a11', ...borderX, ...borderY }}
                 >
                     <ChartOption
-                        container={ container }
-                        orientation={ head(placement) }
-                        clear={ clear }
-                        menu={ menu.vertical }
-                        tooltip={ name + ' ' + timeInterval }
+                        container={container}
+                        orientation={head(placement)}
+                        clear={clear}
+                        menu={menu.vertical}
+                        tooltip={name + ' ' + timeInterval}
                     />
                 </div>
             </div>
@@ -5345,14 +5345,14 @@ const ChartTimeRange = ({
     setTime
 }) => {
 
-    const [ collapsed, setCollapsed ] = useState(false)
+    const [collapsed, setCollapsed] = useState(false)
 
     const data = timeRanges.map(timeRange => {
         return {
             center: timeRange.label,
             highlighted: equals(
-                [ timeInterval, time ],
-                [ timeRange.interval, timeRange.generate(now()) ]
+                [timeInterval, time],
+                [timeRange.interval, timeRange.generate(now())]
             ),
             onClick: () => {
                 setTimeInterval(timeRange.interval)
@@ -5372,25 +5372,25 @@ const ChartTimeRange = ({
     )
 
     useEffect(container => {
-        const subscription = resizeObserver([ container ]).subscribe(() =>
+        const subscription = resizeObserver([container]).subscribe(() =>
             setCollapsed(
                 getNodeWidth(container) < 600
             )
         )
 
         return () => subscription.unsubscribe()
-    }, [ container ])
+    }, [container])
 
     return collapsed
         ? (
             <Select
-                container={ container }
-                clear={ clear }
+                container={container}
+                clear={clear}
                 preview='Time Range'
-                data={ data }
+                data={data}
                 containerMargin='0 0 0 -45'
                 targetMargin='5'
-                outlined={ false }
+                outlined={false}
                 display='block'
             />
         )
@@ -5399,13 +5399,13 @@ const ChartTimeRange = ({
                 {
                     data.map(({ center, onClick, highlighted }, key) =>
                         <li
-                            key={ key }
+                            key={key}
                             className='chart-range-item'
                         >
                             <TooltipPlacements
-                                container={ container }
-                                clear={ clear }
-                                data={ center }
+                                container={container}
+                                clear={clear}
+                                data={center}
                                 targetMargin='0 5 0 0'
                                 containerMargin='-5 0 0 0'
                                 alignment='center'
@@ -5414,10 +5414,10 @@ const ChartTimeRange = ({
                                 <Button
                                     display='block'
                                     size='big'
-                                    highlighted={ highlighted }
-                                    onClick={ onClick }
+                                    highlighted={highlighted}
+                                    onClick={onClick}
                                 >
-                                    { shortenLabel(center) }
+                                    {shortenLabel(center)}
                                 </Button>
                             </TooltipPlacements>
                         </li>
@@ -5432,7 +5432,7 @@ const ChartCalendarHeader = ({ onClose }) => (
         <h3 className='chart-calendar-title'>
             Go To
         </h3>
-        <Button title='Close Calendar' display='inline' size='big' onClick={ onClose }>
+        <Button title='Close Calendar' display='inline' size='big' onClick={onClose}>
             <Icon name='close' />
         </Button>
     </div>
@@ -5453,24 +5453,24 @@ const ChartCalendarForm = ({
 }) => (
     <div className='chart-calendar-form'>
         <TimeDate
-            id={ id }
-            min={ min }
-            max={ max }
-            value={ value }
-            onChange={ onChange }
-            focus={ focus }
-            onFocus={ onFocus }
+            id={id}
+            min={min}
+            max={max}
+            value={value}
+            onChange={onChange}
+            focus={focus}
+            onFocus={onFocus}
         />
         <TimeClock
             display='inline'
-            container={ container }
-            control={ control }
-            clear={ clear }
-            min={ min }
-            max={ max }
-            value={ value }
-            onChange={ onChange }
-            disabled={ !clock }
+            container={container}
+            control={control}
+            clear={clear}
+            min={min}
+            max={max}
+            value={value}
+            onChange={onChange}
+            disabled={!clock}
         />
     </div>
 )
@@ -5487,21 +5487,21 @@ const ChartCalendarSingle = ({
     <>
         <ChartCalendarForm
             id='singledate'
-            container={ container }
-            clear={ clear }
-            min={ 0 }
-            max={ today }
-            value={ value }
-            control={ control }
-            focus={ active }
-            onChange={ onChange }
-            clock={ clock }
+            container={container}
+            clear={clear}
+            min={0}
+            max={today}
+            value={value}
+            control={control}
+            focus={active}
+            onChange={onChange}
+            clock={clock}
         />
         <TimeCalendar
-            min={ 0 }
-            max={ today }
-            value={ value }
-            onChange={ onChange }
+            min={0}
+            max={today}
+            value={value}
+            onChange={onChange}
         />
     </>
 )
@@ -5517,13 +5517,13 @@ const ChartCalendarMultiple = ({
     clock
 }) => {
 
-    const [ focus, setFocus ] = useState(() => 0)
+    const [focus, setFocus] = useState(() => 0)
 
-    const ids = [ 'mindate', 'maxdate' ]
+    const ids = ['mindate', 'maxdate']
 
     const extent = [
-        [ 0, last(value) ],
-        [ head(value), Infinity ]
+        [0, last(value)],
+        [head(value), Infinity]
     ]
 
     const onFormChange = curry((idx, vs, v) =>
@@ -5537,33 +5537,33 @@ const ChartCalendarMultiple = ({
         setFocus(idx || 1)
     })
 
-    useEffect(() => setFocus(0), [ active ])
+    useEffect(() => setFocus(0), [active])
 
     return (
         <>
             {
                 value.map((ms, key) =>
                     <ChartCalendarForm
-                        key={ key }
-                        id={ ids[ key ] }
-                        container={ container }
-                        control={ control }
-                        clear={ clear }
-                        min={ head(extent[ key ]) }
-                        max={ last(extent[ key ]) }
-                        value={ ms }
-                        focus={ focus === key && active }
-                        onFocus={ () => setFocus(key) }
-                        onChange={ onFormChange(key, value) }
-                        clock={ clock }
+                        key={key}
+                        id={ids[key]}
+                        container={container}
+                        control={control}
+                        clear={clear}
+                        min={head(extent[key])}
+                        max={last(extent[key])}
+                        value={ms}
+                        focus={focus === key && active}
+                        onFocus={() => setFocus(key)}
+                        onChange={onFormChange(key, value)}
+                        clock={clock}
                     />
                 )
             }
             <TimeCalendar
-                value={ value[ focus ] }
-                min={ head(extent[ focus ]) }
-                max={ last(extent[ focus ]) }
-                onChange={ onCalendarChange(focus, value) }
+                value={value[focus]}
+                min={head(extent[focus])}
+                max={last(extent[focus])}
+                onChange={onCalendarChange(focus, value)}
             />
         </>
     )
@@ -5578,20 +5578,20 @@ const ChartCalendarMain = ({
     clock
 }) => {
 
-    const [ tab, setTab ] = useState(() => 0)
+    const [tab, setTab] = useState(() => 0)
 
-    const [ single, setSingle ] = useState(() =>
+    const [single, setSingle] = useState(() =>
         utcHour.floor(
             now()
         )
     )
 
-    const [ multiple, setMultiple ] = useState(() => {
+    const [multiple, setMultiple] = useState(() => {
         const end = utcHour.floor(
             now()
         )
         const start = utcDay.offset(end, -7)
-        return [ start, end ]
+        return [start, end]
     })
 
     const onSingleChange = useCallback(batch([
@@ -5604,7 +5604,7 @@ const ChartCalendarMain = ({
         onChange
     ]), [])
 
-    useEffect(setMultiple, [ value ])
+    useEffect(setMultiple, [value])
 
     const props = {
         clear,
@@ -5615,16 +5615,16 @@ const ChartCalendarMain = ({
 
     const contents = [
         <ChartCalendarSingle
-            active={ tab === 0 && control.visible }
-            value={ single }
-            onChange={ onSingleChange }
-            { ...props }
+            active={tab === 0 && control.visible}
+            value={single}
+            onChange={onSingleChange}
+            {...props}
         />,
         <ChartCalendarMultiple
-            active={ tab === 1 && control.visible }
-            value={ multiple }
-            onChange={ onMultipleChange }
-            { ...props }
+            active={tab === 1 && control.visible}
+            value={multiple}
+            onChange={onMultipleChange}
+            {...props}
         />
     ]
 
@@ -5632,24 +5632,24 @@ const ChartCalendarMain = ({
         <div className='chart-calendar-main'>
             <menu className='chart-calendar-tab'>
                 {
-                    [ 'date', 'custom range' ].map((id, key) =>
+                    ['date', 'custom range'].map((id, key) =>
                         <li
-                            key={ key }
+                            key={key}
                             className='chart-calendar-item'
                         >
                             <Button
                                 size='big'
-                                highlighted={ key === tab }
-                                onClick={ () => setTab(key) }
+                                highlighted={key === tab}
+                                onClick={() => setTab(key)}
                             >
-                                { capitalizeWords(id) }
+                                {capitalizeWords(id)}
                             </Button>
                         </li>
                     )
                 }
             </menu>
             <div className='chart-calendar-content'>
-                { contents[ tab ] }
+                {contents[tab]}
             </div>
         </div>
     )
@@ -5662,19 +5662,19 @@ const ChartCalendarFooter = ({
     <menu className='chart-calendar-footer'>
         {
             [
-                [ 'cancel', onCancel ],
-                [ 'go to', onDone ]
-            ].map(([ id, onClick ]) =>
+                ['cancel', onCancel],
+                ['go to', onDone]
+            ].map(([id, onClick]) =>
                 <li
-                    key={ id }
+                    key={id}
                     className='chart-calendar-item'
                 >
                     <Button
                         size='big'
-                        outlined={ true }
-                        onClick={ onClick }
+                        outlined={true}
+                        onClick={onClick}
                     >
-                        { capitalizeWords(id) }
+                        {capitalizeWords(id)}
                     </Button>
                 </li>
             )
@@ -5693,9 +5693,9 @@ const ChartCalendarPopup = ({
     onDone
 }) => {
 
-    const [ output, setOutput ] = useState([])
+    const [output, setOutput] = useState([])
 
-    const [ clear, setClear ] = useState({})
+    const [clear, setClear] = useState({})
 
     const onPointerDown = useCallback(({ target }) => setClear({
         target: target,
@@ -5713,25 +5713,25 @@ const ChartCalendarPopup = ({
 
     const value = useMemo(() => time.map(
         add(timeOffset)
-    ), [ time, timeOffset ])
+    ), [time, timeOffset])
 
     return (
         <div
             className='chart-calendar'
-            onPointerDown={ onPointerDown }
+            onPointerDown={onPointerDown}
         >
-            <ChartCalendarHeader onClose={ onClose } />
+            <ChartCalendarHeader onClose={onClose} />
             <ChartCalendarMain
-                container={ container }
-                control={ control }
-                clear={ clear }
-                onChange={ setOutput }
-                value={ value }
-                clock={ clock }
+                container={container}
+                control={control}
+                clear={clear}
+                onChange={setOutput}
+                value={value}
+                clock={clock}
             />
             <ChartCalendarFooter
-                onCancel={ onCancel }
-                onDone={ () => done(output) }
+                onCancel={onCancel}
+                onDone={() => done(output)}
             />
         </div>
     )
@@ -5746,11 +5746,11 @@ const ChartCalendar = ({
     setTime
 }) => {
 
-    const [ control, setControl ] = useState({})
+    const [control, setControl] = useState({})
 
-    const [ event, setEvent ] = useState({})
+    const [event, setEvent] = useState({})
 
-    const [ highlighted, setHighlighted ] = useState(false)
+    const [highlighted, setHighlighted] = useState(false)
 
     const onToggle = useCallback(batch([
         compose(
@@ -5765,30 +5765,30 @@ const ChartCalendar = ({
         transition: false
     }), [])
 
-    const onDone = useCallback(batch([ setTime, onClose ]), [])
+    const onDone = useCallback(batch([setTime, onClose]), [])
 
     return (
         <PopupPlacements
-            container={ container }
-            clear={ clear }
-            control={ control }
-            onToggle={ onToggle }
+            container={container}
+            clear={clear}
+            control={control}
+            onToggle={onToggle}
             data={
                 <ChartCalendarPopup
-                    container={ container }
-                    onCancel={ onClose }
-                    onClose={ onClose }
-                    onDone={ onDone }
-                    control={ event }
-                    time={ time }
-                    timeZone={ timeZone }
-                    clock={ clock }
+                    container={container}
+                    onCancel={onClose}
+                    onClose={onClose}
+                    onDone={onDone}
+                    control={event}
+                    time={time}
+                    timeZone={timeZone}
+                    clock={clock}
                 />
             }
         >
             <TooltipPlacements
-                container={ container }
-                clear={ clear }
+                container={container}
+                clear={clear}
                 data='Go To'
                 alignment='center'
                 direction='top'
@@ -5796,7 +5796,7 @@ const ChartCalendar = ({
                 <Button
                     display='block'
                     size='big'
-                    highlighted={ highlighted }
+                    highlighted={highlighted}
                 >
                     <Icon name='arrowcalendar' />
                 </Button>
@@ -5812,9 +5812,9 @@ const ChartTimeZone = ({
     setTimeZone
 }) => {
 
-    const [ time, setTime ] = useState(now)
+    const [time, setTime] = useState(now)
 
-    const [ highlighted, setHighlighted ] = useState(false)
+    const [highlighted, setHighlighted] = useState(false)
 
     const data = timeZones.map((_, id) => {
         return {
@@ -5837,17 +5837,17 @@ const ChartTimeZone = ({
 
     return (
         <ToggleMenuPlacements
-            container={ container }
-            clear={ clear }
+            container={container}
+            clear={clear}
             containerMargin='0 0 0 -45'
             targetMargin='0 5 0 0'
             alignment='center'
             direction='top'
-            onToggle={ onToggle }
-            data={ data }
+            onToggle={onToggle}
+            data={data}
         >
             <TooltipPlacements
-                container={ container }
+                container={container}
                 direction='top'
                 alignment='center'
                 data='Time Zone'
@@ -5855,9 +5855,9 @@ const ChartTimeZone = ({
                 <Button
                     display='block'
                     size='big'
-                    highlighted={ highlighted }
+                    highlighted={highlighted}
                 >
-                    { millisecondsToClock(getTimeZoneOffset(timeZone) + time) + getTimeZoneUTC(timeZone) }
+                    {millisecondsToClock(getTimeZoneOffset(timeZone) + time) + getTimeZoneUTC(timeZone)}
                 </Button>
             </TooltipPlacements>
         </ToggleMenuPlacements>
@@ -5872,15 +5872,15 @@ const ChartAlgorithm = ({
 }) => (
     <menu className='chart-algorithm'>
         {
-            priceAlgorithms.slice(0, -1).map(([ long, short ], id) =>
+            priceAlgorithms.slice(0, -1).map(([long, short], id) =>
                 <li
-                    key={ id }
+                    key={id}
                     className='chart-algorithm-item'
                 >
                     <TooltipPlacements
-                        container={ container }
-                        clear={ clear }
-                        data={ 'Toggle' + ' ' + capitalizeWord(long) + ' ' + 'Scale' }
+                        container={container}
+                        clear={clear}
+                        data={'Toggle' + ' ' + capitalizeWord(long) + ' ' + 'Scale'}
                         alignment='center'
                         direction='top'
                         targetMargin='0 5 0 0'
@@ -5889,10 +5889,10 @@ const ChartAlgorithm = ({
                         <Button
                             display='block'
                             size='big'
-                            highlighted={ id === priceAlgorithm }
-                            onClick={ () => setPriceAlgorithm(id) }
+                            highlighted={id === priceAlgorithm}
+                            onClick={() => setPriceAlgorithm(id)}
                         >
-                            { short }
+                            {short}
                         </Button>
                     </TooltipPlacements>
                 </li>
@@ -5907,10 +5907,10 @@ const Separator = () => (
         viewBox='0 0 25 25'
     >
         <line
-            x1={ 12.5 }
-            y1={ 0 }
-            x2={ 12.5 }
-            y2={ 25 }
+            x1={12.5}
+            y1={0}
+            x2={12.5}
+            y2={25}
             stroke='rgb(255, 255, 255, .2)'
         />
     </svg>
@@ -5931,36 +5931,36 @@ const ChartBottom = memo(({
     <div className='chart-bottom'>
         <div className='chart-bottom-left'>
             <ChartTimeRange
-                container={ container }
-                clear={ clear }
-                timeInterval={ timeInterval }
-                setTimeInterval={ setTimeInterval }
-                time={ time }
-                setTime={ setTime }
+                container={container}
+                clear={clear}
+                timeInterval={timeInterval}
+                setTimeInterval={setTimeInterval}
+                time={time}
+                setTime={setTime}
             />
             <Separator />
             <ChartCalendar
-                container={ container }
-                clear={ clear }
-                time={ time }
-                setTime={ setTime }
-                timeZone={ [ 'W', 'M' ].some(v => timeInterval.includes(v)) ? defaultTimeZone : timeZone }
-                clock={ [ 'm', 'h' ].some(v => timeInterval.includes(v)) }
+                container={container}
+                clear={clear}
+                time={time}
+                setTime={setTime}
+                timeZone={['W', 'M'].some(v => timeInterval.includes(v)) ? defaultTimeZone : timeZone}
+                clock={['m', 'h'].some(v => timeInterval.includes(v))}
             />
         </div>
         <div className='chart-bottom-right'>
             <ChartTimeZone
-                container={ container }
-                clear={ clear }
-                timeZone={ timeZone }
-                setTimeZone={ setTimeZone }
+                container={container}
+                clear={clear}
+                timeZone={timeZone}
+                setTimeZone={setTimeZone}
             />
             <Separator />
             <ChartAlgorithm
-                container={ container }
-                clear={ clear }
-                priceAlgorithm={ priceAlgorithm }
-                setPriceAlgorithm={ setPriceAlgorithm }
+                container={container}
+                clear={clear}
+                priceAlgorithm={priceAlgorithm}
+                setPriceAlgorithm={setPriceAlgorithm}
             />
         </div>
     </div>
@@ -5968,23 +5968,23 @@ const ChartBottom = memo(({
 
 const Chart = ({ socket, maps, symbol }) => {
 
-    const [ container, setContainer ] = useState({})
+    const [container, setContainer] = useState({})
 
-    const [ clear, setClear ] = useState({})
+    const [clear, setClear] = useState({})
 
-    const [ info, setInfo ] = useState({})
+    const [info, setInfo] = useState({})
 
-    const [ setting, setSetting ] = useState({})
+    const [setting, setSetting] = useState({})
 
-    const [ snapshot, setSnapshot ] = useState({})
+    const [snapshot, setSnapshot] = useState({})
 
-    const [ placement, setPlacement ] = useState([ 'bottom', 'right' ])
+    const [placement, setPlacement] = useState(['bottom', 'right'])
 
-    const [ navigationVisibility, setNavigationVisibility ] = useState(defaultUIVisibility)
+    const [navigationVisibility, setNavigationVisibility] = useState(defaultUIVisibility)
 
-    const [ background, setBackground ] = useState([ 'transparent', 'transparent' ])
+    const [background, setBackground] = useState(['transparent', 'transparent'])
 
-    const [ grid, setGrid ] = useState([
+    const [grid, setGrid] = useState([
         {
             color: defaultGridColor,
             thickness: 1,
@@ -5997,14 +5997,14 @@ const Chart = ({ socket, maps, symbol }) => {
         }
     ])
 
-    const [ status, setStatus ] = useState({
+    const [status, setStatus] = useState({
         symbol: true,
         ohlc: true,
         change: true,
         volume: true
     })
 
-    const [ session, setSession ] = useState({
+    const [session, setSession] = useState({
         value: false,
         stroke: {
             color: defaultColor,
@@ -6013,7 +6013,7 @@ const Chart = ({ socket, maps, symbol }) => {
         }
     })
 
-    const [ axis, setAxis ] = useState({
+    const [axis, setAxis] = useState({
         stroke: {
             color: defaultAxisColor,
             thickness: 1,
@@ -6027,13 +6027,13 @@ const Chart = ({ socket, maps, symbol }) => {
         }
     })
 
-    const [ crosshair, setCrosshair ] = useState({
+    const [crosshair, setCrosshair] = useState({
         color: defaultColor,
         thickness: 1,
         style: 'dashed'
     })
 
-    const [ label, setLabel ] = useState({
+    const [label, setLabel] = useState({
         value: {
             symbol: false,
             price: true,
@@ -6054,7 +6054,7 @@ const Chart = ({ socket, maps, symbol }) => {
         }
     })
 
-    const [ line, setLine ] = useState({
+    const [line, setLine] = useState({
         value: {
             price: true,
             high: false,
@@ -6079,7 +6079,7 @@ const Chart = ({ socket, maps, symbol }) => {
         }
     })
 
-    const [ areaChart, setAreaChart ] = useState({
+    const [areaChart, setAreaChart] = useState({
         previous: false,
         price: defaultPriceSource,
         stroke: {
@@ -6089,7 +6089,7 @@ const Chart = ({ socket, maps, symbol }) => {
         fill: defaultAreaFill
     })
 
-    const [ barChart, setBarChart ] = useState({
+    const [barChart, setBarChart] = useState({
         previous: false,
         price: defaultPriceSource,
         fill: defaultChartColors,
@@ -6097,7 +6097,7 @@ const Chart = ({ socket, maps, symbol }) => {
         hlc: false
     })
 
-    const [ baselineChart, setBaselineChart ] = useState({
+    const [baselineChart, setBaselineChart] = useState({
         previous: false,
         top: {
             fill: defaultChartColors,
@@ -6118,7 +6118,7 @@ const Chart = ({ socket, maps, symbol }) => {
         level: .5
     })
 
-    const [ candleChart, setCandleChart ] = useState({
+    const [candleChart, setCandleChart] = useState({
         previous: false,
         price: defaultPriceSource,
         body: {
@@ -6135,13 +6135,13 @@ const Chart = ({ socket, maps, symbol }) => {
         }
     })
 
-    const [ columnChart, setColumnChart ] = useState({
+    const [columnChart, setColumnChart] = useState({
         previous: true,
         fill: defaultChartColors,
         price: defaultPriceSource
     })
 
-    const [ heikinashiChart, setHeikinashiChart ] = useState({
+    const [heikinashiChart, setHeikinashiChart] = useState({
         previous: false,
         price: defaultPriceSource,
         body: {
@@ -6158,7 +6158,7 @@ const Chart = ({ socket, maps, symbol }) => {
         }
     })
 
-    const [ highLowChart, setHighLowChart ] = useState({
+    const [highLowChart, setHighLowChart] = useState({
         previous: false,
         price: defaultHighLowPriceSource,
         body: { color: defaultBlueColor, value: true },
@@ -6166,7 +6166,7 @@ const Chart = ({ socket, maps, symbol }) => {
         label: { color: defaultBlueColor, value: true }
     })
 
-    const [ HLCChart, setHLCChart ] = useState(() => {
+    const [HLCChart, setHLCChart] = useState(() => {
         return {
             previous: false,
             price: defaultPriceSource,
@@ -6188,12 +6188,12 @@ const Chart = ({ socket, maps, symbol }) => {
         }
     })
 
-    const [ hollowChart, setHollowChart ] = useState(() => {
+    const [hollowChart, setHollowChart] = useState(() => {
         return {
             previous: true,
             price: defaultPriceSource,
             body: {
-                color: [ colord(defaultUpColor).alpha(0).toHex(), defaultDownColor ],
+                color: [colord(defaultUpColor).alpha(0).toHex(), defaultDownColor],
                 value: true
             },
             border: {
@@ -6207,7 +6207,7 @@ const Chart = ({ socket, maps, symbol }) => {
         }
     })
 
-    const [ lineChart, setLineChart ] = useState({
+    const [lineChart, setLineChart] = useState({
         previous: false,
         price: defaultPriceSource,
         stroke: {
@@ -6216,7 +6216,7 @@ const Chart = ({ socket, maps, symbol }) => {
         }
     })
 
-    const [ markerChart, setMarkerChart ] = useState({
+    const [markerChart, setMarkerChart] = useState({
         previous: false,
         price: defaultPriceSource,
         stroke: {
@@ -6225,7 +6225,7 @@ const Chart = ({ socket, maps, symbol }) => {
         }
     })
 
-    const [ stepChart, setStepChart ] = useState({
+    const [stepChart, setStepChart] = useState({
         previous: false,
         price: defaultPriceSource,
         stroke: {
@@ -6234,21 +6234,21 @@ const Chart = ({ socket, maps, symbol }) => {
         }
     })
 
-    const [ type, setType ] = useState(defaultType)
+    const [type, setType] = useState(defaultType)
 
-    const [ pricePrecision, setPricePrecision ] = useState(defaultPricePrecision)
+    const [pricePrecision, setPricePrecision] = useState(defaultPricePrecision)
 
-    const [ priceAlgorithm, setPriceAlgorithm ] = useState(defaultPriceAlgorithm)
+    const [priceAlgorithm, setPriceAlgorithm] = useState(defaultPriceAlgorithm)
 
-    const [ timeZone, setTimeZone ] = useState(defaultTimeZone)
+    const [timeZone, setTimeZone] = useState(defaultTimeZone)
 
-    const [ timeFormat, setTimeFormat ] = useState(defaultTimeFormat)
+    const [timeFormat, setTimeFormat] = useState(defaultTimeFormat)
 
-    const [ timeInterval, setTimeInterval ] = useState(defaultTimeInterval)
+    const [timeInterval, setTimeInterval] = useState(defaultTimeInterval)
 
-    const [ timeDestination, setTimeDestination ] = useState([])
+    const [timeDestination, setTimeDestination] = useState([])
 
-    const [ timeRange, setTimeRange ] = useState([])
+    const [timeRange, setTimeRange] = useState([])
 
     const clearMenu = e => setClear(clear =>
         isPlacementEvent(e)
@@ -6277,129 +6277,129 @@ const Chart = ({ socket, maps, symbol }) => {
         stepChart
     ]
 
-    const chart = charts[ type ]
+    const chart = charts[type]
 
     return (
         <div
             id='chart'
             className='chart'
-            ref={ setContainer }
-            onClick={ clearMenu }
-            onContextMenu={ clearMenu }
+            ref={setContainer}
+            onClick={clearMenu}
+            onContextMenu={clearMenu}
         >
             <ChartTop
-                timeInterval={ timeInterval }
-                setTimeInterval={ setTimeInterval }
-                container={ container }
-                clear={ clear }
-                navigationVisibility={ navigationVisibility }
-                setNavigationVisibility={ setNavigationVisibility }
-                setSnapshot={ setSnapshot }
-                type={ type }
-                setType={ setType }
-                line={ line }
-                setLine={ setLine }
-                label={ label }
-                setLabel={ setLabel }
-                setInfo={ setInfo }
-                status={ status }
-                setStatus={ setStatus }
-                background={ background }
-                setBackground={ setBackground }
-                session={ session }
-                setSession={ setSession }
-                axis={ axis }
-                setAxis={ setAxis }
-                crosshair={ crosshair }
-                setCrosshair={ setCrosshair }
-                grid={ grid }
-                setGrid={ setGrid }
-                timeZone={ timeZone }
-                setTimeZone={ setTimeZone }
-                priceAlgorithm={ priceAlgorithm }
-                setPriceAlgorithm={ setPriceAlgorithm }
-                pricePrecision={ pricePrecision }
-                setPricePrecision={ setPricePrecision }
-                setting={ setting }
-                setSetting={ setSetting }
-                timeFormat={ timeFormat }
-                setTimeFormat={ setTimeFormat }
-                areaChart={ areaChart }
-                setAreaChart={ setAreaChart }
-                barChart={ barChart }
-                setBarChart={ setBarChart }
-                baselineChart={ baselineChart }
-                setBaselineChart={ setBaselineChart }
-                candleChart={ candleChart }
-                setCandleChart={ setCandleChart }
-                columnChart={ columnChart }
-                setColumnChart={ setColumnChart }
-                heikinashiChart={ heikinashiChart }
-                setHeikinashiChart={ setHeikinashiChart }
-                highLowChart={ highLowChart }
-                setHighLowChart={ setHighLowChart }
-                HLCChart={ HLCChart }
-                setHLCChart={ setHLCChart }
-                hollowChart={ hollowChart }
-                setHollowChart={ setHollowChart }
-                lineChart={ lineChart }
-                setLineChart={ setLineChart }
-                markerChart={ markerChart }
-                setMarkerChart={ setMarkerChart }
-                stepChart={ stepChart }
-                setStepChart={ setStepChart }
-                placement={ placement }
-                setPlacement={ setPlacement }
+                timeInterval={timeInterval}
+                setTimeInterval={setTimeInterval}
+                container={container}
+                clear={clear}
+                navigationVisibility={navigationVisibility}
+                setNavigationVisibility={setNavigationVisibility}
+                setSnapshot={setSnapshot}
+                type={type}
+                setType={setType}
+                line={line}
+                setLine={setLine}
+                label={label}
+                setLabel={setLabel}
+                setInfo={setInfo}
+                status={status}
+                setStatus={setStatus}
+                background={background}
+                setBackground={setBackground}
+                session={session}
+                setSession={setSession}
+                axis={axis}
+                setAxis={setAxis}
+                crosshair={crosshair}
+                setCrosshair={setCrosshair}
+                grid={grid}
+                setGrid={setGrid}
+                timeZone={timeZone}
+                setTimeZone={setTimeZone}
+                priceAlgorithm={priceAlgorithm}
+                setPriceAlgorithm={setPriceAlgorithm}
+                pricePrecision={pricePrecision}
+                setPricePrecision={setPricePrecision}
+                setting={setting}
+                setSetting={setSetting}
+                timeFormat={timeFormat}
+                setTimeFormat={setTimeFormat}
+                areaChart={areaChart}
+                setAreaChart={setAreaChart}
+                barChart={barChart}
+                setBarChart={setBarChart}
+                baselineChart={baselineChart}
+                setBaselineChart={setBaselineChart}
+                candleChart={candleChart}
+                setCandleChart={setCandleChart}
+                columnChart={columnChart}
+                setColumnChart={setColumnChart}
+                heikinashiChart={heikinashiChart}
+                setHeikinashiChart={setHeikinashiChart}
+                highLowChart={highLowChart}
+                setHighLowChart={setHighLowChart}
+                HLCChart={HLCChart}
+                setHLCChart={setHLCChart}
+                hollowChart={hollowChart}
+                setHollowChart={setHollowChart}
+                lineChart={lineChart}
+                setLineChart={setLineChart}
+                markerChart={markerChart}
+                setMarkerChart={setMarkerChart}
+                stepChart={stepChart}
+                setStepChart={setStepChart}
+                placement={placement}
+                setPlacement={setPlacement}
             />
             <ChartCenter
-                setInfo={ setInfo }
-                info={ info }
-                container={ container }
-                clear={ clear }
-                socket={ socket }
-                symbol={ symbol }
-                navigationVisibility={ navigationVisibility }
-                timeInterval={ timeInterval }
-                axis={ axis }
-                type={ type }
-                background={ background }
-                grid={ grid }
-                status={ status }
-                snapshot={ snapshot }
-                timeFormat={ timeFormat }
-                session={ session }
-                setSession={ setSession }
-                crosshair={ crosshair }
-                line={ line }
-                setLine={ setLine }
-                label={ label }
-                setLabel={ setLabel }
-                timeZone={ timeZone }
-                setTimeZone={ setTimeZone }
-                pricePrecision={ pricePrecision }
-                priceAlgorithm={ priceAlgorithm }
-                setPriceAlgorithm={ setPriceAlgorithm }
-                setSetting={ setSetting }
-                chart={ chart }
-                setTimeRange={ setTimeRange }
-                timeDestination={ timeDestination }
-                placement={ placement }
-                setPlacement={ setPlacement }
-                level={ baselineChart.level }
-                setLevel={ setLevel }
-                maps={ maps }
+                setInfo={setInfo}
+                info={info}
+                container={container}
+                clear={clear}
+                socket={socket}
+                symbol={symbol}
+                navigationVisibility={navigationVisibility}
+                timeInterval={timeInterval}
+                axis={axis}
+                type={type}
+                background={background}
+                grid={grid}
+                status={status}
+                snapshot={snapshot}
+                timeFormat={timeFormat}
+                session={session}
+                setSession={setSession}
+                crosshair={crosshair}
+                line={line}
+                setLine={setLine}
+                label={label}
+                setLabel={setLabel}
+                timeZone={timeZone}
+                setTimeZone={setTimeZone}
+                pricePrecision={pricePrecision}
+                priceAlgorithm={priceAlgorithm}
+                setPriceAlgorithm={setPriceAlgorithm}
+                setSetting={setSetting}
+                chart={chart}
+                setTimeRange={setTimeRange}
+                timeDestination={timeDestination}
+                placement={placement}
+                setPlacement={setPlacement}
+                level={baselineChart.level}
+                setLevel={setLevel}
+                maps={maps}
             />
             <ChartBottom
-                container={ container }
-                clear={ clear }
-                timeZone={ timeZone }
-                setTimeZone={ setTimeZone }
-                priceAlgorithm={ priceAlgorithm }
-                setPriceAlgorithm={ setPriceAlgorithm }
-                timeInterval={ timeInterval }
-                setTimeInterval={ setTimeInterval }
-                time={ timeRange }
-                setTime={ setTimeDestination }
+                container={container}
+                clear={clear}
+                timeZone={timeZone}
+                setTimeZone={setTimeZone}
+                priceAlgorithm={priceAlgorithm}
+                setPriceAlgorithm={setPriceAlgorithm}
+                timeInterval={timeInterval}
+                setTimeInterval={setTimeInterval}
+                time={timeRange}
+                setTime={setTimeDestination}
             />
         </div>
     )
