@@ -3,7 +3,12 @@
 Krypton is a high-performance, real-time crypto trading dashboard inspired by TradingView-style charting systems.  
 It is built to explore **reactive data flows**, **custom chart rendering**, and **low-latency UI updates** using modern front-end architecture.
 
-![Krypton](./src/assets/images/screenshot/Krypton.png)
+<p align="center">
+  <img src="./src/assets/images/screenshots/1.gif" alt="Krypton multi-chart" width="60%">
+  <br>
+  <br>
+  <img src="./src//assets/images/screenshots/3.gif" alt="Krpton book chart" width="60%">
+</p>
 
 **Tech Stack:** React, RxJS, D3.js, HTML5 Canvas, Webpack
 
