@@ -48,9 +48,6 @@ const prices = [
     'cnht',
     'eurt',
     'xaut',
-    'mim',
-    'mxnt',
-    'try'
 ].map(toUpper)
 
 const defaultPrice = 'ANY'
@@ -532,19 +529,16 @@ const Table = ({ maps, onSymbolChange }) => {
                         BTC: 1 / P.price(table.BTC.UST),
                         USD: P.price(table.UST.USD),
                         ETH: 1 / P.price(table.ETH.UST),
-                        TRY: 1 / P.price(table.TRY.UST)
                     },
                     BTC: {
                         BTC: 1,
                         USD: P.price(table.BTC.USD),
                         ETH: 1 / P.price(table.ETH.BTC),
-                        TRY: P.price(table.BTC.TRY)
                     },
                     USD: {
                         BTC: 1 / P.price(table.BTC.USD),
                         USD: 1,
                         ETH: 1 / P.price(table.ETH.USD),
-                        TRY: 1 / P.price(table.TRY.USD)
                     }
                 }
 
